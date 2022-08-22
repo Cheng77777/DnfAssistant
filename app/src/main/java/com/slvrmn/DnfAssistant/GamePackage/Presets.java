@@ -65,6 +65,7 @@ public class Presets {
         beforeLion = readImage("BeforeLion.jpg");
         lion = readImage("Lion.jpg");
         monsterLevel = readImage("number 5.jpg");
+        reward = readImage("Reward.jpg");
         initialized = true;
     }
 
