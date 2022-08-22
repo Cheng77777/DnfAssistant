@@ -10,12 +10,17 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/start"
+            android:id="@+id/open"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="start"
-            android:text="开始" />
-
+            android:onClick="openDialog"
+            android:text="打开悬浮窗" />
+        <Button
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="closeDialog"
+            android:text="关闭悬浮窗" />
 
         <Button
             android:layout_width="wrap_content"
@@ -27,21 +32,9 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/xposed_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Xposed状态：未加载" />
-
-    <TextView
         android:id="@+id/accessibility_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Accessibility状态：未加载" />
-
-    <TextView
-        android:id="@+id/httpserver_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="HttpServer状态：未开启" />
 
 </LinearLayout>
