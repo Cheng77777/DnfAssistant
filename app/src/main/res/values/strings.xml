@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">RobotHelper</string>
+    <string name="app_name">DnfAssistant</string>
+    <string name="create_floating_widget_text">Create Floating Widget</string>
+    <string name="main_icon">main icon</string>
+    <string name="start_the_activity">start the activity</string>
+    <string name="stop_the_activity">stop the activity</string>
+    <string name="close_the_widget">close the widget</string>
 </resources>
