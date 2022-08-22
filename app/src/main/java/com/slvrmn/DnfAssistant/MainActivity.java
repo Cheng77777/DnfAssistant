@@ -28,7 +28,7 @@ import com.slvrmn.DnfAssistant.Service.FloatingViewService;
 import com.slvrmn.DnfAssistant.Tools.MLog;
 import com.slvrmn.DnfAssistant.Tools.ScreenCaptureUtilByMediaPro;
 import com.slvrmn.DnfAssistant.Tools.TessactOcr;
-import com.slvrmn.DnfAssistant.Tools.Toast;
+import com.slvrmn.DnfAssistant.Tools.Utility;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -96,7 +96,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void openDialog(View view) {
         if (!TessactOcr.checkInit()) {
-            Toast.show("初始化中，Please Wait!");
+            Utility.show("初始化中，Please Wait!");
+            return;
+        }
+        if(!mainApplication.checkAccessibilityService()){
+            Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+            startActivityForResult(intent, 0);
             return;
         }
         // 启动屏幕监控
@@ -108,11 +113,11 @@ public class MainActivity extends AppCompatActivity {
                 android.widget.Toast.makeText(this, "当前无权限，请授权", android.widget.Toast.LENGTH_SHORT);
                 startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())), 1);
             } else {
-                Toast.show("正在开启悬浮窗");
+                Utility.show("正在开启悬浮窗");
                 startService(new Intent(MainActivity.this, FloatingViewService.class));
             }
         }else {
-            Toast.show("悬浮窗已开启");
+            Utility.show("悬浮窗已开启");
         }
         finish();
 

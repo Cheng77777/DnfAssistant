@@ -1,4 +1,4 @@
-package com.slvrmn.DnfAssistant.Tools;
+package com.slvrmn.DnfAssistant.Model;
 
 public class Color {
     private int R = 0;

@@ -1,7 +1,7 @@
-package com.slvrmn.DnfAssistant.Tools.InputImp;
+package com.slvrmn.DnfAssistant.InputImp;
 
 
-import com.slvrmn.DnfAssistant.Tools.Point;
+import com.slvrmn.DnfAssistant.Model.Point;
 
 public interface Input {
 

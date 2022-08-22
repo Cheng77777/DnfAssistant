@@ -1,4 +1,4 @@
-package com.slvrmn.DnfAssistant.Tools;
+package com.slvrmn.DnfAssistant.Model;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import com.slvrmn.DnfAssistant.R;
+import com.slvrmn.DnfAssistant.Tools.MLog;
 
 
 public class Image {
@@ -104,7 +105,7 @@ public class Image {
     public static Point findPointByMulColor(Bitmap img, String colorRules, int leftX, int leftY, int rightX, int rightY) {
         img = cropBitmap(img, leftX, leftY, rightX, rightY);
         Point p = findPointByMulColor(img, colorRules);
-        if (p.isEmpty()) {
+        if (!p.isValid()) {
             return p;
         }
         return new Point(p.getX() + leftX, p.getY() + leftY);
@@ -147,7 +148,7 @@ public class Image {
                 }
             }
         }
-        return new Point(-1, -1);
+        return Point.INVALID_POINT;
     }
 
     /**
@@ -196,7 +197,7 @@ public class Image {
             }
         }
         MLog.info("找点用时：", String.valueOf(System.currentTimeMillis() - now));
-        return new Point(-1, -1);
+        return Point.INVALID_POINT;
     }
 
     /**
@@ -238,7 +239,7 @@ public class Image {
             }
         }
         MLog.info("找点用时：", String.valueOf(System.currentTimeMillis() - now));
-        return new Point(-1, -1);
+        return Point.INVALID_POINT;
     }
 
 
@@ -425,7 +426,7 @@ public class Image {
         Core.MinMaxLocResult minMaxResult = Core.minMaxLoc(result);
         org.opencv.core.Point maxloc = minMaxResult.maxLoc;
         if (minMaxResult.maxVal < threshold) {
-            return new Point(-1, -1);
+            return Point.INVALID_POINT;
         }
         org.opencv.core.Point minloc = minMaxResult.minLoc;
         org.opencv.core.Point matchloc = null;

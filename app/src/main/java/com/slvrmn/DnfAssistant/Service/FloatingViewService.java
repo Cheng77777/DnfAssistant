@@ -12,8 +12,6 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.slvrmn.DnfAssistant.R;
-import com.slvrmn.DnfAssistant.Tools.MLog;
-import com.slvrmn.DnfAssistant.Tools.Toast;
 
 public class FloatingViewService extends Service implements View.OnClickListener {
 
@@ -56,11 +54,11 @@ public class FloatingViewService extends Service implements View.OnClickListener
     }
 
     private void startAssistant() {
-        //TODO
+        Assistant.getInstance().start();
     }
 
     private void stopAssistant() {
-        //TODO
+        Assistant.getInstance().stop();
     }
 
     private void destroy() {
@@ -149,10 +147,5 @@ public class FloatingViewService extends Service implements View.OnClickListener
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-
-        System.out.println("initialized");
-
-        Toast.show("Floating dialog initialized.");
-        MLog.info("Floating dialog", "Floating dialog initialized.");
     }
 }

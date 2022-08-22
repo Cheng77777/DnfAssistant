@@ -1,8 +1,8 @@
-package com.slvrmn.DnfAssistant.Tools.InputImp;
+package com.slvrmn.DnfAssistant.InputImp;
 
 import com.slvrmn.DnfAssistant.Tools.MLog;
-import com.slvrmn.DnfAssistant.Tools.Point;
-import com.slvrmn.DnfAssistant.Tools.Toast;
+import com.slvrmn.DnfAssistant.Model.Point;
+import com.slvrmn.DnfAssistant.Tools.Utility;
 
 public class NullInput implements Input {
 
@@ -23,55 +23,55 @@ public class NullInput implements Input {
     @Override
     public void tap(int x, int y) {
         MLog.error("没有权限执行操作！请检查xposed或者无障碍权限！");
-        Toast.show("没有权限执行操作！请检查xposed或者无障碍权限！");
+        Utility.show("没有权限执行操作！请检查xposed或者无障碍权限！");
     }
 
     @Override
     public void tap(int x, int y, long delay) {
         MLog.error("没有权限执行操作！请检查xposed或者无障碍权限！");
-        Toast.show("没有权限执行操作！请检查xposed或者无障碍权限！");
+        Utility.show("没有权限执行操作！请检查xposed或者无障碍权限！");
     }
 
     @Override
     public void tap(Point p) {
         MLog.error("没有权限执行操作！请检查xposed或者无障碍权限！");
-        Toast.show("没有权限执行操作！请检查xposed或者无障碍权限！");
+        Utility.show("没有权限执行操作！请检查xposed或者无障碍权限！");
     }
 
     @Override
     public void tap(Point p, long delay) {
         MLog.error("没有权限执行操作！请检查xposed或者无障碍权限！");
-        Toast.show("没有权限执行操作！请检查xposed或者无障碍权限！");
+        Utility.show("没有权限执行操作！请检查xposed或者无障碍权限！");
     }
 
     @Override
     public void swipe(int x1, int y1, int x2, int y2, int duration) {
         MLog.error("没有权限执行操作！请检查xposed或者无障碍权限！");
-        Toast.show("没有权限执行操作！请检查xposed或者无障碍权限！");
+        Utility.show("没有权限执行操作！请检查xposed或者无障碍权限！");
     }
 
     @Override
     public void swipe(float x1, float y1, float x2, float y2, float duration) {
         MLog.error("没有权限执行操作！请检查xposed或者无障碍权限！");
-        Toast.show("没有权限执行操作！请检查xposed或者无障碍权限！");
+        Utility.show("没有权限执行操作！请检查xposed或者无障碍权限！");
     }
 
     @Override
     public void input(String str) {
         MLog.error("没有权限执行操作！请检查xposed或者无障碍权限！");
-        Toast.show("没有权限执行操作！请检查xposed或者无障碍权限！");
+        Utility.show("没有权限执行操作！请检查xposed或者无障碍权限！");
     }
 
 
     @Override
     public void pinchOpen(int distance) {
         MLog.error("没有权限执行操作！请检查xposed或者无障碍权限！");
-        Toast.show("没有权限执行操作！请检查xposed或者无障碍权限！");
+        Utility.show("没有权限执行操作！请检查xposed或者无障碍权限！");
     }
 
     @Override
     public void pinchClose(int distance) {
         MLog.error("没有权限执行操作！请检查xposed或者无障碍权限！");
-        Toast.show("没有权限执行操作！请检查xposed或者无障碍权限！");
+        Utility.show("没有权限执行操作！请检查xposed或者无障碍权限！");
     }
 }

@@ -1,6 +1,8 @@
 package com.slvrmn.DnfAssistant;
 
 import android.app.Application;
+import android.content.Intent;
+import android.provider.Settings;
 
 import com.slvrmn.DnfAssistant.Service.Accessibility;
 

@@ -1,7 +1,8 @@
-package com.slvrmn.DnfAssistant.Tools;
+package com.slvrmn.DnfAssistant.Model;
 
 public class Point {
 
+    public static final Point INVALID_POINT = new Point(-1, -1);
     private int x = 0;
     private int y = 0;
 
@@ -30,8 +31,8 @@ public class Point {
         this.y = y;
     }
 
-    public boolean isEmpty() {
-        return x < 0 || y < 0;
+    public boolean isValid() {
+        return !(x < 0 || y < 0);
     }
 
 

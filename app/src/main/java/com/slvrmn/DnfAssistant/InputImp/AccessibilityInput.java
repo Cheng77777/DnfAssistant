@@ -1,4 +1,4 @@
-package com.slvrmn.DnfAssistant.Tools.InputImp;
+package com.slvrmn.DnfAssistant.InputImp;
 
 import android.accessibilityservice.GestureDescription;
 import android.graphics.Path;
@@ -7,8 +7,8 @@ import android.support.annotation.RequiresApi;
 
 import com.slvrmn.DnfAssistant.Service.Accessibility;
 import com.slvrmn.DnfAssistant.Tools.MLog;
-import com.slvrmn.DnfAssistant.Tools.Point;
-import com.slvrmn.DnfAssistant.Tools.Toast;
+import com.slvrmn.DnfAssistant.Model.Point;
+import com.slvrmn.DnfAssistant.Tools.Utility;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class AccessibilityInput implements Input {
@@ -106,13 +106,13 @@ public class AccessibilityInput implements Input {
 
     @Override
     public void pinchOpen(int distance) {
-        Toast.show("目前仅在xposed方式中实现了该方法");
+        Utility.show("目前仅在xposed方式中实现了该方法");
         MLog.error("目前仅在xposed方式中实现了该方法");
     }
 
     @Override
     public void pinchClose(int distance) {
-        Toast.show("目前仅在xposed方式中实现了该方法");
+        Utility.show("目前仅在xposed方式中实现了该方法");
         MLog.error("目前仅在xposed方式中实现了该方法");
     }
 }

@@ -1,12 +1,12 @@
-package com.slvrmn.DnfAssistant.Tools;
+package com.slvrmn.DnfAssistant.Model;
 
 
 import android.os.Build;
 
 import com.slvrmn.DnfAssistant.MainApplication;
-import com.slvrmn.DnfAssistant.Tools.InputImp.AccessibilityInput;
-import com.slvrmn.DnfAssistant.Tools.InputImp.Input;
-import com.slvrmn.DnfAssistant.Tools.InputImp.NullInput;
+import com.slvrmn.DnfAssistant.InputImp.AccessibilityInput;
+import com.slvrmn.DnfAssistant.InputImp.Input;
+import com.slvrmn.DnfAssistant.InputImp.NullInput;
 
 
 /**
