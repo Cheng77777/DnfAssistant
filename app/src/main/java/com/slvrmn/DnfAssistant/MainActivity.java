@@ -7,6 +7,7 @@ import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -104,7 +105,12 @@ public class MainActivity extends AppCompatActivity {
         }
         if(!FloatingViewService.isStarted){
             Toast.show("悬浮窗开启中");
-
+            if (!Settings.canDrawOverlays(this)) {
+                android.widget.Toast.makeText(this, "当前无权限，请授权", android.widget.Toast.LENGTH_SHORT);
+                startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())), 1);
+            } else {
+                startService(new Intent(MainActivity.this, FloatingViewService.class));
+            }
         }else {
             Toast.show("悬浮窗已开启");
         }
