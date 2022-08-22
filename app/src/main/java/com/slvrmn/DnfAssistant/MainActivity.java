@@ -104,11 +104,11 @@ public class MainActivity extends AppCompatActivity {
             ScreenCaptureUtilByMediaPro.init();
         }
         if(!FloatingViewService.isStarted){
-            Toast.show("悬浮窗开启中");
             if (!Settings.canDrawOverlays(this)) {
                 android.widget.Toast.makeText(this, "当前无权限，请授权", android.widget.Toast.LENGTH_SHORT);
                 startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())), 1);
             } else {
+                Toast.show("正在开启悬浮窗");
                 startService(new Intent(MainActivity.this, FloatingViewService.class));
             }
         }else {
