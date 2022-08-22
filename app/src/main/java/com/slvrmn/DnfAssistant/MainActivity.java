@@ -33,7 +33,7 @@ import com.slvrmn.DnfAssistant.Tools.Utility;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 1050;
-    private String TAG = "Service";
+    private final String TAG = "Service";
     private MainApplication mainApplication;
 
 
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+    private final BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
             switch (status) {
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void updateStatus() {
-        TextView asStatus = (TextView) findViewById(R.id.accessibility_status);
+        TextView asStatus = findViewById(R.id.accessibility_status);
 
         asStatus.setText(mainApplication.checkAccessibilityService() ? "Accessibility状态：已加载" : "Accessibility状态：未加载");
     }

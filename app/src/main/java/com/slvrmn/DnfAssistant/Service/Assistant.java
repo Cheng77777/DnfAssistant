@@ -6,7 +6,7 @@ import com.slvrmn.DnfAssistant.Tools.Utility;
 public class Assistant {
 
     private static volatile Assistant instance;
-    private Thread thread;
+    private final Thread thread;
     private Main main;
 
     private Assistant() {
@@ -28,6 +28,7 @@ public class Assistant {
         if(!main.run){
             main.run=true;
             thread.start();
+            Utility.show("开始运行");
         }
         else {
             Utility.show("运行中,请勿重复运行");
@@ -37,6 +38,7 @@ public class Assistant {
 
     public void stop() {
         main.run=false;
+        Utility.show("停止");
     }
 
 

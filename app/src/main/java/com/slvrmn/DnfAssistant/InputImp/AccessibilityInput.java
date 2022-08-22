@@ -87,8 +87,8 @@ public class AccessibilityInput implements Input {
     public void swipe(float x1, float y1, float x2, float y2, float duration) {
         GestureDescription.Builder builder = new GestureDescription.Builder();
         Path path = new Path();
-        path.moveTo((float) x1, (float) y1);
-        path.lineTo((float) x2, (float) y2);
+        path.moveTo(x1, y1);
+        path.lineTo(x2, y2);
         /**
          * 参数path：笔画路径
          * 参数startTime：时间 (以毫秒为单位)，从手势开始到开始笔划的时间，非负数

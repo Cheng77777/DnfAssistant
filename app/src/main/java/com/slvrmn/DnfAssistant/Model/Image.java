@@ -10,6 +10,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.slvrmn.DnfAssistant.R;
+import com.slvrmn.DnfAssistant.Tools.MLog;
+
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -23,11 +26,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import com.slvrmn.DnfAssistant.R;
-import com.slvrmn.DnfAssistant.Tools.MLog;
-
 
 public class Image {
+
 
     /**
      * 保存图片到图库
@@ -75,7 +76,7 @@ public class Image {
      * @param color
      * @return
      */
-    public static LinkedList<Point> findPoint(Bitmap img, Color color) {
+    public static LinkedList<Point> findPoints(Bitmap img, Color color) {
         LinkedList<Point> pl = new LinkedList<Point>();
         int width = img.getWidth();
         int height = img.getHeight();
@@ -87,6 +88,35 @@ public class Image {
             }
         }
         return pl;
+    }
+
+    public static Point findPoint(Bitmap img, Color color) {
+        int width = img.getWidth();
+        int height = img.getHeight();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (Color.isSame(getPoint(img, i, j), color)) {
+                    Point p = new Point();
+                    return p;
+                }
+            }
+        }
+        return Point.INVALID_POINT;
+    }
+
+    public static Point findPoint(Bitmap img, Color color, Rectangle rectangle) {
+        Bitmap bitmap = Image.cropBitmap(img, rectangle);
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (Color.isSame(getPoint(bitmap, i, j), color)) {
+                    Point p = new Point();
+                    return p;
+                }
+            }
+        }
+        return Point.INVALID_POINT;
     }
 
 
@@ -126,7 +156,7 @@ public class Image {
         img.getPixels(colors, 0, img.getWidth(), 0, 0, img.getWidth(), img.getHeight());
         for (int i = 0; i < colors.length; i++) {
             if (Color.isSame(new Color(colors[i]), firstPointColor)) {
-                int y = (int) (i / img.getWidth());
+                int y = i / img.getWidth();
                 int x = i % img.getWidth();
                 for (int k = 1; k < res.length; k++) {
                     res[k] = res[k].replace("\"", "");
@@ -141,7 +171,41 @@ public class Image {
                         break;
                     } else {
                         if (k == (res.length - 1)) {
-                            MLog.info("找点用时：", String.valueOf(System.currentTimeMillis() - now));
+//                            MLog.info("找点用时：", String.valueOf(System.currentTimeMillis() - now));
+                            return new Point(x, y);
+                        }
+                    }
+                }
+            }
+        }
+        return Point.INVALID_POINT;
+    }
+
+    public static Point findPointByMulColor(Bitmap screenshot, String colorRules, Rectangle rectangle) {
+        long now = System.currentTimeMillis();
+        Bitmap img = cropBitmap(screenshot, rectangle);
+        int[] colors = new int[img.getWidth() * img.getHeight()];
+        String[] res = colorRules.split(",");
+        Color firstPointColor = HexColor2DecColor(res[0], true);
+        img.getPixels(colors, 0, img.getWidth(), 0, 0, img.getWidth(), img.getHeight());
+        for (int i = 0; i < colors.length; i++) {
+            if (Color.isSame(new Color(colors[i]), firstPointColor)) {
+                int y = i / img.getWidth();
+                int x = i % img.getWidth();
+                for (int k = 1; k < res.length; k++) {
+                    res[k] = res[k].replace("\"", "");
+                    String[] info = res[k].split("\\|");
+                    int testX = x + Integer.parseInt(info[0]);
+                    int testY = y + Integer.parseInt(info[1]);
+                    if (testX < 0 || testY < 0 || testX > img.getWidth() || testY > img.getHeight()) {
+                        break;
+                    }
+                    Color nextColor = getPoint(img, testX, testY);
+                    if (!Color.isSame(nextColor, HexColor2DecColor(info[2], true))) {
+                        break;
+                    } else {
+                        if (k == (res.length - 1)) {
+//                            MLog.info("找点用时：", String.valueOf(System.currentTimeMillis() - now));
                             return new Point(x, y);
                         }
                     }
@@ -171,7 +235,7 @@ public class Image {
             // 寻找规则中第一个点
             if (Color.isSame(new Color(colors[i]), firstPointColor, offset)) {
                 // 第一个点的y坐标
-                int y = (int) (i / img.getWidth());
+                int y = i / img.getWidth();
                 // 第一个点的x坐标
                 int x = i % img.getWidth();
                 // 检查规则中后续每个点
@@ -196,7 +260,7 @@ public class Image {
                 }
             }
         }
-        MLog.info("找点用时：", String.valueOf(System.currentTimeMillis() - now));
+//        MLog.info("找点用时：", String.valueOf(System.currentTimeMillis() - now));
         return Point.INVALID_POINT;
     }
 
@@ -230,7 +294,7 @@ public class Image {
                             break;
                         } else {
                             if (k == (res.length - 1)) {
-                                MLog.info("找点用时：", String.valueOf(System.currentTimeMillis() - now));
+//                                MLog.info("找点用时：", String.valueOf(System.currentTimeMillis() - now));
                                 return new Point(i, j);
                             }
                         }
@@ -238,7 +302,7 @@ public class Image {
                 }
             }
         }
-        MLog.info("找点用时：", String.valueOf(System.currentTimeMillis() - now));
+//        MLog.info("找点用时：", String.valueOf(System.currentTimeMillis() - now));
         return Point.INVALID_POINT;
     }
 
@@ -350,7 +414,7 @@ public class Image {
     public static void show(Bitmap img, Context context) {
         Dialog dia = new Dialog(context, R.style.edit_AlertDialog_style2);
         dia.setContentView(R.layout.activity_start_dialog);
-        ImageView imageView = (ImageView) dia.findViewById(R.id.start_img);
+        ImageView imageView = dia.findViewById(R.id.start_img);
         imageView.setImageBitmap(img);
         dia.show();
 
@@ -377,6 +441,9 @@ public class Image {
         return Bitmap.createBitmap(bitmap, leftTopX, leftTopY, rightBottomX - leftTopX, rightBottomY - leftTopY, null, false);
     }
 
+    public static Bitmap cropBitmap(Bitmap bitmap, Rectangle rectangle) {
+        return cropBitmap(bitmap, rectangle.x1, rectangle.y1, rectangle.x2, rectangle.y2);
+    }
 
     /**
      * base64 图片
@@ -400,12 +467,12 @@ public class Image {
     /**
      * 模板匹配
      *
-     * @param srcImg      //源图像
+     * @param screenshot      //源图像
      * @param templateImg //模板图像
      * @param threshold   //相识度阈值,阈值调小可以一定程度解决不同手机分辨率的问题
      * @return //如果没有找到则返回(-1,-1)点
      */
-    public static Point matchTemplate(Bitmap srcImg, Bitmap templateImg, double threshold) {
+    public static Point matchTemplate(Bitmap screenshot, Bitmap templateImg, double threshold) {
 
         if (threshold <= 0) {
             threshold = 0.5;
@@ -414,7 +481,38 @@ public class Image {
 
         Mat tpl = new Mat();
         Mat src = new Mat();
-        Utils.bitmapToMat(srcImg, src);
+        Utils.bitmapToMat(screenshot, src);
+        Utils.bitmapToMat(templateImg, tpl);
+
+
+        int height = src.rows() - tpl.rows() + 1;
+        int width = src.cols() - tpl.cols() + 1;
+        Mat result = new Mat(height, width, CvType.CV_32FC1);
+        int method = Imgproc.TM_CCOEFF_NORMED;
+        Imgproc.matchTemplate(src, tpl, result, method);
+        Core.MinMaxLocResult minMaxResult = Core.minMaxLoc(result);
+        org.opencv.core.Point maxloc = minMaxResult.maxLoc;
+        if (minMaxResult.maxVal < threshold) {
+            return Point.INVALID_POINT;
+        }
+        org.opencv.core.Point minloc = minMaxResult.minLoc;
+        org.opencv.core.Point matchloc = null;
+        matchloc = maxloc;
+        return new Point((int) matchloc.x, (int) matchloc.y);
+
+    }
+
+    public static Point matchTemplate(Bitmap screenshot, Bitmap templateImg, double threshold, Rectangle rectangle) {
+
+        if (threshold <= 0) {
+            threshold = 0.5;
+        }
+
+        Bitmap bitmap = cropBitmap(screenshot, rectangle);
+
+        Mat tpl = new Mat();
+        Mat src = new Mat();
+        Utils.bitmapToMat(bitmap, src);
         Utils.bitmapToMat(templateImg, tpl);
 
 

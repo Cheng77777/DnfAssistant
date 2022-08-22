@@ -6,12 +6,14 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import com.slvrmn.DnfAssistant.MainApplication;
+import com.slvrmn.DnfAssistant.Model.Point;
+import com.slvrmn.DnfAssistant.Model.Rectangle;
 
 public class Utility {
     public static boolean debugging = true;
-    private static Context context = MainApplication.getInstance();
+    private static final Context context = MainApplication.getInstance();
 
-    private static java.util.Random r = new java.util.Random();
+    private static final java.util.Random r = new java.util.Random();
 
     public static void show(final String msg) {
         if (debugging) {
@@ -25,7 +27,11 @@ public class Utility {
         }
     }
 
-    public static int randomInt(int start, int end) {
+    public static int RandomInt(int start, int end) {
         return r.nextInt(end - start) + start;
+    }
+
+    public static Point RandomPoint(Rectangle rectangle){
+        return new Point(RandomInt(rectangle.x1, rectangle.x2),RandomInt(rectangle.y1, rectangle.y2));
     }
 }

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 
 import com.slvrmn.DnfAssistant.MainApplication;
 import com.slvrmn.DnfAssistant.Model.Image;
+import com.slvrmn.DnfAssistant.Model.Rectangle;
 
 
 /**
@@ -70,14 +71,17 @@ public class ScreenCaptureUtil {
      *
      * @param leftX
      * @param leftY
-     * @param rigthX
+     * @param rightX
      * @param rightY
      * @return
      */
-    public static Bitmap getScreenCap(int leftX, int leftY, int rigthX, int rightY) {
+    public static Bitmap getScreenCap(int leftX, int leftY, int rightX, int rightY) {
         Bitmap bitmap = getScreenCap();
-        return Image.cropBitmap(bitmap, leftX, leftY, rigthX, rightY);
+        return Image.cropBitmap(bitmap, leftX, leftY, rightX, rightY);
     }
 
 
+    public static Bitmap getScreenCap(Rectangle inDungeonRec) {
+        return  getScreenCap(inDungeonRec.x1,inDungeonRec.y1,inDungeonRec.x2,inDungeonRec.y2);
+    }
 }

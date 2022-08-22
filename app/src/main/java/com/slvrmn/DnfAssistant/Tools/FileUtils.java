@@ -24,7 +24,7 @@ public class FileUtils {
     private static FileUtils instance;
     private static final int SUCCESS = 1;
     private static final int FAILED = 0;
-    private Context context;
+    private final Context context;
     private FileOperateCallback callback;
     private volatile boolean isSuccess;
     private String errorStr;
@@ -41,7 +41,7 @@ public class FileUtils {
         this.context = context;
     }
 
-    private Handler handler = new Handler(Looper.getMainLooper()) {
+    private final Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -76,7 +76,7 @@ public class FileUtils {
 
     private void copyAssetsToDst(Context context, String srcPath, String dstPath) {
         try {
-            String fileNames[] = context.getAssets().list(srcPath);
+            String[] fileNames = context.getAssets().list(srcPath);
             if (fileNames.length > 0) {
                 File file = new File(Environment.getExternalStorageDirectory(), dstPath);
                 if (!file.exists()) file.mkdirs();

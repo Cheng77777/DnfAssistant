@@ -17,7 +17,7 @@ public class MLog {
 
     private static  boolean debug = false;
 
-    private static String Tag = "RobotHelper";
+    private static final String Tag = "RobotHelper";
 
     private static String GetDate() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
