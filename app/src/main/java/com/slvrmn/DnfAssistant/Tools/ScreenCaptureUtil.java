@@ -79,9 +79,4 @@ public class ScreenCaptureUtil {
         Bitmap bitmap = getScreenCap();
         return Image.cropBitmap(bitmap, leftX, leftY, rightX, rightY);
     }
-
-
-    public static Bitmap getScreenCap(Rectangle inDungeonRec) {
-        return  getScreenCap(inDungeonRec.x1,inDungeonRec.y1,inDungeonRec.x2,inDungeonRec.y2);
-    }
 }

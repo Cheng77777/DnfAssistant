@@ -29,7 +29,10 @@ public class Presets {
     public static final Rectangle monsterLevelRec = new Rectangle(354,53,387,88);
 
     public static final String damageNumberRule ="006DFF,-1|3|198EFF,-2|5|089AF7";
+    public static final String inLionRule ="003DFF,-2|0|003DFF,22|2|EF6908,23|-1|D69231,23|-6|BDA24A,23|-34|0028EF,23|-41|084DF7,23|-48|4279FF,16|-41|00005A,27|-40|000010";
     public static final Rectangle damageNumberRec = new Rectangle(894,4,1161,210);
+
+    public static final Rectangle leftBottomRec = new Rectangle(20,648,105,690);
 
     public static final Rectangle attackRec = new Rectangle(1107,623,1168,672);
     public static final Rectangle uniqueSkillRec = new Rectangle(901,355,934,393);
@@ -52,18 +55,17 @@ public class Presets {
             new Rectangle(252,441,287,467)
     };
     public static final Rectangle[] dodgeRecs = {
-            new Rectangle(1006,623,1049,651),
+            new Rectangle(1018,623,1049,651),
             new Rectangle(1015,692,1046  ,706)
     };
+    public static final Color dodgeColor = new Color(197,255,123);
 
     public static Bitmap reward;
-    public static final String rewardRule = "EFEBFF,-9|-1|524994,16|-1|4A41AD,39|-1|4231CE,41|10|E6EBFF,53|15|EFEBFF,66|12|EFEFFF,77|7|4A2DEF,95|7|EFEBFF,116|11|EFEFFF,110|16|EFEBFF,142|12|EFEBFF,135|9|9C61F7,121|18|5239E6,175|-3|5231E6,213|0|3120CE,197|15|633DBD,238|25|4239A4,245|5|EFEFFF,227|-6|6351BD,-1|-15|423DB5";
-    public static final String hellRule = "083DFF,15|-1|EF75EF,22|2|EFEB7B,33|-1|EF86DE,23|-35|1041FF,19|-38|000000,28|-38|000010,-1|2|003DFF,1|1|083DFF,-4|3|083DF7,1|5|083DFF,0|-1|0839E6";
 
     public static void initialize(){
         inDungeon = readImage("InDungeon.jpg");
         beforeLion = readImage("BeforeLion.jpg");
-        lion = readImage("Lion.jpg");
+//        lion = readImage("Lion.jpg");
         monsterLevel = readImage("number 5.jpg");
         reward = readImage("Reward.jpg");
         initialized = true;

@@ -14,7 +14,7 @@ import com.slvrmn.DnfAssistant.Tools.Utility;
 public class Main implements Runnable {
     private static final String SD_PATH = Environment.getExternalStorageDirectory().getPath();
     private static final int checkInterval = 200;
-    private static final int backJumpCD = 4;
+    private static final int backJumpCD = 15;
     private static final int checkBattlingCD = 1;
     private static final int checkCoolDownCD = 1;
     private static final boolean[] skills = {true, true, true, true, true, true, true};
@@ -23,9 +23,9 @@ public class Main implements Runnable {
     private static boolean autoFarm = false;
     private static boolean autoBattle = false;
     private static boolean reward = false;
-    private static int backJump = 9;
-    private static int checkBattling = 9;
-    private static int checkCoolDown = 9;
+    private static int backJump = 99;
+    private static int checkBattling = 99;
+    private static int checkCoolDown = 99;
     private static boolean isBattling = true;
     public volatile boolean run = false;
 
@@ -112,12 +112,26 @@ public class Main implements Runnable {
 //                }
 //                sleep(2000);
 
+//                sleep(2000);
             }
             Utility.show("线程停止运行");
+            InitializeParameters();
         } catch (Exception e) {
             e.printStackTrace();
             MLog.error(e.toString());
         }
+    }
+
+    private void InitializeParameters() {
+        beforeLion = false;
+        inLion = false;
+        autoFarm = false;
+        autoBattle = false;
+        reward = false;
+        backJump = 99;
+        checkBattling = 99;
+        checkCoolDown = 99;
+        isBattling = true;
     }
 
     private void AutoFarm() throws InterruptedException {
@@ -131,9 +145,9 @@ public class Main implements Runnable {
             /** 检测图中 **/
             while (!CheckInDungeon()) {
 
-                System.out.println("检测是否进入地图");
+//                System.out.println("检测是否进入地图");
 
-                sleep(100);
+                sleep(200);
 
                 /** 检测退出 **/
                 if (!run) {
@@ -145,9 +159,6 @@ public class Main implements Runnable {
             while (autoBattle) {
                 /** 自动寻路循环 **/
                 while (!PathFinding()) {
-
-                    System.out.println("自动寻路");
-
                     /** 检测退出 **/
                     if (!run) {
                         Utility.show("线程停止运行");
@@ -162,10 +173,6 @@ public class Main implements Runnable {
                     GetReward();
                 } else {
                     while (!AutoBattle()) {
-
-                        System.out.println("自动战斗");
-
-                        break;
                     }
                 }
 
@@ -186,52 +193,49 @@ public class Main implements Runnable {
     }
 
     private boolean CheckInDungeon() {
-        Bitmap screenshot = ScreenCaptureUtil.getScreenCap(Presets.mapRec);
-        return Image.matchTemplate(screenshot, Presets.inDungeon, 0.5).isValid();
+        Bitmap screenshot = ScreenCaptureUtil.getScreenCap();
+        return Image.matchTemplate(screenshot, Presets.inDungeon, 0.5, Presets.mapRec).isValid();
     }
 
     private boolean PathFinding() throws InterruptedException {
+
+        System.out.println("寻路中");
+
         Bitmap screenshot = ScreenCaptureUtil.getScreenCap();
-        /** 检测狮子头 **/
-        CheckLion(screenshot);
         /** 检测BUFF **/
         CheckBuff(screenshot);
 
-        if(beforeLion){
+        if (beforeLion) {
             /** 进入狮子头房间 **/
-            while (!inLion){
-                int random = Utility.RandomInt(2000,2300);
-                Robot.LongPress(Presets.lionRecs[0],random);
-                sleep(random);
-                random = Utility.RandomInt(1000,1500);
-                Robot.LongPress(Presets.lionRecs[1],random);
-                sleep(random);
-                random = Utility.RandomInt(1000,1500);
-                Robot.LongPress(Presets.lionRecs[0],random);
-                sleep(random);
-                random = Utility.RandomInt(1000,1500);
-                Robot.LongPress(Presets.lionRecs[2],random);
+            while (!inLion) {
+                int random = Utility.RandomInt(2000, 2300);
+                Robot.LongPress(Presets.lionRecs[0], random);
+                sleep(random+100);
+                random = Utility.RandomInt(1000, 1200);
+                Robot.LongPress(Presets.lionRecs[2], random);
                 sleep(3000);
 
                 for (int i = 0; i < 10; i++) {
                     screenshot = ScreenCaptureUtil.getScreenCap();
-                    if(Image.matchTemplate(screenshot,Presets.lion,0.5,Presets.mapRec).isValid()){
+                    if (Image.findPointByMulColor(screenshot, Presets.inLionRule, Presets.mapRec).isValid()) {
+//                        Image.matchTemplate(screenshot, Presets.lion, 0.9, Presets.mapRec).isValid()
                         inLion = true;
                         beforeLion = false;
-                        Robot.swipe(Presets.dodgeRecs[0],Presets.dodgeRecs[1],Utility.RandomInt(300,400));
-                        Robot.Press(Presets.uniqueSkillRec,Utility.RandomInt(3,4));
+                        Robot.swipe(Presets.dodgeRecs[0], Presets.dodgeRecs[1], Utility.RandomInt(50, 100));
+                        sleep(150);
+                        Robot.Press(Presets.uniqueSkillRec, Utility.RandomInt(3, 4));
                         break;
                     }
                 }
-                if(inLion){
+                if (inLion) {
                     break;
                 }
-                random = Utility.RandomInt(2000,2500);
-                Robot.LongPress(Presets.attackRec,random);
+                random = Utility.RandomInt(2000, 2500);
+                Robot.LongPress(Presets.attackRec, random);
                 sleep(random);
                 for (int i = 0; i < 6; i++) {
                     screenshot = ScreenCaptureUtil.getScreenCap();
-                    if(isBattling(screenshot)){
+                    if (isBattling(screenshot)) {
                         Robot.Press(Presets.backJumpRec);
                         return true;
                     }
@@ -245,23 +249,35 @@ public class Main implements Runnable {
                     return false;
                 }
             }
-        }
-        else {
+        } else {
             /** 长按攻击 **/
-            long pressTime = Utility.RandomInt(2500, 3000);
-            Robot.Press(Presets.attackRec, 5);
+            long pressTime = Utility.RandomInt(5000, 6000);
+            Robot.Press(Presets.attackRec, (int) pressTime / 1500);
+            sleep((int) pressTime / 1500 * 60);
             Robot.LongPress(Presets.attackRec, pressTime);
+            Bitmap oldScreenshot;
             /** 检测战斗 **/
-            for (int i = 1; i < pressTime / checkInterval; i++) {
+            for (int i = (int) pressTime / checkInterval; i > 0; i--) {
+                oldScreenshot = screenshot;
                 screenshot = ScreenCaptureUtil.getScreenCap();
-
-                /** 检测狮子头 **/
-                CheckLion(screenshot);
+                /** 检测闪避 **/
+                if (CheckDodge(screenshot)) {
+                    return false;
+                }
 
                 /** 检测战斗 **/
                 if (isBattling(screenshot)) {
                     isBattling = true;
                     return true;
+                }
+
+                if (i <= (int) pressTime / checkInterval / 2) {
+                    if (Image.matchTemplate(
+                            Image.cropBitmap(oldScreenshot, Presets.leftBottomRec),
+                            Image.cropBitmap(screenshot, Presets.leftBottomRec),
+                            0.99).isValid()) {
+                        return false;
+                    }
                 }
 
                 /** 检测翻牌 **/
@@ -275,8 +291,16 @@ public class Main implements Runnable {
         return false;
     }
 
+    private boolean CheckDodge(Bitmap screenshot) throws InterruptedException {
+        if (Image.findPoint(screenshot, Presets.dodgeColor, Presets.dodgeRecs[0]).isValid()) {
+            Robot.swipe(Presets.dodgeRecs[0], Presets.dodgeRecs[1], Utility.RandomInt(50, 100));
+            return true;
+        }
+        return false;
+    }
+
     private boolean CheckReward(Bitmap screenshot) {
-        if(Image.matchTemplate(screenshot,Presets.reward,0.9).isValid()){
+        if (Image.matchTemplate(screenshot, Presets.reward, 0.9).isValid()) {
             return true;
         }
         return false;
@@ -284,35 +308,38 @@ public class Main implements Runnable {
 
     private void GetReward() throws InterruptedException {
         autoBattle = false;
-        int random = Utility.RandomInt(5,10);
-        Robot.Press(Presets.attackRec,random);
-        sleep(random*400);
-        random = Utility.RandomInt(500,1000);
-        Robot.LongPress(Presets.lionRecs[2], random);
-        sleep(random);
-        random = Utility.RandomInt(500,1000);
-        Robot.LongPress(Presets.lionRecs[1], random);
-        sleep(random);
-        random = Utility.RandomInt(500,1000);
-        Robot.LongPress(Presets.lionRecs[0], random);
-        sleep(random);
-        random = Utility.RandomInt(2500,3000);
-        Robot.LongPress(Presets.attackRec, random);
-        sleep(random);
+        sleep(2000);
+        int random = Utility.RandomInt(5, 10);
+        Robot.Press(Presets.skillRecs[4], random);
+        sleep(random * 400);
 
+//        random = Utility.RandomInt(200, 300);
+//        Robot.LongPress(Presets.lionRecs[2], random);
+//        sleep(random);
+//        random = Utility.RandomInt(200, 300);
+//        Robot.LongPress(Presets.lionRecs[1], random);
+//        sleep(random);
+//        random = Utility.RandomInt(2500, 3000);
+//        Robot.LongPress(Presets.attackRec, random);
+//        sleep(random);
 //        boolean next = false;
 //        while (!next){
 //
 //        }
+
+        InitializeParameters();
     }
 
     private boolean AutoBattle() throws InterruptedException {
+
+        System.out.println("自动战斗中");
+
         Bitmap screenshot = ScreenCaptureUtil.getScreenCap();
         /** 检测狮子头 **/
         CheckLion(screenshot);
         /** 长按攻击 **/
-        long pressTime = Utility.RandomInt(300,500);
-        Robot.Press(Presets.attackRec, (int)pressTime/50);
+        long pressTime = Utility.RandomInt(300, 500);
+        Robot.Press(Presets.attackRec, (int) pressTime / 50);
         /** 检测战斗 **/
         for (int i = 0; i < pressTime / checkInterval; i++) {
             screenshot = ScreenCaptureUtil.getScreenCap();
@@ -330,15 +357,15 @@ public class Main implements Runnable {
             }
             sleep(checkInterval);
         }
-
         return false;
     }
 
     private void CheckSkill(Bitmap screenshot) throws InterruptedException {
         /** 后跳 **/
         if (backJump >= backJumpCD) {
-            Robot.Press(Presets.backJumpRec,2);
+            Robot.Press(Presets.backJumpRec, 1);
             backJump = 0;
+            sleep(300);
         }
         /** 刷新技能冷却 **/
         if (checkCoolDown >= checkCoolDownCD) {
@@ -366,7 +393,7 @@ public class Main implements Runnable {
                 sleep(500);
                 skills[i] = false;
             }
-            if (count >= 2) {
+            if (count >= 1) {
                 return;
             }
         }
@@ -384,7 +411,7 @@ public class Main implements Runnable {
 
     private boolean isBattling(Bitmap screenshot) {
 
-        System.out.println("检测是否战斗中");
+//        System.out.println("检测是否战斗中");
 
         boolean isBattling = true;
         isBattling = (isBattling && Image.matchTemplate(screenshot, Presets.monsterLevel, 0.5, Presets.monsterLevelRec).isValid());
@@ -394,26 +421,26 @@ public class Main implements Runnable {
 
     private boolean isEndBattling(Bitmap screenshot) {
 
-        System.out.println("检测是否结束战斗");
+//        System.out.println("检测是否结束战斗");
 
         return !Image.matchTemplate(screenshot, Presets.monsterLevel, 0.5, Presets.monsterLevelRec).isValid();
     }
 
     private void CheckLion(Bitmap screenshot) {
-        if (beforeLion || !inLion) {
+        if (beforeLion || inLion) {
             return;
         }
 
-        System.out.println("检测狮子头");
-        if (Image.matchTemplate(screenshot, Presets.beforeLion, 0.9,Presets.mapRec).isValid()) {
+//        System.out.println("检测狮子头");
+        if (Image.matchTemplate(screenshot, Presets.beforeLion, 0.8, Presets.mapRec).isValid()) {
             beforeLion = true;
-            Utility.show("狮子头前");
+            System.out.println("狮子头前");
         }
     }
 
     private void CheckBuff(Bitmap screenshot) throws InterruptedException {
 
-        System.out.println("检测BUFF");
+//        System.out.println("检测BUFF");
 
         if (Image.findPoint(screenshot, Presets.buffColor, Presets.buffRec).isValid()) {
             Robot.Press(Presets.buffRec, 2);
