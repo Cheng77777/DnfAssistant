@@ -34,4 +34,8 @@ public class Utility {
     public static Point RandomPoint(Rectangle rectangle){
         return new Point(RandomInt(rectangle.x1, rectangle.x2),RandomInt(rectangle.y1, rectangle.y2));
     }
+    public static Point RandomPoint(Rectangle rectangle,Point p){
+        return new Point(RandomInt((rectangle.x1+p.getX()*2)/3, (rectangle.x2+p.getX()*2)/3),
+                RandomInt((rectangle.y1+p.getY()*2)/3, (rectangle.y2+p.getY()*2)/3));
+    }
 }

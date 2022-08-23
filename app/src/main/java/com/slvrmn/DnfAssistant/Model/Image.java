@@ -118,6 +118,22 @@ public class Image {
         }
         return Point.INVALID_POINT;
     }
+    public static Point findPoint(Bitmap img, Color[] colors, Rectangle rectangle) {
+        Bitmap bitmap = Image.cropBitmap(img, rectangle);
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        for (Color color : colors){
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    if (Color.isSame(getPoint(bitmap, i, j), color)) {
+                        Point p = new Point();
+                        return p;
+                    }
+                }
+            }
+        }
+        return Point.INVALID_POINT;
+    }
 
 
     /**

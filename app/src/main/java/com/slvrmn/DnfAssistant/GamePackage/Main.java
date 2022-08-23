@@ -59,18 +59,16 @@ public class Main implements Runnable {
                 //TODO
                 /** 换号 **/
                 //TODO
-//                GetReward();
 //                sleep(2000);
             }
             Utility.show("线程停止运行");
-            InitializeParameters();
         } catch (Exception e) {
             e.printStackTrace();
             MLog.error(e.toString());
         }
     }
 
-    private void InitializeParameters() {
+    private void InitializeAutoFarmParameters() {
         beforeLion = false;
         inLion = false;
         autoFarm = false;
@@ -108,11 +106,11 @@ public class Main implements Runnable {
                         break;
                     }
                 }
-                if (reward) {
-                    GetReward();
-                } else {
+                if (!reward) {
                     while (!AutoBattle()) {
                     }
+                } else {
+                    GetReward();
                 }
                 /** 检测退出 **/
                 if (!run) {
@@ -121,6 +119,8 @@ public class Main implements Runnable {
                 }
             }
         }
+
+        InitializeAutoFarmParameters();
         /** 检测退出 **/
         if (!run) {
             Utility.show("线程停止运行");
@@ -129,12 +129,14 @@ public class Main implements Runnable {
     }
 
     private boolean CheckInDungeon() {
-        Bitmap screenshot = ScreenCaptureUtil.getScreenCap();
+        Bitmap screenshot = GetScreenshot();
         return Image.matchTemplate(screenshot, Presets.inDungeon, 0.5, Presets.mapRec).isValid();
     }
 
     private boolean PathFinding() throws InterruptedException {
-        Bitmap screenshot = ScreenCaptureUtil.getScreenCap();
+        Bitmap screenshot = GetScreenshot();
+        /** 检测狮子头 **/
+        CheckLion(screenshot);
         /** 检测BUFF **/
         CheckBuff(screenshot);
 
@@ -142,36 +144,46 @@ public class Main implements Runnable {
             /** 进入狮子头房间 **/
             while (!inLion) {
                 int random = Utility.RandomInt(2000, 2300);
-                Robot.LongPress(Presets.lionRecs[0], random);
-                sleep(random+100);
+                Robot.LongPress(Presets.moveRecs[0], random);
+                sleep(random + 100);
                 random = Utility.RandomInt(1000, 1200);
-                Robot.LongPress(Presets.lionRecs[2], random);
+                Robot.LongPress(Presets.moveRecs[2], random);
                 sleep(3000);
 
                 for (int i = 0; i < 10; i++) {
-                    screenshot = ScreenCaptureUtil.getScreenCap();
+                    screenshot = GetScreenshot();
                     if (Image.findPointByMulColor(screenshot, Presets.inLionRule, Presets.mapRec).isValid()) {
-//                        Image.matchTemplate(screenshot, Presets.lion, 0.9, Presets.mapRec).isValid()
                         inLion = true;
                         beforeLion = false;
                         Dodge();
                         Robot.Press(Presets.uniqueSkillRec, Utility.RandomInt(3, 4));
                         break;
                     }
+                    sleep(100);
+                    /** 检测退出 **/
+                    if (!run) {
+                        Utility.show("线程停止运行");
+                        return false;
+                    }
                 }
                 if (inLion) {
                     break;
                 }
+                BackJump();
                 random = Utility.RandomInt(2000, 2500);
-                PressLongAttack(random,random);
+                PressLongAttack(random, random);
                 sleep(random);
                 for (int i = 0; i < 6; i++) {
-                    screenshot = ScreenCaptureUtil.getScreenCap();
+                    screenshot = GetScreenshot();
                     if (isBattling(screenshot)) {
-                        BackJump();
                         return true;
                     }
                     sleep(300);
+                    /** 检测退出 **/
+                    if (!run) {
+                        Utility.show("线程停止运行");
+                        return false;
+                    }
                 }
 
                 /** 检测退出 **/
@@ -182,30 +194,30 @@ public class Main implements Runnable {
             }
         } else {
             /** 长按攻击 **/
-            int pressTime = Utility.RandomInt(5000, 6000);
-            PressMultipleAttacks(pressTime / 1500);
-            PressLongAttack(pressTime,0);
+            int pressTime = Utility.RandomInt(8000, 9000);
+            PressLongAttack(pressTime, 1000);
             Bitmap oldScreenshot;
             /** 检测战斗 **/
-            for (int i = pressTime / checkInterval; i > 0; i--) {
+            int steps = (pressTime - 2000) / checkInterval;
+            for (int i = steps; i > 0; i--) {
                 oldScreenshot = screenshot;
-                screenshot = ScreenCaptureUtil.getScreenCap();
-                /** 检测闪避 **/
-                if (CheckDodge(screenshot)) {
-                    return false;
-                }
-
+                screenshot = GetScreenshot();
                 /** 检测战斗 **/
                 if (isBattling(screenshot)) {
                     isBattling = true;
                     return true;
                 }
-
-                if (i <= (int) pressTime / checkInterval / 2) {
+                /** 检测闪避 **/
+                if (i <= steps / 2) {
+                    if (CheckDodge(screenshot)) {
+                        return false;
+                    }
+                }
+                if (i <= steps * 2 / 3) {
                     if (Image.matchTemplate(
                             Image.cropBitmap(oldScreenshot, Presets.leftBottomRec),
                             Image.cropBitmap(screenshot, Presets.leftBottomRec),
-                            0.99).isValid()) {
+                            0.9).isValid()) {
                         MoveAround();
                         return false;
                     }
@@ -223,15 +235,15 @@ public class Main implements Runnable {
     }
 
     private boolean AutoBattle() throws InterruptedException {
-        Bitmap screenshot = ScreenCaptureUtil.getScreenCap();
+        Bitmap screenshot = GetScreenshot();
         /** 检测狮子头 **/
         CheckLion(screenshot);
         /** 长按攻击 **/
-        long pressTime = Utility.RandomInt(300, 500);
+        int pressTime = Utility.RandomInt(800, 1000);
         PressMultipleAttacks(pressTime);
         /** 检测战斗 **/
         for (int i = 0; i < pressTime / checkInterval; i++) {
-            screenshot = ScreenCaptureUtil.getScreenCap();
+            screenshot = GetScreenshot();
 
             /** 检测狮子头 **/
             CheckLion(screenshot);
@@ -241,8 +253,18 @@ public class Main implements Runnable {
 
             /** 检测结束战斗 **/
             if (!isBattling(screenshot)) {
-                backJump = 9;
-                return true;
+                /** 长按攻击 **/
+                pressTime = Utility.RandomInt(500, 700);
+                PressMultipleAttacks(pressTime);
+                if (isBattling(GetScreenshot())) {
+                    continue;
+                }
+                pressTime = Utility.RandomInt(1000, 1500);
+                PressLongAttack(pressTime, pressTime);
+                if (!isBattling(GetScreenshot())) {
+                    backJump = 99;
+                    return true;
+                }
             }
             sleep(checkInterval);
         }
@@ -251,17 +273,15 @@ public class Main implements Runnable {
 
     private void GetReward() throws InterruptedException {
         autoBattle = false;
-        Bitmap screenshot;
         Point p;
 
         sleep(1000);
-        int random = Utility.RandomInt(5, 10);
+        int random = Utility.RandomInt(10, 15);
         Robot.Press(Presets.skillRecs[4], random);
         sleep(3000);
 
-        do{
-            screenshot = ScreenCaptureUtil.getScreenCap();
-            p = Image.matchTemplate(screenshot,Presets.nextButton,0.9,Presets.nextMenuRec);
+        do {
+            p = Image.matchTemplate(GetScreenshot(), Presets.nextButton, 0.9, Presets.nextMenuRec);
             sleep(1000);
 
             /** 检测退出 **/
@@ -269,61 +289,71 @@ public class Main implements Runnable {
                 Utility.show("线程停止运行");
                 return;
             }
-        }while (!p.isValid());
-        p.setX(p.getX()+Presets.nextMenuRec.x1);
-        p.setY(p.getY()+Presets.nextMenuRec.y1);
+        } while (!p.isValid());
+        p.setX(p.getX() + Presets.nextMenuRec.x1);
+        p.setY(p.getY() + Presets.nextMenuRec.y1);
 
-        Rectangle next = new Rectangle(p.getX(),p.getY(), p.getX()+50, p.getY()+10);
+        Rectangle next = new Rectangle(p.getX(), p.getY(), p.getX() + 50, p.getY() + 10);
         /** 拾取物品 **/
         MoveAround();
         random = Utility.RandomInt(3500, 4000);
-        PressLongAttack(random,random);
+        PressLongAttack(random, random);
 
         /** 检测背包 **/
-        screenshot = ScreenCaptureUtil.getScreenCap();
-        CheckInventory(screenshot);
+        CheckInventory(GetScreenshot());
 
         /** 进入下一次副本 **/
         CheckNextDungeon(next);
 
-        InitializeParameters();
+        InitializeAutoFarmParameters();
     }
 
     private boolean CheckReward(Bitmap screenshot) {
-        if (Image.matchTemplate(screenshot, Presets.reward, 0.9).isValid()) {
-            return true;
-        }
-        return false;
+        return Image.matchTemplate(screenshot, Presets.reward, 0.9).isValid();
     }
 
     private void CheckInventory(Bitmap screenshot) {
-        if (Image.findPointByMulColor(screenshot,Presets.inventoryFullRules,Presets.inventoryRec).isValid()){
-            //TODO
+        if (Image.findPointByMulColor(screenshot, Presets.inventoryFullRules, Presets.inventoryRec).isValid()) {
+            Robot.Press(Presets.inventoryRec);
+            sleep(1500);
+            BreakItems();
+            SellItems();
+            PressBack();
+        } else {
+            System.out.println("False");
         }
     }
 
     private void CheckNextDungeon(Rectangle next) {
-        //TODO 检测疲劳值
+        if (CheckEnergyEmpty(GetScreenshot())) {
+            autoFarm = false;
+            return;
+        } else {
+            Point p;
+            do {
+                Robot.Press(next);
+                sleep(1000);
+                p = Image.matchTemplate(GetScreenshot(), Presets.confirmButton, 0.9, Presets.confirmMenuRec);
 
-        Point p;
-        Bitmap screenshot;
-        do{
-            Robot.Press(next);
-            sleep(1000);
-            screenshot = ScreenCaptureUtil.getScreenCap();
-            p = Image.matchTemplate(screenshot,Presets.confirmButton,0.9,Presets.confirmMenuRec);
+                if (p.isValid()) {
+                    p.setX(p.getX() + Presets.confirmMenuRec.x1);
+                    p.setY(p.getY() + Presets.confirmMenuRec.y1);
+                    Robot.Press(new Rectangle(p.getX(), p.getY(), p.getX() + 40, p.getY() + 20));
+                }
+                /** 检测退出 **/
+                if (!run) {
+                    Utility.show("线程停止运行");
+                    return;
+                }
+            } while (!p.isValid());
+        }
+    }
 
-            if(p.isValid()){
-                p.setX(p.getX()+Presets.confirmMenuRec.x1);
-                p.setY(p.getY()+Presets.confirmMenuRec.y1);
-                Robot.Press(new Rectangle(p.getX(),p.getY(), p.getX()+40, p.getY()+20));
-            }
-            /** 检测退出 **/
-            if (!run) {
-                Utility.show("线程停止运行");
-                return;
-            }
-        }while (!p.isValid());
+    private boolean CheckEnergyEmpty(Bitmap screenshot) {
+        if (Image.findPointByMulColor(screenshot, Presets.energyEmptyRules, Presets.energyRec).isValid()) {
+            return true;
+        }
+        return false;
     }
 
     private void CheckSkill(Bitmap screenshot) {
@@ -372,7 +402,7 @@ public class Main implements Runnable {
     }
 
     private boolean CheckSkillCoolDown(Bitmap screenshot, int i) {
-        return Image.findPoint(screenshot, Presets.skillColor, Presets.skillRecs[i]).isValid();
+        return Image.findPoint(screenshot, Presets.skillColors, Presets.skillRecs[i]).isValid();
     }
 
     private boolean isBattling(Bitmap screenshot) {
@@ -394,7 +424,9 @@ public class Main implements Runnable {
 
     private void CheckBuff(Bitmap screenshot) throws InterruptedException {
         if (Image.findPoint(screenshot, Presets.buffColor, Presets.buffRec).isValid()) {
+            sleep(200);
             Robot.Press(Presets.buffRec, 2);
+            sleep(1000);
         }
     }
 
@@ -407,7 +439,7 @@ public class Main implements Runnable {
     }
 
     private void Dodge() {
-        Robot.swipe(Presets.dodgeRecs[0], Presets.dodgeRecs[1], Utility.RandomInt(100, 150));
+        Robot.swipe(Presets.dodgeRecs[0], Presets.dodgeRecs[1], Utility.RandomInt(120, 130));
         sleep(800);
     }
 
@@ -418,15 +450,46 @@ public class Main implements Runnable {
     private void MoveAround() {
         int random;
         random = Utility.RandomInt(100, 200);
-        Robot.LongPress(Presets.lionRecs[2], random);
+        Robot.LongPress(Presets.moveRecs[2], random);
         sleep(random);
         random = Utility.RandomInt(100, 200);
-        Robot.LongPress(Presets.lionRecs[1], random);
+        Robot.LongPress(Presets.moveRecs[1], random);
         sleep(random);
         random = Utility.RandomInt(100, 200);
-        Robot.LongPress(Presets.lionRecs[0], random);
+        Robot.LongPress(Presets.moveRecs[0], random);
         sleep(random);
 
+    }
+
+    private void SellItems() {
+        Robot.Press(Presets.sellRec);
+        sleep(2000);
+        Robot.Press(Presets.breakAndSellConfirmRec);
+        sleep(2000);
+        Robot.Press(Presets.breakAndSellSecondConfirmRec);
+        sleep(4000);
+        Robot.Press(Presets.breakAndSellCloseRec);
+        sleep(2000);
+        Robot.Press(Presets.breakAndSellCloseRec);
+        sleep(2000);
+    }
+
+    private void BreakItems() {
+        Robot.Press(Presets.breakRec);
+        sleep(2000);
+        Robot.Press(Presets.breakAndSellConfirmRec);
+        sleep(2000);
+        Robot.Press(Presets.breakAndSellSecondConfirmRec);
+        sleep(4000);
+        Robot.Press(Presets.breakAndSellCloseRec);
+        sleep(2000);
+        Robot.Press(Presets.breakAndSellCloseRec);
+        sleep(2000);
+    }
+
+    private void PressBack() {
+        Robot.Press(Presets.backRec);
+        sleep(1000);
     }
 
     private void PressLongAttack(int pressTime, int sleepTime) {
@@ -436,5 +499,9 @@ public class Main implements Runnable {
 
     private void PressMultipleAttacks(long pressTime) throws InterruptedException {
         Robot.Press(Presets.attackRec, (int) pressTime / 100);
+    }
+
+    private Bitmap GetScreenshot() {
+        return ScreenCaptureUtil.getScreenCap();
     }
 }

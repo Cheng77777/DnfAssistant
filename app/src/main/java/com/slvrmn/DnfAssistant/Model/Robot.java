@@ -5,10 +5,10 @@ import static java.lang.Thread.sleep;
 
 import android.os.Build;
 
-import com.slvrmn.DnfAssistant.MainApplication;
 import com.slvrmn.DnfAssistant.InputImp.AccessibilityInput;
 import com.slvrmn.DnfAssistant.InputImp.Input;
 import com.slvrmn.DnfAssistant.InputImp.NullInput;
+import com.slvrmn.DnfAssistant.MainApplication;
 import com.slvrmn.DnfAssistant.Tools.Utility;
 
 
@@ -21,9 +21,8 @@ import com.slvrmn.DnfAssistant.Tools.Utility;
 public class Robot {
 
 
-    private static int execType;
-
     public static final int ExecTypeAccessibillty = 18;
+    private static int execType;
 
     private static Input getInput() {
         MainApplication mainApplication = MainApplication.getInstance();
@@ -92,11 +91,12 @@ public class Robot {
     public static void swipe(int x1, int y1, int x2, int y2, int duration) {
         getInput().swipe(x1, y1, x2, y2, duration);
     }
-    public static void swipe(Rectangle rectangle1,Rectangle rectangle2, int duration) {
-        int x1 = Utility.RandomInt(rectangle1.x1,rectangle1.x2);
-        int y1 = Utility.RandomInt(rectangle1.y1,rectangle1.y2);
-        int x2 = Utility.RandomInt(rectangle2.x1,rectangle2.x2);
-        int y2 = Utility.RandomInt(rectangle2.y1,rectangle2.y2);
+
+    public static void swipe(Rectangle rectangle1, Rectangle rectangle2, int duration) {
+        int x1 = Utility.RandomInt(rectangle1.x1, rectangle1.x2);
+        int y1 = Utility.RandomInt(rectangle1.y1, rectangle1.y2);
+        int x2 = Utility.RandomInt(rectangle2.x1, rectangle2.x2);
+        int y2 = Utility.RandomInt(rectangle2.y1, rectangle2.y2);
         getInput().swipe(x1, y1, x2, y2, duration);
     }
 
@@ -134,18 +134,19 @@ public class Robot {
         getInput().pinchClose(distance);
     }
 
-    public static void Press(Rectangle rec){
+    public static void Press(Rectangle rec) {
         getInput().tap(Utility.RandomPoint(rec), Utility.RandomInt(10, 20));
     }
 
     public static void Press(Rectangle rec, int multiple) throws InterruptedException {
+        Point p = Utility.RandomPoint(rec);
         for (int i = 0; i < multiple; i++) {
-            getInput().tap(Utility.RandomPoint(rec), Utility.RandomInt(100, 150));
+            getInput().tap(Utility.RandomPoint(rec, p), Utility.RandomInt(100, 150));
             sleep(Utility.RandomInt(100, 150));
         }
     }
 
-    public static void LongPress(Rectangle rec, long time){
+    public static void LongPress(Rectangle rec, long time) {
         getInput().tap(Utility.RandomPoint(rec), time);
     }
 }
