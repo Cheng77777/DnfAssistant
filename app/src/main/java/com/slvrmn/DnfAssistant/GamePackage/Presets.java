@@ -3,6 +3,7 @@ package com.slvrmn.DnfAssistant.GamePackage;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 
 import com.slvrmn.DnfAssistant.MainApplication;
 import com.slvrmn.DnfAssistant.Model.Color;
@@ -20,7 +21,7 @@ public class Presets {
 
     public static boolean initialized;
 
-    public static Bitmap inDungeon,beforeLion,lion,monsterLevel;
+    public static Bitmap inDungeon,beforeLion,monsterLevel,reward,nextButton,confirmButton;
     public static final Rectangle mapRec = new Rectangle(1136,27,1270,140);
 
     public static final Rectangle buffRec = new Rectangle(1132,355,1174,393);
@@ -60,14 +61,19 @@ public class Presets {
     };
     public static final Color dodgeColor = new Color(197,255,123);
 
-    public static Bitmap reward;
+    public static final Rectangle nextMenuRec = new Rectangle(999,20,1261,374);
+    public static final Rectangle confirmMenuRec = new Rectangle(638,400,830,489);
+
+    public static final Rectangle inventoryRec = new Rectangle(813,0,880,81);
+    public static final String inventoryFullRules = "A4EBFF,10|1|6BAEDE,15|-12|212021,-1|-12|DEEBFF,-11|-13|002063,-14|-25|4A5D84,-5|-25|080C08,3|-23|080808,7|-21|080C10,5|-29|0000FF,7|-27|000084,9|-26|101410,18|-22|0000FF,21|-22|00003A,25|-26|0000EF,25|-30|0000EF,25|-32|0000B5,25|-23|0000EF,25|-20|0000EF,26|-26|0000FF,20|-22|08044A,16|-22|100C19,7|-21|080C10,4|-21|081010,2|-21|101010,1|-21|080808,-1|-21|191C21,1|-21|080808,2|-21|101010,4|-21|081010,6|-21|0000EF,8|-21|000810,10|-21|080C10,5|-29|0000FF,5|-31|0000FF,6|-32|00009C";
 
     public static void initialize(){
         inDungeon = readImage("InDungeon.jpg");
         beforeLion = readImage("BeforeLion.jpg");
-//        lion = readImage("Lion.jpg");
         monsterLevel = readImage("number 5.jpg");
         reward = readImage("Reward.jpg");
+        nextButton = readImage("NextButton.png");
+        confirmButton = readImage("ConfirmButton.png");
         initialized = true;
     }
 
