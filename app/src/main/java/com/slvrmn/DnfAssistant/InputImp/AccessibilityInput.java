@@ -5,9 +5,9 @@ import android.graphics.Path;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
+import com.slvrmn.DnfAssistant.Model.Point;
 import com.slvrmn.DnfAssistant.Service.Accessibility;
 import com.slvrmn.DnfAssistant.Tools.MLog;
-import com.slvrmn.DnfAssistant.Model.Point;
 import com.slvrmn.DnfAssistant.Tools.Utility;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -87,7 +87,11 @@ public class AccessibilityInput implements Input {
     public void swipe(float x1, float y1, float x2, float y2, float duration) {
         GestureDescription.Builder builder = new GestureDescription.Builder();
         Path path = new Path();
+        float xLen, yLen, scale;
+        xLen = x2 - x1;
+        yLen = y2 - y1;
         path.moveTo(x1, y1);
+        path.lineTo(x1 + 0.2f * xLen, y1 + 0.2f * yLen);
         path.lineTo(x2, y2);
         /**
          * 参数path：笔画路径

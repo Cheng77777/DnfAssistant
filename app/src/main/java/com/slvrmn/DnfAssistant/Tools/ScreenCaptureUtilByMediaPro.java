@@ -53,7 +53,7 @@ public class ScreenCaptureUtilByMediaPro {
         mImageReaderVertical = ImageReader.newInstance(MainApplication.screenHeight, MainApplication.screenWidth,
                 PixelFormat.RGBA_8888, 2);
         sMediaProjection.createVirtualDisplay(
-                "ScreenShot",
+                "Screenshot",
                 MainApplication.screenHeight,
                 MainApplication.screenWidth,
                 MainApplication.dpi,

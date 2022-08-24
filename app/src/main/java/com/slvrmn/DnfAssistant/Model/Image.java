@@ -118,13 +118,14 @@ public class Image {
         }
         return Point.INVALID_POINT;
     }
+
     public static Point findPoint(Bitmap img, Color[] colors, Rectangle rectangle) {
         Bitmap bitmap = Image.cropBitmap(img, rectangle);
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-        for (Color color : colors){
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                for (Color color : colors) {
                     if (Color.isSame(getPoint(bitmap, i, j), color)) {
                         Point p = new Point();
                         return p;
@@ -223,6 +224,43 @@ public class Image {
                         if (k == (res.length - 1)) {
 //                            MLog.info("找点用时：", String.valueOf(System.currentTimeMillis() - now));
                             return new Point(x, y);
+                        }
+                    }
+                }
+            }
+        }
+        return Point.INVALID_POINT;
+    }
+
+    public static Point findPointByMulColor(Bitmap screenshot, String[] colorRules, Rectangle rectangle) {
+        long now = System.currentTimeMillis();
+        Bitmap img = cropBitmap(screenshot, rectangle);
+        int[] colors = new int[img.getWidth() * img.getHeight()];
+        for (String s :
+                colorRules) {
+            String[] res = s.split(",");
+            Color firstPointColor = HexColor2DecColor(res[0], true);
+            img.getPixels(colors, 0, img.getWidth(), 0, 0, img.getWidth(), img.getHeight());
+            for (int i = 0; i < colors.length; i++) {
+                if (Color.isSame(new Color(colors[i]), firstPointColor)) {
+                    int y = i / img.getWidth();
+                    int x = i % img.getWidth();
+                    for (int k = 1; k < res.length; k++) {
+                        res[k] = res[k].replace("\"", "");
+                        String[] info = res[k].split("\\|");
+                        int testX = x + Integer.parseInt(info[0]);
+                        int testY = y + Integer.parseInt(info[1]);
+                        if (testX < 0 || testY < 0 || testX > img.getWidth() || testY > img.getHeight()) {
+                            break;
+                        }
+                        Color nextColor = getPoint(img, testX, testY);
+                        if (!Color.isSame(nextColor, HexColor2DecColor(info[2], true))) {
+                            break;
+                        } else {
+                            if (k == (res.length - 1)) {
+//                            MLog.info("找点用时：", String.valueOf(System.currentTimeMillis() - now));
+                                return new Point(x, y);
+                            }
                         }
                     }
                 }
@@ -483,7 +521,7 @@ public class Image {
     /**
      * 模板匹配
      *
-     * @param screenshot      //源图像
+     * @param screenshot  //源图像
      * @param templateImg //模板图像
      * @param threshold   //相识度阈值,阈值调小可以一定程度解决不同手机分辨率的问题
      * @return //如果没有找到则返回(-1,-1)点

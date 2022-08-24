@@ -149,4 +149,13 @@ public class Robot {
     public static void LongPress(Rectangle rec, long time) {
         getInput().tap(Utility.RandomPoint(rec), time);
     }
+
+    public static void LongPress(Rectangle recOut, Rectangle recIn, long time) {
+        Point p;
+        do {
+            p = Utility.RandomPoint(recOut);
+        }
+        while (recIn.Contains(p));
+        getInput().tap(p, time);
+    }
 }

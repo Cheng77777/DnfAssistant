@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.slvrmn.DnfAssistant.GamePackage.Assistant;
 import com.slvrmn.DnfAssistant.R;
 
 public class FloatingViewService extends Service implements View.OnClickListener {
@@ -67,12 +68,47 @@ public class FloatingViewService extends Service implements View.OnClickListener
         stopSelf();
     }
 
+    @SuppressLint("WrongConstant")
+    private void initialize() {
+
+        //getting the widget layout from xml using layout inflater
+        floatingView = LayoutInflater.from(this).inflate(R.layout.layout_floating_widget, null);
+
+        //setting the layout parameters
+        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+
+        params.x = -580;
+        params.y = 200;
+        //getting window services and adding the floating view to it
+        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        windowManager.addView(floatingView, params);
+
+        //getting the collapsed and expanded view from the floating view
+        expandedView = floatingView.findViewById(R.id.layoutExpanded);
+
+        //adding click listener to close button and expanded view
+        floatingView.findViewById(R.id.btn_start).setOnClickListener(this);
+        floatingView.findViewById(R.id.btn_stop).setOnClickListener(this);
+        floatingView.findViewById(R.id.btn_close).setOnClickListener(this);
+
+        //adding a touch listener to make drag movement of the floating widget
+        floatingView.findViewById(R.id.ic_main).setOnTouchListener(new mainOnTouchListener(params));
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+    }
+
     private class mainOnTouchListener implements View.OnTouchListener {
+        private final WindowManager.LayoutParams params;
         private int initialX;
         private int initialY;
         private float initialTouchX;
         private float initialTouchY;
-        private final WindowManager.LayoutParams params;
 
         public mainOnTouchListener(WindowManager.LayoutParams params) {
             super();
@@ -103,49 +139,23 @@ public class FloatingViewService extends Service implements View.OnClickListener
 
                 case MotionEvent.ACTION_MOVE:
                     //this code is helping the widget to move around the screen with fingers
-                    if (!dragging) {
-                        dragging = true;
+                    if (event.getRawX() > 5 || event.getRawY() > 5) {
+                        if (!dragging) {
+                            dragging = true;
+                        }
+                        int x = initialX + (int) (event.getRawX() - initialTouchX);
+                        int y = initialY + (int) (event.getRawY() - initialTouchY);
+                        x = Math.min(x, 580);
+                        x = Math.max(x, -580);
+                        y = Math.min(y, 200);
+                        y = Math.max(y, -200);
+                        params.x = x;
+                        params.y = y;
+                        windowManager.updateViewLayout(floatingView, params);
+                        return true;
                     }
-                    params.x = initialX + (int) (event.getRawX() - initialTouchX);
-                    params.y = initialY + (int) (event.getRawY() - initialTouchY);
-                    windowManager.updateViewLayout(floatingView, params);
-                    return true;
             }
             return false;
         }
-    }
-
-    @SuppressLint("WrongConstant")
-    private void initialize() {
-
-        //getting the widget layout from xml using layout inflater
-        floatingView = LayoutInflater.from(this).inflate(R.layout.layout_floating_widget, null);
-
-        //setting the layout parameters
-        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_PHONE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-
-
-        //getting window services and adding the floating view to it
-        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        windowManager.addView(floatingView, params);
-
-        //getting the collapsed and expanded view from the floating view
-        expandedView = floatingView.findViewById(R.id.layoutExpanded);
-
-        //adding click listener to close button and expanded view
-        floatingView.findViewById(R.id.btn_start).setOnClickListener(this);
-        floatingView.findViewById(R.id.btn_stop).setOnClickListener(this);
-        floatingView.findViewById(R.id.btn_close).setOnClickListener(this);
-
-        //adding a touch listener to make drag movement of the floating widget
-        floatingView.findViewById(R.id.ic_main).setOnTouchListener(new mainOnTouchListener(params));
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
     }
 }

@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 
 import com.slvrmn.DnfAssistant.MainApplication;
 import com.slvrmn.DnfAssistant.Model.Image;
-import com.slvrmn.DnfAssistant.Model.Rectangle;
 
 
 /**
@@ -14,7 +13,7 @@ import com.slvrmn.DnfAssistant.Model.Rectangle;
  */
 public class ScreenCaptureUtil {
 
-    private static int screenOrientation;   // 0 未设置  ，1竖屏    2横屏
+    private static int screenOrientation = 2;   // 0 未设置  ，1竖屏    2横屏
 
 
     /**
@@ -38,7 +37,7 @@ public class ScreenCaptureUtil {
      *
      * @return
      */
-    public static Bitmap getScreenCap() {
+    public static synchronized Bitmap getScreenCap() {
         Bitmap o_img;
         boolean retry = false;
         do {

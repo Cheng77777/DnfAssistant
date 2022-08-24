@@ -1,17 +1,16 @@
-package com.slvrmn.DnfAssistant.Service;
+package com.slvrmn.DnfAssistant.GamePackage;
 
-import com.slvrmn.DnfAssistant.GamePackage.Main;
 import com.slvrmn.DnfAssistant.Tools.Utility;
 
 public class Assistant {
 
     private static volatile Assistant instance;
     private final Thread thread;
-    private Main main;
+    private ScreenCheck main;
 
     private Assistant() {
         if(main == null){
-            main = new Main();
+            main = new ScreenCheck();
         }
         thread = new Thread(main);
     }
@@ -25,8 +24,8 @@ public class Assistant {
 
 
     public void start() {
-        if(!main.run){
-            main.run=true;
+        if(!main.RUN){
+            main.RUN=true;
             thread.start();
             Utility.show("开始运行");
         }
@@ -37,12 +36,12 @@ public class Assistant {
 
 
     public void stop() {
-        main.run=false;
+        main.RUN=false;
         Utility.show("停止");
     }
 
 
     public boolean isRunning() {
-        return main.run;
+        return main.RUN;
     }
 }

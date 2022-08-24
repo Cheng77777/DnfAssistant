@@ -13,7 +13,7 @@ import com.slvrmn.DnfAssistant.Tools.MLog;
 import com.slvrmn.DnfAssistant.Tools.ScreenCaptureUtil;
 import com.slvrmn.DnfAssistant.Tools.Utility;
 
-public class Main implements Runnable {
+public class SecondMain implements Runnable {
     private static final String SD_PATH = Environment.getExternalStorageDirectory().getPath();
     private static final boolean[] skills = {true, true, true, true, true, true, true};
     private static final int backJumpCD = 15;
@@ -36,7 +36,6 @@ public class Main implements Runnable {
 
     @Override
     public void run() {
-        Presets.initialize();
         try {
             while (run) {
                 MLog.setDebug(true);
@@ -173,8 +172,8 @@ public class Main implements Runnable {
                 Robot.LongPress(Presets.moveRecs[2], random);
                 sleep(random);
                 //TODO
-                PressJoystick(3,100);
-                sleep(100);
+                PressJoystick(3);
+                sleep(40);
                 PressLongAttack(Utility.RandomInt(50,100),50);
                 if (isBattling(GetScreenshot())) {
                     isBattling = true;
@@ -182,8 +181,8 @@ public class Main implements Runnable {
                 }
                 if (Image.findPointByMulColor(screenshot, Presets.inLionRule, Presets.mapRec).isValid()) {
                     inLion = true;
-                    PressJoystick(1,100);
-                    sleep(100);
+                    PressJoystick(1);
+                    sleep(200);
                     Dodge();
                     sleep(200);
                     Robot.Press(Presets.uniqueSkillRec, Utility.RandomInt(3, 4));
@@ -279,20 +278,20 @@ public class Main implements Runnable {
         return false;
     }
 
-    private void PressJoystick(int direction,int duration) {
+    private void PressJoystick(int direction) {
         if (direction==1){
             Robot.LongPress(new Rectangle(Presets.joystickRecs[1].x2,
                             Presets.joystickRecs[1].y1,
                             Presets.joystickRecs[0].x2,
                             Presets.joystickRecs[1].y2),
-                    Utility.RandomInt(duration,duration+10));
+                    Utility.RandomInt(40,50));
         }
         else if (direction==3){
             Robot.LongPress(new Rectangle(Presets.joystickRecs[0].x1,
-                    Presets.joystickRecs[1].y1,
-                    Presets.joystickRecs[1].x1,
-                    Presets.joystickRecs[1].y2),
-                    Utility.RandomInt(duration,duration+10));
+                            Presets.joystickRecs[1].y1,
+                            Presets.joystickRecs[1].x1,
+                            Presets.joystickRecs[1].y2),
+                    Utility.RandomInt(40,50));
         }
     }
 
@@ -467,7 +466,7 @@ public class Main implements Runnable {
     private void RefreshCoolDownList(Bitmap screenshot) {
         MLog.info("刷新技能冷却表");
         for (int i = 0; i < skills.length; i++) {
-            skills[i] = Image.findPoint(screenshot, Presets.skillColors, Presets.skillRecs[i]).isValid();
+            skills[i] = CheckSkillCoolDown(screenshot, i);
         }
     }
 

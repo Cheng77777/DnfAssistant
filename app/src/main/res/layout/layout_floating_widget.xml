@@ -6,18 +6,6 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-    <ImageView
-        android:id="@+id/ic_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="false"
-        android:background="#85FF1100"
-        android:contentDescription="@string/main_icon"
-        android:cropToPadding="false"
-        android:padding="10dp"
-        android:src="@drawable/ic_baseline_android_24"
-        android:visibility="visible" />
-
     <LinearLayout
         android:id="@+id/layoutExpanded"
         android:layout_width="wrap_content"
@@ -27,15 +15,16 @@
         android:visibility="visible">
 
         <ImageView
-            android:id="@+id/btn_start"
+            android:id="@+id/btn_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
             android:adjustViewBounds="false"
             android:background="#85FF1100"
-            android:contentDescription="@string/start_the_activity"
+            android:contentDescription="@string/close_the_widget"
             android:cropToPadding="false"
             android:padding="10dp"
-            android:src="@drawable/ic_baseline_play_circle_filled_24"
+            android:src="@drawable/ic_baseline_close_24"
             android:visibility="visible" />
 
         <ImageView
@@ -51,18 +40,31 @@
             android:visibility="visible" />
 
         <ImageView
-            android:id="@+id/btn_close"
+            android:id="@+id/btn_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
             android:adjustViewBounds="false"
             android:background="#85FF1100"
-            android:contentDescription="@string/close_the_widget"
+            android:contentDescription="@string/start_the_activity"
             android:cropToPadding="false"
             android:padding="10dp"
-            android:src="@drawable/ic_baseline_close_24"
+            android:src="@drawable/ic_baseline_play_circle_filled_24"
             android:visibility="visible" />
 
+
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ic_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="false"
+        android:background="#85FF1100"
+        android:contentDescription="@string/main_icon"
+        android:cropToPadding="false"
+        android:padding="10dp"
+        android:src="@drawable/ic_baseline_android_24"
+        android:visibility="visible" />
+
 
 </LinearLayout>
