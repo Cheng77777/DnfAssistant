@@ -146,7 +146,8 @@ public class SecondMain implements Runnable {
     private boolean CheckInDungeon() {
         MLog.info("检测是否进入地下城");
         Bitmap screenshot = GetScreenshot();
-        return Image.matchTemplate(screenshot, Presets.inDungeonIcon, 0.5, Presets.mapRec).isValid();
+//        return Image.matchTemplate(screenshot, Presets.inDungeonIcon, 0.5, Presets.mapRec).isValid();
+        return false;
     }
 
     private boolean PathFinding() throws InterruptedException {
@@ -185,7 +186,7 @@ public class SecondMain implements Runnable {
                     sleep(200);
                     Dodge();
                     sleep(200);
-                    Robot.Press(Presets.uniqueSkillRec, Utility.RandomInt(3, 4));
+//                    Robot.Press(Presets.uniqueSkillRec, Utility.RandomInt(3, 4));
                     break;
                 }
                 /** 检测退出 **/
@@ -318,7 +319,7 @@ public class SecondMain implements Runnable {
             if (Image.findPointByMulColor(screenshot, Presets.inLionRule, Presets.mapRec).isValid()) {
                 inLion = true;
                 Dodge();
-                Robot.Press(Presets.uniqueSkillRec, Utility.RandomInt(3, 4));
+//                Robot.Press(Presets.uniqueSkillRec, Utility.RandomInt(3, 4));
             }
         }
         /** 连按攻击 **/
@@ -471,7 +472,8 @@ public class SecondMain implements Runnable {
     }
 
     private boolean CheckSkillCoolDown(Bitmap screenshot, int i) {
-        return Image.findPoint(screenshot, Presets.skillColors, Presets.skillRecs[i]).isValid();
+//        return Image.findPoint(screenshot, Presets.skillColors, Presets.skillRecs[i]).isValid();
+        return false;
     }
 
     private boolean isBattling(Bitmap screenshot) {
@@ -500,11 +502,11 @@ public class SecondMain implements Runnable {
 
     private void CheckBuff(Bitmap screenshot) throws InterruptedException {
         MLog.info("检测BUFF");
-        if (Image.findPoint(screenshot, Presets.buffColor, Presets.buffRec).isValid()) {
-            sleep(0);
-            Robot.Press(Presets.buffRec, 2);
-            sleep(1000);
-        }
+//        if (Image.findPoint(screenshot, Presets.buffColor, Presets.buffRec).isValid()) {
+//            sleep(0);
+//            Robot.Press(Presets.buffRec, 2);
+//            sleep(1000);
+//        }
     }
 
     private boolean CheckDodge(Bitmap screenshot) {

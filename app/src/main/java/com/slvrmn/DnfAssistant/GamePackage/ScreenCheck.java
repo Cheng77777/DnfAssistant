@@ -3,22 +3,26 @@ package com.slvrmn.DnfAssistant.GamePackage;
 import static java.lang.Thread.sleep;
 
 import android.graphics.Bitmap;
+import android.os.SystemClock;
 
 import com.slvrmn.DnfAssistant.Model.Image;
 import com.slvrmn.DnfAssistant.Model.Point;
 import com.slvrmn.DnfAssistant.Model.Rectangle;
+import com.slvrmn.DnfAssistant.Model.Robot;
 import com.slvrmn.DnfAssistant.Tools.MLog;
 import com.slvrmn.DnfAssistant.Tools.ScreenCaptureUtil;
 
-public class ScreenCheck implements Runnable {
+public class ScreenCheck extends Thread {
     public static final int CHECK_INTERVAL = 1000;
-    public static volatile boolean RUN = false;
     public static volatile int stuckTime;
-    public static volatile boolean inDungeon, inBoss, beforeLion, inLion, hasMonster, isDamaging,
+    public static volatile boolean
+            inDungeon, inBoss, beforeLion, inLion, hasMonster, isDamaging,
             canDodge, hasReward, inHell, hasContinueConfirm, isInventoryFull, isEnergyEmpty,
             canBreak, canSell, canBreakSelect, canSellSelect, canBreakConfirm;
     public static volatile Rectangle hasContinue, hasRepair;
-    public static volatile boolean[] skills = {true, true, true, true, true, true, true};
+    public static volatile boolean[] skills = {true, true, true, true, true, true, true, true};
+    public static volatile boolean[] buffs = {true, true, true};
+    public static volatile boolean[] directionalBuffs = {true, true, true, true};
 
     private static volatile Bitmap lastScreenshot;
     private static volatile Bitmap screenshot;
@@ -48,7 +52,7 @@ public class ScreenCheck implements Runnable {
         InitializeParameters();
         Presets.initialize();
         try {
-            while (RUN) {
+            while (Assistant.RUN) {
                 MLog.info("------------------------------------------");
                 screenshot = GetScreenshot();
                 CheckInDungeon(screenshot);
@@ -73,6 +77,8 @@ public class ScreenCheck implements Runnable {
                 CheckContinueConfirmButton(screenshot);
                 CheckEnergyEmpty(screenshot);
                 CheckSkillsCoolDown(screenshot);
+                CheckBuffsCoolDown(screenshot);
+                CheckDirectionBuffsCoolDown(screenshot);
 
                 sleep(CHECK_INTERVAL);
                 lastScreenshot = screenshot;
@@ -88,7 +94,7 @@ public class ScreenCheck implements Runnable {
     }
 
     private void CheckInDungeon(Bitmap screenshot) {
-        if (Image.matchTemplate(screenshot, Presets.inDungeonIcon, 0.5, Presets.mapRec).
+        if (Image.findPointByMulColor(screenshot, Presets.inDungeonRule, Presets.inDungeonRec).
                 isValid()) {
             MLog.info("地下城中");
             inDungeon = true;
@@ -178,7 +184,7 @@ public class ScreenCheck implements Runnable {
     }
 
     private void CheckReward(Bitmap screenshot) {
-        if (Image.matchTemplate(screenshot, Presets.rewardIcon, 0.9).isValid()) {
+        if (Image.matchTemplate(screenshot, Presets.rewardIcon, 0.5).isValid()) {
             hasReward = true;
             MLog.info("可翻牌");
             return;
@@ -308,10 +314,32 @@ public class ScreenCheck implements Runnable {
 
     private void CheckSkillsCoolDown(Bitmap screenshot) {
         for (int i = 0; i < skills.length; i++) {
-            if (!skills[i]) {
-                skills[i] = Image.findPoint(screenshot, Presets.skillColors,
-                        Presets.skillRecs[i]).isValid();
+            if (skills[i] = Image.findPoint(screenshot, Presets.skillCDColor,
+                    Presets.skillCDRecs[i]).isValid()) {
+                MLog.info("技能 " + i + " 冷却中");
+                skills[i] = false;
+                continue;
+            }
+            skills[i] = true;
+        }
+    }
+
+    private void CheckBuffsCoolDown(Bitmap screenshot) {
+        for (int i = 0; i < buffs.length; i++) {
+            if (Image.findPoint(screenshot, Presets.buffColor, Presets.buffRecs[i]).isValid()) {
+                MLog.info("BUFF " + i + " 可用");
+                buffs[i] = true;
             }
         }
     }
+
+    private void CheckDirectionBuffsCoolDown(Bitmap screenshot) {
+        for (int i = 0; i < directionalBuffs.length; i++) {
+            if (Image.findPoint(screenshot, Presets.directionalBuffCDColor, Presets.directionalBuffRecs[i]).isValid()) {
+                MLog.info("方向性BUFF " + i + " 可用");
+                directionalBuffs[i] = true;
+            }
+        }
+    }
+
 }

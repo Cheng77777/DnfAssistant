@@ -4,15 +4,14 @@ import com.slvrmn.DnfAssistant.Tools.Utility;
 
 public class Assistant {
 
+    public static volatile boolean RUN = false;
     private static volatile Assistant instance;
-    private final Thread thread;
-    private ScreenCheck main;
+    private ScreenCheck screenCheck;
 
     private Assistant() {
-        if(main == null){
-            main = new ScreenCheck();
+        if(screenCheck == null){
+            screenCheck = new ScreenCheck();
         }
-        thread = new Thread(main);
     }
 
     public static Assistant getInstance() {
@@ -24,9 +23,9 @@ public class Assistant {
 
 
     public void start() {
-        if(!main.RUN){
-            main.RUN=true;
-            thread.start();
+        if(!RUN){
+            RUN=true;
+            screenCheck.start();
             Utility.show("开始运行");
         }
         else {
@@ -36,12 +35,12 @@ public class Assistant {
 
 
     public void stop() {
-        main.RUN=false;
+        RUN=false;
         Utility.show("停止");
     }
 
 
     public boolean isRunning() {
-        return main.RUN;
+        return RUN;
     }
 }

@@ -147,7 +147,8 @@ public class Main implements Runnable {
     private boolean CheckInDungeon() {
         MLog.info("检测是否进入地下城");
         Bitmap screenshot = GetScreenshot();
-        return Image.matchTemplate(screenshot, Presets.inDungeonIcon, 0.5, Presets.mapRec).isValid();
+//        return Image.matchTemplate(screenshot, Presets.inDungeonIcon, 0.5, Presets.mapRec).isValid();
+        return false;
     }
 
     private boolean PathFinding() throws InterruptedException {
@@ -186,7 +187,7 @@ public class Main implements Runnable {
                     sleep(100);
                     Dodge();
                     sleep(200);
-                    Robot.Press(Presets.uniqueSkillRec, Utility.RandomInt(3, 4));
+//                    Robot.Press(Presets.uniqueSkillRec, Utility.RandomInt(3, 4));
                     break;
                 }
                 /** 检测退出 **/
@@ -306,7 +307,7 @@ public class Main implements Runnable {
         autoFarm = false;
     }
 
-    private boolean AutoBattle() throws InterruptedException {
+    private boolean  AutoBattle() throws InterruptedException {
         MLog.info("自动战斗中");
         Bitmap screenshot = GetScreenshot();
 
@@ -319,7 +320,7 @@ public class Main implements Runnable {
             if (Image.findPointByMulColor(screenshot, Presets.inLionRule, Presets.mapRec).isValid()) {
                 inLion = true;
                 Dodge();
-                Robot.Press(Presets.uniqueSkillRec, Utility.RandomInt(3, 4));
+//                Robot.Press(Presets.uniqueSkillRec, Utility.RandomInt(3, 4));
             }
         }
         /** 连按攻击 **/
@@ -467,12 +468,13 @@ public class Main implements Runnable {
     private void RefreshCoolDownList(Bitmap screenshot) {
         MLog.info("刷新技能冷却表");
         for (int i = 0; i < skills.length; i++) {
-            skills[i] = Image.findPoint(screenshot, Presets.skillColors, Presets.skillRecs[i]).isValid();
+//            skills[i] = Image.findPoint(screenshot, Presets.skillColors, Presets.skillRecs[i]).isValid();
         }
     }
 
     private boolean CheckSkillCoolDown(Bitmap screenshot, int i) {
-        return Image.findPoint(screenshot, Presets.skillColors, Presets.skillRecs[i]).isValid();
+//        return Image.findPoint(screenshot, Presets.skillColors, Presets.skillRecs[i]).isValid();
+        return false;
     }
 
     private boolean isBattling(Bitmap screenshot) {
@@ -501,11 +503,11 @@ public class Main implements Runnable {
 
     private void CheckBuff(Bitmap screenshot) throws InterruptedException {
         MLog.info("检测BUFF");
-        if (Image.findPoint(screenshot, Presets.buffColor, Presets.buffRec).isValid()) {
-            sleep(0);
-            Robot.Press(Presets.buffRec, 2);
-            sleep(1000);
-        }
+//        if (Image.findPoint(screenshot, Presets.buffColor, Presets.buffRec).isValid()) {
+//            sleep(0);
+//            Robot.Press(Presets.buffRec, 2);
+//            sleep(1000);
+//        }
     }
 
     private boolean CheckDodge(Bitmap screenshot) {
