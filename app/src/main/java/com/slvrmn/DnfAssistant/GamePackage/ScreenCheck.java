@@ -1,24 +1,21 @@
 package com.slvrmn.DnfAssistant.GamePackage;
 
-import static java.lang.Thread.sleep;
-
 import android.graphics.Bitmap;
-import android.os.SystemClock;
 
 import com.slvrmn.DnfAssistant.Model.Image;
 import com.slvrmn.DnfAssistant.Model.Point;
 import com.slvrmn.DnfAssistant.Model.Rectangle;
-import com.slvrmn.DnfAssistant.Model.Robot;
 import com.slvrmn.DnfAssistant.Tools.MLog;
 import com.slvrmn.DnfAssistant.Tools.ScreenCaptureUtil;
 
 public class ScreenCheck extends Thread {
-    public static final int CHECK_INTERVAL = 1000;
+    public static final int CHECK_INTERVAL = 200;
     public static volatile int stuckTime;
     public static volatile boolean
             inDungeon, inBoss, beforeLion, inLion, hasMonster, isDamaging,
             canDodge, hasReward, inHell, hasContinueConfirm, isInventoryFull, isEnergyEmpty,
-            canBreak, canSell, canBreakSelect, canSellSelect, canBreakConfirm;
+            canBreak, canSell, canBreakSelect, canSellSelect, canBreakConfirm,
+            isPathFinding, isBattling;
     public static volatile Rectangle hasContinue, hasRepair;
     public static volatile boolean[] skills = {true, true, true, true, true, true, true, true};
     public static volatile boolean[] buffs = {true, true, true};
@@ -29,25 +26,40 @@ public class ScreenCheck extends Thread {
 
     public static synchronized void InitializeParameters() {
         stuckTime = 0;
-        beforeLion = false;
-        canDodge = false;
-        hasContinueConfirm = false;
-        hasMonster = false;
-        hasReward = false;
-        inBoss = false;
         inDungeon = false;
-        inHell = false;
+        inBoss = false;
+        beforeLion = false;
         inLion = false;
+        hasMonster = false;
         isDamaging = false;
-        isEnergyEmpty = false;
+        canDodge = false;
+        hasReward = false;
+        inHell = false;
+        hasContinueConfirm = false;
         isInventoryFull = false;
+        isEnergyEmpty = false;
+        canBreak = false;
+        canSell = false;
+        canBreakSelect = false;
+        canSellSelect = false;
+        canBreakConfirm = false;
+        isPathFinding = true;
+        isBattling = false;
         hasContinue = Rectangle.INVALID_RECTANGLE;
         hasRepair = Rectangle.INVALID_RECTANGLE;
+        for (int i = 0; i < skills.length; i++) {
+            skills[i] = true;
+        }
+        for (int i = 0; i < buffs.length; i++) {
+            buffs[i] = true;
+        }
+        for (int i = 0; i < directionalBuffs.length; i++) {
+            directionalBuffs[i] = true;
+        }
     }
 
     @Override
     public void run() {
-        MLog.setDebug(true);
         MLog.info("Start Debugging");
         InitializeParameters();
         Presets.initialize();
@@ -104,7 +116,7 @@ public class ScreenCheck extends Thread {
     }
 
     private void CheckBoss(Bitmap screenshot) {
-        if (Image.findPointByMulColor(screenshot, Presets.bossRules, Presets.mapRec).isValid()) {
+        if (Image.findPointByMulColor(screenshot, Presets.bossRules, Presets.mapCentreRec).isValid()) {
             MLog.info("BOSS房中");
             inBoss = true;
             return;
@@ -172,8 +184,8 @@ public class ScreenCheck extends Thread {
     private void CheckStuck(Bitmap screenshot) {
         if (lastScreenshot != null) {
             if (Image.matchTemplate(
-                    Image.cropBitmap(lastScreenshot, Presets.rightBottomRec),
-                    Image.cropBitmap(screenshot, Presets.rightBottomRec),
+                    Image.cropBitmap(lastScreenshot, Presets.stuckRec),
+                    Image.cropBitmap(screenshot, Presets.stuckRec),
                     0.99).isValid()) {
                 stuckTime++;
                 MLog.info("屏幕静止" + stuckTime + "次");
@@ -184,7 +196,7 @@ public class ScreenCheck extends Thread {
     }
 
     private void CheckReward(Bitmap screenshot) {
-        if (Image.matchTemplate(screenshot, Presets.rewardIcon, 0.5).isValid()) {
+        if (Image.matchTemplate(screenshot, Presets.rewardIcon, 0.95).isValid()) {
             hasReward = true;
             MLog.info("可翻牌");
             return;
@@ -267,6 +279,8 @@ public class ScreenCheck extends Thread {
         Point p = Image.matchTemplate(screenshot, Presets.repairButton, 0.9,
                 Presets.completeDungeonMenuRec);
         if (p.isValid()) {
+            p.setX(p.getX() + Presets.completeDungeonMenuRec.x1);
+            p.setY(p.getY() + Presets.completeDungeonMenuRec.y1);
             Rectangle rectangle = new Rectangle(p.getX(), p.getY(),
                     p.getX() + 50, p.getY() + 10);
             MLog.info("需要修理");
@@ -282,10 +296,13 @@ public class ScreenCheck extends Thread {
         Point p = Image.matchTemplate(screenshot, Presets.nextButton, 0.9,
                 Presets.completeDungeonMenuRec);
         if (p.isValid()) {
+            p.setX(p.getX() + Presets.completeDungeonMenuRec.x1);
+            p.setY(p.getY() + Presets.completeDungeonMenuRec.y1);
             Rectangle rectangle = new Rectangle(p.getX(), p.getY(),
                     p.getX() + 50, p.getY() + 10);
             MLog.info("可点击继续");
             hasContinue = rectangle;
+            return;
         }
         hasContinue = Rectangle.INVALID_RECTANGLE;
     }
@@ -295,6 +312,7 @@ public class ScreenCheck extends Thread {
                 Presets.continueConfirmRec).isValid()) {
             hasContinueConfirm = true;
             MLog.info("可点击确认继续");
+            return;
         }
         hasContinueConfirm = false;
     }
@@ -329,6 +347,8 @@ public class ScreenCheck extends Thread {
             if (Image.findPoint(screenshot, Presets.buffColor, Presets.buffRecs[i]).isValid()) {
                 MLog.info("BUFF " + i + " 可用");
                 buffs[i] = true;
+            } else {
+                buffs[i] = false;
             }
         }
     }
@@ -338,6 +358,8 @@ public class ScreenCheck extends Thread {
             if (Image.findPoint(screenshot, Presets.directionalBuffCDColor, Presets.directionalBuffRecs[i]).isValid()) {
                 MLog.info("方向性BUFF " + i + " 可用");
                 directionalBuffs[i] = true;
+            } else {
+                directionalBuffs[i] = false;
             }
         }
     }

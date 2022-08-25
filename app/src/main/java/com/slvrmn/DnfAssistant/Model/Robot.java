@@ -135,14 +135,14 @@ public class Robot {
     }
 
     public static void Press(Rectangle rec) {
-        getInput().tap(Utility.RandomPoint(rec), Utility.RandomInt(10, 20));
+        getInput().tap(Utility.RandomPoint(rec), Utility.RandomInt(120, 140));
     }
 
     public static void Press(Rectangle rec, int multiple) throws InterruptedException {
         Point p = Utility.RandomPoint(rec);
         for (int i = 0; i < multiple; i++) {
-            getInput().tap(Utility.RandomPoint(rec, p), Utility.RandomInt(100, 150));
-            sleep(Utility.RandomInt(100, 150));
+            getInput().tap(Utility.RandomPoint(rec, p), Utility.RandomInt(120, 140));
+            sleep(Utility.RandomInt(140, 160));
         }
     }
 

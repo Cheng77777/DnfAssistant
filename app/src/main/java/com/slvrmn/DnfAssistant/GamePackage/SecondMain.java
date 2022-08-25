@@ -251,8 +251,8 @@ public class SecondMain implements Runnable {
                 }
                 /** 检测卡住 **/
                 if (Image.matchTemplate(
-                        Image.cropBitmap(oldScreenshot, Presets.rightBottomRec),
-                        Image.cropBitmap(screenshot, Presets.rightBottomRec),
+                        Image.cropBitmap(oldScreenshot, Presets.stuckRec),
+                        Image.cropBitmap(screenshot, Presets.stuckRec),
                         0.99).isValid()) {
                     stuckSteps++;
                 } else {
