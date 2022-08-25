@@ -134,8 +134,9 @@ public class Robot {
         getInput().pinchClose(distance);
     }
 
-    public static void Press(Rectangle rec) {
+    public static void Press(Rectangle rec) throws InterruptedException {
         getInput().tap(Utility.RandomPoint(rec), Utility.RandomInt(120, 140));
+        sleep(Utility.RandomInt(140, 160));
     }
 
     public static void Press(Rectangle rec, int multiple) throws InterruptedException {

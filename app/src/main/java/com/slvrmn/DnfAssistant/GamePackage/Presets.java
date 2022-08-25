@@ -23,7 +23,7 @@ public class Presets {
     public static final String inLionRule = "29495A,13|1|7BBAD6,22|1|294D63,0|11|7BBAD6,13|11|7BBAD6,24|11|0841F7,29|9|083DFF,29|15|0039FF,3|21|29495A,11|21|29556B,22|21|295563,39|-38|0824CE,52|-36|428AF7,67|-37|00008C,38|-27|293D42,52|-27|1051F7,65|-27|081819,38|-18|081819,51|-20|0010CE,67|-16|101821,47|-30|000000,57|-29|000010,53|5|E6A631,53|11|EFDB63,52|17|E67500";
     public static final String beforeLionRules = "294D5A,13|-1|314D63,22|1|294D5A,1|10|7BBAD6,13|11|7BBAD6,26|11|214552,2|21|214D5A,13|22|7BBAD6,25|21|294D63,2|36|21394A,12|38|7BBAD6,23|38|295163,1|49|31556B,14|49|73B6D6,24|49|73B6D6,2|59|214152,13|61|7BBADE,23|60|295163,41|38|294152,51|37|7BBAD6,64|39|295163,39|50|7BBAD6,49|50|FFBE52,55|50|E6D25A,52|43|DED763,52|55|DE5500,66|50|7BBAD6,41|63|295163,51|62|295163,64|62|214152,49|27|1041F7,54|27|0039FF,52|23|083DF7,75|61|101821,76|37|081419";
     public static final Rectangle damageNumberRec = new Rectangle(894, 4, 1161, 210);
-    public static final Rectangle stuckRec = new Rectangle(105, 48, 275, 82);
+    public static final Rectangle stuckRec = new Rectangle(121, 623, 183, 654);
     public static final Rectangle attackRec = new Rectangle(1107, 623, 1168, 672);
     public static final Rectangle backJumpRec = new Rectangle(1008, 630, 1048, 660);
 
@@ -75,7 +75,7 @@ public class Presets {
     public static final Rectangle sellConfirmRec = new Rectangle(654, 452, 844, 504);
     public static final String sellConfirmRule = "006DA4,14|0|006DA4,33|1|006DA4,44|3|0871AD,46|12|0071AD,36|16|DEF3FF,33|16|0079B5,17|15|0075B5,14|15|DEF3FF,3|16|DEF7FF,-4|21|0079B5,0|26|0079B5,11|26|E6F7FF,15|26|E6F7FF,27|26|007DBD,32|26|0079B5,43|27|0079BD,41|30|007DBD,29|30|D5EEFF,27|29|DEF3FF,8|29|007DBD,2|32|007DBD,-10|29|007DBD";
 
-    public static final Rectangle uniqueSkillCDRec = new Rectangle(916, 340, 919, 344);
+    public static final Rectangle confirmRepairRecs = new Rectangle(997, 604, 1126, 644);
 
     public static final Rectangle[] skillRecs = {
             new Rectangle(1056, 530, 1115, 590),
@@ -98,10 +98,10 @@ public class Presets {
             new Rectangle(916, 340, 919, 344)
     };
     public static final Color skillCDColor = new Color(8, 206, 255);
-//    public static final Color[] skillColors = {
-//            new Color(255, 255, 181),
-//            new Color(255, 255, 173),
-//            new Color(255, 255, 115)};
+    public static final Color[] skillColors = {
+            new Color(255, 255, 181),
+            new Color(255, 255, 173),
+            new Color(255, 255, 115)};
 
 
     public static final Rectangle[] buffRecs = {
@@ -172,7 +172,8 @@ public class Presets {
     private static InputStream input;
     private static final AssetManager assetManager = MainApplication.getInstance().getAssets();
     public static boolean initialized;
-    public static Bitmap monsterLevelNumberFive, rewardIcon, nextButton, continueConfirmButton,repairButton;
+    public static Bitmap monsterLevelNumberFive, rewardIcon, nextButton, continueConfirmButton,
+            repairButton,inventoryFullButton;
 
     public static void initialize() {
         monsterLevelNumberFive = readImage("MonsterLevelNumberFive.jpg");
@@ -180,6 +181,7 @@ public class Presets {
         nextButton = readImage("NextButton.png");
         continueConfirmButton = readImage("ContinueConfirmButton.png");
         repairButton = readImage("RepairButton.png");
+        inventoryFullButton = readImage("InventoryFullButton.png");
         initialized = true;
     }
 

@@ -83,13 +83,14 @@ public class Actions {
         random = Utility.RandomInt(3500, 4000);
         PressLongAttack(random, random);
 
-        /** 检测背包 **/
-        if (isInventoryFull) {
-            CleanInventory();
+        /** 检测修理 **/
+        if (hasRepair.isValid()) {
+            RepairEquipments();
         }
 
-        if (hasRepair.isValid()){
-
+        /** 检测背包 **/
+        if (isInventoryFull.isValid()) {
+            CleanInventory();
         }
 
         /** 进入下一次副本 **/
@@ -99,44 +100,30 @@ public class Actions {
         } else {
             Robot.Press(hasContinue);
             sleep(1000);
+            ScreenCheck.InitializeParameters();
             Robot.Press(Presets.continueConfirmRec);
+            sleep(3000);
         }
+    }
+
+    static void RepairEquipments() throws InterruptedException {
+        Robot.Press(hasRepair);
+        sleep(1000);
+        Robot.Press(Presets.confirmRepairRecs);
+        sleep(1000);
+        PressBack();
+        sleep(1000);
     }
 
     static void CleanInventory() throws InterruptedException {
-        while (!ScreenCheck.isInventoryFull) {
-            if (RUN) {
-                return;
-            }
-            Robot.Press(Presets.inventoryRec);
-            sleep(1500);
-        }
-        BreakItems();
-        SellItems();
-        ScreenCheck.hasContinue = Rectangle.INVALID_RECTANGLE;
-        while (!ScreenCheck.hasContinue.isValid()) {
-            if (RUN) {
-                return;
-            }
-            PressBack();
-            sleep(1000);
-        }
-    }
-
-    static void BreakItems() throws InterruptedException {
-        MLog.info("分解物品");
-        Robot.Press(Presets.breakRec);
-        sleep(2000);
+        Robot.Press(ScreenCheck.isInventoryFull);
+        sleep(1500);
         Robot.Press(Presets.breakAndSellSelectRec);
         sleep(2000);
         Robot.Press(Presets.breakConfirmRec);
         sleep(4000);
         PressBack();
         PressBack();
-    }
-
-    static void SellItems() throws InterruptedException {
-        MLog.info("出售物品");
         Robot.Press(Presets.sellRec);
         sleep(2000);
         Robot.Press(Presets.breakAndSellSelectRec);
@@ -145,6 +132,8 @@ public class Actions {
         sleep(4000);
         PressBack();
         PressBack();
+        PressBack();
+        sleep(1000);
     }
 
     static void PressBack() throws InterruptedException {
@@ -166,13 +155,15 @@ public class Actions {
         PressMultipleAttacks(3);
     }
 
-    static void UseBuff() throws InterruptedException {
+    static boolean UseBuff() throws InterruptedException {
         for (int i = 0; i < buffs.length; i++) {
             if (buffs[i]) {
+                sleep(500);
                 Robot.Press(Presets.buffRecs[i]);
                 sleep(500);
-                break;
+                return true;
             }
         }
+        return false;
     }
 }

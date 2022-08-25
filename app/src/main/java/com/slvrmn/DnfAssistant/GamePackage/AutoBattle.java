@@ -3,6 +3,7 @@ package com.slvrmn.DnfAssistant.GamePackage;
 import static com.slvrmn.DnfAssistant.GamePackage.Actions.BackJump;
 import static com.slvrmn.DnfAssistant.GamePackage.Actions.PressMultipleAttacks;
 import static com.slvrmn.DnfAssistant.GamePackage.Assistant.RUN;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.CHECK_INTERVAL;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.buffs;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasMonster;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.inBoss;
@@ -18,7 +19,7 @@ import com.slvrmn.DnfAssistant.Tools.MLog;
 import com.slvrmn.DnfAssistant.Tools.Utility;
 
 public class AutoBattle extends Thread {
-    private static int backJumpCD = 4;
+    private static int backJumpCD = 30;
     private int backJump;
 
     @Override
@@ -26,6 +27,7 @@ public class AutoBattle extends Thread {
         try {
             while (RUN) {
                 if (isBattling) {
+                    MLog.info("自动战斗中");
                     if (hasMonster && isDamaging) {
                         /** 后跳 **/
                         if (backJump >= backJumpCD) {
@@ -37,14 +39,13 @@ public class AutoBattle extends Thread {
                         UseSkills();
                         backJump++;
                     }
-                    if (!isDamaging) {
+                    if (!hasMonster||!isDamaging) {
                         isBattling = false;
                         isPathFinding = true;
-                        backJump = 99;
                         continue;
                     }
                 } else {
-                    sleep(100);
+                    sleep(CHECK_INTERVAL);
                 }
             }
         } catch (InterruptedException e) {
@@ -63,9 +64,12 @@ public class AutoBattle extends Thread {
             }
             if (skills[i]) {
                 Robot.Press(Presets.skillRecs[i]);
-                sleep(200);
-                PressMultipleAttacks(2);
-                return;
+                sleep(300);
+                if (!hasMonster||!isDamaging) {
+                    isBattling = false;
+                    isPathFinding = true;
+                    return;
+                }
             }
         }
     }

@@ -296,7 +296,7 @@ public class SecondMain implements Runnable {
         }
     }
 
-    private void GoOutDungeon() {
+    private void GoOutDungeon() throws InterruptedException {
         Robot.Press(Presets.settingsRec);
         sleep(2000);
         Robot.Press(Presets.homeRec);
@@ -389,7 +389,7 @@ public class SecondMain implements Runnable {
         return Image.matchTemplate(screenshot, Presets.rewardIcon, 0.9).isValid();
     }
 
-    private void CheckInventory(Bitmap screenshot) {
+    private void CheckInventory(Bitmap screenshot) throws InterruptedException {
         MLog.info("检测背包是否满");
         if (Image.findPointByMulColor(screenshot, Presets.inventoryFullRules, Presets.inventoryRec).isValid()) {
             Robot.Press(Presets.inventoryRec);
@@ -401,7 +401,7 @@ public class SecondMain implements Runnable {
         }
     }
 
-    private void CheckNextDungeon(Rectangle next) {
+    private void CheckNextDungeon(Rectangle next) throws InterruptedException {
         MLog.info("检测重新进入地下城");
         if (CheckEnergyEmpty(GetScreenshot())) {
             autoFarm = false;
@@ -536,7 +536,7 @@ public class SecondMain implements Runnable {
         sleep(800);
     }
 
-    private void BackJump() {
+    private void BackJump() throws InterruptedException {
         MLog.info("后跳");
         Robot.Press(Presets.backJumpRec);
     }
@@ -551,7 +551,7 @@ public class SecondMain implements Runnable {
         }
     }
 
-    private void SellItems() {
+    private void SellItems() throws InterruptedException {
         MLog.info("出售物品");
         Robot.Press(Presets.sellRec);
         sleep(2000);
@@ -565,7 +565,7 @@ public class SecondMain implements Runnable {
         sleep(2000);
     }
 
-    private void BreakItems() {
+    private void BreakItems() throws InterruptedException {
         MLog.info("分解物品");
         Robot.Press(Presets.breakRec);
         sleep(2000);
@@ -579,7 +579,7 @@ public class SecondMain implements Runnable {
         sleep(2000);
     }
 
-    private void PressBack() {
+    private void PressBack() throws InterruptedException {
         MLog.info("点击返回按钮");
         Robot.Press(Presets.backRec);
         sleep(1000);
