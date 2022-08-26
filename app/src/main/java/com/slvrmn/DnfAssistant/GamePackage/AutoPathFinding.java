@@ -38,96 +38,97 @@ public class AutoPathFinding extends Thread {
                 if (inDungeon && isPathFinding) {
                     if (hasReward) {
                         GetReward();
-                    }
-                    if (beforeLion) {
-                        do {
-                            if (!RUN) {
-                                return;
-                            }
-                            int random = Utility.RandomInt(2000, 2300);
-                            Robot.LongPress(Presets.moveRecs[0], random);
-                            sleep(random + 100);
-                            random = Utility.RandomInt(1000, 1200);
-                            Robot.LongPress(Presets.moveRecs[2], random);
-                            sleep(3000);
-
-                            if (!inLion) {
-                                PressJoystick(3, 100);
-                                sleep(100);
-                                int pressTime = Utility.RandomInt(1500, 1600);
-                                PressLongAttack(pressTime, pressTime);
-
-                                int steps = pressTime / CHECK_INTERVAL;
-                                for (int i = steps; i > 0; i--) {
-                                    if (inLion) {
-                                        continue mainLoop;
-                                    }
-                                    /** 检测闪避 **/
-                                    if (canDodge) {
-                                        Dodge();
-                                        continue mainLoop;
-                                    }
-                                    /** 检测战斗 **/
-                                    if (isDamaging) {
-                                        isPathFinding = false;
-                                        isBattling = true;
-                                        continue mainLoop;
-                                    }
-                                    sleep(CHECK_INTERVAL);
+                    } else {
+                        if (beforeLion) {
+                            do {
+                                if (!RUN) {
+                                    return;
                                 }
-                            }
-                        } while (!inLion);
-                    }
-                    /** 长按攻击 **/
-                    int pressTime = Utility.RandomInt(4500, 5000);
-                    PressLongAttack(pressTime, 500);
+                                int random = Utility.RandomInt(2000, 2300);
+                                Robot.LongPress(Presets.moveRecs[0], random);
+                                sleep(random + 100);
+                                random = Utility.RandomInt(1000, 1200);
+                                Robot.LongPress(Presets.moveRecs[2], random);
+                                sleep(3000);
 
-                    int steps = (pressTime - 500) / CHECK_INTERVAL;
-                    for (int i = steps; i > 0; i--) {
+                                if (!inLion) {
+                                    PressJoystick(3, 100);
+                                    sleep(100);
+                                    int pressTime = Utility.RandomInt(1500, 1600);
+                                    PressLongAttack(pressTime, pressTime);
 
-                        if (hasReward) {
-                            continue mainLoop;
+                                    int steps = pressTime / CHECK_INTERVAL;
+                                    for (int i = steps; i > 0; i--) {
+                                        if (inLion) {
+                                            continue mainLoop;
+                                        }
+                                        /** 检测闪避 **/
+                                        if (canDodge) {
+                                            Dodge();
+                                            continue mainLoop;
+                                        }
+                                        /** 检测战斗 **/
+                                        if (isDamaging) {
+                                            isPathFinding = false;
+                                            isBattling = true;
+                                            continue mainLoop;
+                                        }
+                                        sleep(CHECK_INTERVAL);
+                                    }
+                                }
+                            } while (!inLion);
                         }
+                        /** 长按攻击 **/
+                        int pressTime = Utility.RandomInt(4500, 5000);
+                        PressLongAttack(pressTime, 500);
 
-                        if (UseBuff()) {
-                            continue mainLoop;
-                        }
-                        /** 检测战斗 **/
-                        if (isDamaging && hasMonster) {
-                            stuckTime = 0;
-                            isPathFinding = false;
-                            isBattling = true;
-                            continue mainLoop;
-                        }
-                        /** 检测卡住 **/
+                        int steps = (pressTime - 500) / CHECK_INTERVAL;
+                        for (int i = steps; i > 0; i--) {
 
-                        if (stuckTime >= 1) {
-                            MoveAround();
-                            stuckTime = 0;
-                            if (!inHell) {
+                            if (hasReward) {
                                 continue mainLoop;
+                            }
+
+                            if (UseBuff()) {
+                                continue mainLoop;
+                            }
+                            /** 检测战斗 **/
+                            if (isDamaging && hasMonster) {
+                                stuckTime = 0;
+                                isPathFinding = false;
+                                isBattling = true;
+                                continue mainLoop;
+                            }
+                            /** 检测卡住 **/
+
+                            if (stuckTime >= 1) {
+                                MoveAround();
+                                stuckTime = 0;
+                                if (!inHell) {
+                                    continue mainLoop;
+                                } else {
+                                    int random = Utility.RandomInt(1500, 2000);
+                                    PressLongAttack(random, random);
+                                    PressMultipleAttacks(3);
+                                    random = Utility.RandomInt(1500, 2000);
+                                    PressLongAttack(random, random);
+                                    if (isEnergyEmpty) {
+                                        GoOutDungeon();
+                                    }
+                                }
                             } else {
-                                int random = Utility.RandomInt(1500, 2000);
-                                PressLongAttack(random, random);
-                                PressMultipleAttacks(3);
-                                random = Utility.RandomInt(1500, 2000);
-                                PressLongAttack(random, random);
-                                if (isEnergyEmpty) {
-                                    GoOutDungeon();
+                                if (screenFreezeTime >= 2500 / CHECK_INTERVAL) {
+                                    stuckTime++;
+                                    continue mainLoop;
                                 }
                             }
-                        } else {
-                            if (screenFreezeTime >= 2500 / CHECK_INTERVAL) {
-                                stuckTime++;
+                            /** 检测闪避 **/
+                            if (canDodge) {
+                                Dodge();
                                 continue mainLoop;
                             }
+                            sleep(CHECK_INTERVAL);
                         }
-                        /** 检测闪避 **/
-                        if (canDodge) {
-                            Dodge();
-                            continue mainLoop;
-                        }
-                        sleep(CHECK_INTERVAL);
                     }
                 }
                 sleep(CHECK_INTERVAL);

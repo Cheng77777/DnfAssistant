@@ -2,6 +2,7 @@ package com.slvrmn.DnfAssistant.GamePackage;
 
 import static com.slvrmn.DnfAssistant.GamePackage.Actions.BackJump;
 import static com.slvrmn.DnfAssistant.GamePackage.Actions.PressMultipleAttacks;
+import static com.slvrmn.DnfAssistant.GamePackage.Actions.UseSkills;
 import static com.slvrmn.DnfAssistant.GamePackage.Assistant.RUN;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.CHECK_INTERVAL;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasMonster;
@@ -48,28 +49,6 @@ public class AutoBattle extends Thread {
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-    }
-
-    private void UseSkills() throws InterruptedException {
-        if (skills[skills.length - 4] && (inBoss || inLion || inHell)) {
-            Robot.Press(Presets.skillRecs[skills.length - 4]);
-            return;
-        }
-        for (int i = 0; i < skills.length - 4; i++) {
-            if (!RUN) {
-                return;
-            }
-            if (skills[i]) {
-                MLog.info("skill "+i);
-                Robot.Press(Presets.skillRecs[i]);
-                sleep(300);
-                if (!hasMonster||!isDamaging) {
-                    isBattling = false;
-                    isPathFinding = true;
-                    return;
-                }
-            }
         }
     }
 }

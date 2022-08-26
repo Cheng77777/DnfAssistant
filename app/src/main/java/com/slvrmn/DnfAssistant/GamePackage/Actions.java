@@ -7,9 +7,16 @@ import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.directionalBuff;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.directionalBuffs;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasContinue;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasGoBack;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasMonster;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasRepair;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.inBoss;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.inHell;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.inLion;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isBattling;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isDamaging;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isEnergyEmpty;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isInventoryFull;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isPathFinding;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.skills;
 import static java.lang.Thread.sleep;
 
@@ -103,6 +110,8 @@ public class Actions {
         if (isEnergyEmpty) {
             /** 回城 **/
             Robot.Press(hasGoBack);
+            sleep(1000);
+            ScreenCheck.InitializeParameters();
             return;
         } else {
             /** 进入下一次副本 **/
@@ -187,7 +196,6 @@ public class Actions {
                     return false;
                 }
                 sleep(500);
-                MLog.info("Use Buff " + i);
                 Robot.Press(skillRecs[i]);
                 sleep(500);
                 return true;
@@ -214,5 +222,26 @@ public class Actions {
         }
         Robot.swipe(skillRecs[skillRecs.length - 1], destination, 150);
         sleep(150);
+    }
+
+    static void UseSkills() throws InterruptedException {
+        if (skills[skills.length - 4] && (inBoss || inLion || inHell)) {
+            Robot.Press(Presets.skillRecs[skills.length - 4]);
+            return;
+        }
+        for (int i = 0; i < skills.length - 4; i++) {
+            if (!RUN) {
+                return;
+            }
+            if (skills[i]) {
+                Robot.Press(Presets.skillRecs[i]);
+                sleep(300);
+                if (!hasMonster||!isDamaging) {
+                    isBattling = false;
+                    isPathFinding = true;
+                    return;
+                }
+            }
+        }
     }
 }
