@@ -25,4 +25,23 @@ public class Rectangle {
         }
         return true;
     }
+
+    public Rectangle Copy() {
+        return new Rectangle(x1, y1, x2, y2);
+    }
+
+    public void Move(int x, int y) {
+        x1 += x;
+        x2 += x;
+        y1 += y;
+        y2 += y;
+    }
+
+    public int XLen() {
+        return x2 - x1;
+    }
+
+    public int YLen() {
+        return y2 - y1;
+    }
 }

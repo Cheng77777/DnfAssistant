@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import com.slvrmn.DnfAssistant.MainApplication;
 import com.slvrmn.DnfAssistant.Model.Color;
 import com.slvrmn.DnfAssistant.Model.Rectangle;
-import com.slvrmn.DnfAssistant.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +38,7 @@ public class Presets {
     };
     public static final Rectangle[] joystickRecs = {
             new Rectangle(114, 432, 283, 613),
-            new Rectangle(165, 484, 231,558)
+            new Rectangle(165, 484, 231, 558)
     };
     public static final Color dodgeColor = new Color(197, 255, 123);
     public static final Rectangle completeDungeonMenuRec = new Rectangle(999, 20, 1270, 600);
@@ -56,14 +55,14 @@ public class Presets {
 
     public static final String hellRules = "D66508,0|0|D66508,-1|1|E66508,-1|4|FFBE52,-1|6|DE5900,0|7|DE5900,3|10|100010,-3|10|BD359C,-7|4|000408,-8|0|E671E6,-10|0|FF61FF,7|0|FF14DE,10|0|E681D6,14|-2|F718DE,9|6|E628D6";
 
-    public static final Rectangle mapCentreRec = new Rectangle(1183,69,1218,103);
+    public static final Rectangle mapCentreRec = new Rectangle(1183, 69, 1218, 103);
     public static final String bossRules = "101073,2|3|4265FF,3|6|1935DE,8|3|2965F7,15|1|2961E6,21|4|2155FF,25|6|1035EF,28|0|000063,19|10|000019,9|10|000000,7|8|000029,21|8|000042,18|11|000010,10|12|000000,11|16|001CD6,8|19|0010CE,11|21|000008,17|22|000010,21|17|0010CE,16|15|0035EF,12|16|0020E6";
 
     public static final Rectangle breakRec = new Rectangle(1159, 653, 1260, 701);
     public static final String breakRule = "8BBACE,4|0|DEEFF7,9|0|0871B5,18|-1|EEF7FF,28|-1|0871AD,38|-2|006DAD,51|-1|0071AD,63|-2|0871B5,75|-2|0871B5,-1|8|0079B5,6|8|087AB5,18|7|107DBD,29|7|0075B5,47|7|0075B5,55|8|218AC5,65|8|007ABD,71|8|0079B5,72|8|DEF3FF,0|12|0075B5,4|12|94C6E6,10|12|84BAD6,15|12|097EBD,21|12|1075B5,27|12|0079BD,35|12|0079BD,39|12|DEF7FF,41|12|2186C6,44|11|0079B5,48|11|0079B5,49|11|DEF3FF,53|12|E6F7FF,57|12|0879BD,61|12|E6F7FF,63|12|DEF7FF,68|12|DEF3FF,72|12|DEF3FF,2|18|6BB2DE,6|18|6BB2DE,11|18|73B6DE,17|18|6BB2DE,21|17|73B6DE,32|17|007DBD,36|17|007DBD,41|17|0079BD,45|17|0079BD,49|17|DEF3FF,53|17|DEF3FF,58|17|007DBD,63|18|007DBD,65|18|007DBD,68|18|DEF3FF,72|18|DEF3FF";
 
     public static final Rectangle sellRec = new Rectangle(1043, 652, 1144, 701);
-    public static final String sellRule ="DEEFF7,6|-1|DEEFF7,12|-1|0071AD,66|-4|0871AD,-4|7|53A2CE,5|7|73B6DE,26|6|0075B5,34|6|0075B5,40|6|DEF3FF,46|6|DEF3FF,52|7|DEF3FF,58|7|DEF3FF,62|7|DEF3FF,66|7|DEF3FF,74|6|0075B5,-5|10|63AED6,6|11|399AC5,24|12|0879BD,37|12|0079BD,61|11|0079BD,75|12|0079B5,-3|17|6BB6DE,11|18|63B2DE,20|18|007DBD,31|18|007DBD,39|17|3296CE,53|17|007DBD,62|17|DEF3FF,65|17|007DBD";
+    public static final String sellRule = "DEEFF7,6|-1|DEEFF7,12|-1|0071AD,66|-4|0871AD,-4|7|53A2CE,5|7|73B6DE,26|6|0075B5,34|6|0075B5,40|6|DEF3FF,46|6|DEF3FF,52|7|DEF3FF,58|7|DEF3FF,62|7|DEF3FF,66|7|DEF3FF,74|6|0075B5,-5|10|63AED6,6|11|399AC5,24|12|0879BD,37|12|0079BD,61|11|0079BD,75|12|0079B5,-3|17|6BB6DE,11|18|63B2DE,20|18|007DBD,31|18|007DBD,39|17|3296CE,53|17|007DBD,62|17|DEF3FF,65|17|007DBD";
 
     public static final Rectangle breakAndSellSelectRec = new Rectangle(961, 600, 1170, 653);
     public static final String breakSelectRule = "0071AD,5|0|0075B5,9|0|298AC5,17|0|E6F7FF,14|0|0071AD,19|1|298ABD,22|1|DEF3FF,25|0|0075B5,31|1|DEF3FF,34|0|0071AD,38|0|DEF3FF,43|1|DEF3FF,46|1|0075B5,2|2|0071AD,6|2|DEF3FF,10|2|DEF3FF,13|2|DEF7FF,16|2|1179AD,17|2|DEF7FF,19|2|298EC5,21|2|84C2E6,25|3|0075B5,29|3|DEF3FF,32|3|DEF3FF,38|3|DEF3FF,42|3|73BADE,48|3|0075B5,1|8|0079BD,6|8|53A2CE,10|9|0079B5,13|9|DEF3FF,15|9|7CBEDE,17|9|DEF3FF,20|8|DEF3FF,22|8|DEF3FF,26|8|0075B5,30|9|DEF3FF,35|9|0079B5,38|9|DEF3FF,41|9|0079B5,43|9|DEF3FF,48|9|0079B5,4|15|007DBD,10|13|DEF3FF,9|16|007DBD,13|15|0079BD,17|15|DEF3FF,19|15|218EC5,20|15|007DBD,22|15|DEF3FF,25|14|007DBD,27|14|E6F7FF,31|15|0079BD,34|13|DEF3FF,36|15|0881BD,38|15|DEF3FF,42|16|73BAD6,46|15|007DBD";
@@ -85,7 +84,7 @@ public class Presets {
             new Rectangle(893, 630, 942, 680),
             new Rectangle(825, 530, 876, 590),
             new Rectangle(760, 630, 810, 680),
-            new Rectangle(899,354,938,399)
+            new Rectangle(899, 354, 938, 399)
     };
     public static final Rectangle[] skillCDRecs = {
             new Rectangle(1082, 517, 1084, 520),
@@ -99,6 +98,7 @@ public class Presets {
     };
     public static final Color skillCDColor = new Color(8, 206, 255);
     public static final Color[] skillColors = {
+            new Color(255, 255, 8),
             new Color(255, 255, 181),
             new Color(255, 255, 173),
             new Color(255, 255, 115)};
@@ -111,39 +111,39 @@ public class Presets {
     };
     public static final Color buffColor = new Color(230, 255, 206);
     public static final Rectangle[] directionalBuffRecs = {
-            new Rectangle(1151,411,1160,414),
-            new Rectangle(1118,369,1121,381),
-            new Rectangle(1191,367,1195,381),
-            new Rectangle(1151,336,1164,340),
+            new Rectangle(1151, 411, 1160, 414),
+            new Rectangle(1118, 369, 1121, 381),
+            new Rectangle(1191, 367, 1195, 381),
+            new Rectangle(1151, 336, 1164, 340),
     };
     public static final Color directionalBuffCDColor = new Color(107, 255, 255);
 
     public static final Rectangle backRec = new Rectangle(5, 8, 36, 38);
 
     public static final Rectangle[] storeRecs = {
-            new Rectangle(913,642 ,941,667),
-            new Rectangle(889,545 ,919,567),
-            new Rectangle(15,224 ,553,68),
-            new Rectangle(536,72 ,616,102),
-            new Rectangle(997,648,1122,681),
-            new Rectangle(586,463,696,496),
+            new Rectangle(913, 642, 941, 667),
+            new Rectangle(889, 545, 919, 567),
+            new Rectangle(15, 224, 553, 68),
+            new Rectangle(536, 72, 616, 102),
+            new Rectangle(997, 648, 1122, 681),
+            new Rectangle(586, 463, 696, 496),
             new Rectangle(5, 8, 36, 38),
             new Rectangle(5, 8, 36, 38)
     };
 
     public static final Rectangle[] friendRecs = {
-            new Rectangle(350,649,371,684),
-            new Rectangle(569,653,824,685),
-            new Rectangle(693,431,781,462),
-            new Rectangle(861,653,687,685),
+            new Rectangle(350, 649, 371, 684),
+            new Rectangle(569, 653, 824, 685),
+            new Rectangle(693, 431, 781, 462),
+            new Rectangle(861, 653, 687, 685),
             new Rectangle(5, 8, 36, 38)
     };
 
     public static final Rectangle[] guildRecs = {
-            new Rectangle(1106,641,1133,672),
-            new Rectangle(700,544,722,574),
-            new Rectangle(1025,118,1078,154),
-            new Rectangle(1035,266,1102,317),
+            new Rectangle(1106, 641, 1133, 672),
+            new Rectangle(700, 544, 722, 574),
+            new Rectangle(1025, 118, 1078, 154),
+            new Rectangle(1035, 266, 1102, 317),
             new Rectangle(244, 622, 345, 644),
             new Rectangle(689, 555, 770, 584),
             new Rectangle(5, 8, 36, 38),
@@ -152,28 +152,27 @@ public class Presets {
     };
 
     public static final Rectangle[] mailRecs = {
-            new Rectangle(1157,35,1178,56),
-            new Rectangle(627,654,736,677),
+            new Rectangle(1157, 35, 1178, 56),
+            new Rectangle(627, 654, 736, 677),
             new Rectangle(5, 8, 36, 38),
             new Rectangle(5, 8, 36, 38)
     };
 
     public static final Rectangle[] petRecs = {
-            new Rectangle(1219,30,1249,51),
-            new Rectangle(990,314,1011,341),
-            new Rectangle(1076,677,1135,699),
-            new Rectangle(989,625,1078,666),
-            new Rectangle(683,442,775,453),
+            new Rectangle(1219, 30, 1249, 51),
+            new Rectangle(990, 314, 1011, 341),
+            new Rectangle(1076, 677, 1135, 699),
+            new Rectangle(989, 625, 1078, 666),
+            new Rectangle(683, 442, 775, 453),
             new Rectangle(5, 8, 36, 38),
             new Rectangle(5, 8, 36, 38),
             new Rectangle(5, 8, 36, 38)
     };
-
-    private static InputStream input;
     private static final AssetManager assetManager = MainApplication.getInstance().getAssets();
     public static boolean initialized;
     public static Bitmap monsterLevelNumberFive, rewardIcon, nextButton, continueConfirmButton,
-            repairButton,inventoryFullButton;
+            repairButton, inventoryFullButton, goBackButton, directionalBuffIcon;
+    private static InputStream input;
 
     public static void initialize() {
         monsterLevelNumberFive = readImage("MonsterLevelNumberFive.jpg");
@@ -182,6 +181,8 @@ public class Presets {
         continueConfirmButton = readImage("ContinueConfirmButton.png");
         repairButton = readImage("RepairButton.png");
         inventoryFullButton = readImage("InventoryFullButton.png");
+        goBackButton = readImage("GoBackButton.png");
+        directionalBuffIcon = readImage("DirectionalBuffIcon.png");
         initialized = true;
     }
 

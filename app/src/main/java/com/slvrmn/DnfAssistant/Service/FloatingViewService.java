@@ -13,6 +13,7 @@ import android.view.WindowManager;
 
 import com.slvrmn.DnfAssistant.GamePackage.Assistant;
 import com.slvrmn.DnfAssistant.R;
+import com.slvrmn.DnfAssistant.Tools.MLog;
 
 public class FloatingViewService extends Service implements View.OnClickListener {
 
@@ -82,8 +83,8 @@ public class FloatingViewService extends Service implements View.OnClickListener
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 
-        params.x = -580;
-        params.y = 200;
+        params.x = -600;
+        params.y = 270;
         //getting window services and adding the floating view to it
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         windowManager.addView(floatingView, params);
@@ -128,7 +129,7 @@ public class FloatingViewService extends Service implements View.OnClickListener
                 case MotionEvent.ACTION_UP:
                     if (!dragging) {
                         if (expandedView.getVisibility() == View.VISIBLE) {
-                            expandedView.setVisibility(View.INVISIBLE);
+                            expandedView.setVisibility(View.GONE);
                         } else {
                             expandedView.setVisibility(View.VISIBLE);
                         }
@@ -145,10 +146,10 @@ public class FloatingViewService extends Service implements View.OnClickListener
                         }
                         int x = initialX + (int) (event.getRawX() - initialTouchX);
                         int y = initialY + (int) (event.getRawY() - initialTouchY);
-                        x = Math.min(x, 580);
-                        x = Math.max(x, -580);
-                        y = Math.min(y, 200);
-                        y = Math.max(y, -200);
+                        x = Math.min(x, 600);
+                        x = Math.max(x, -600);
+                        y = Math.min(y, 270);
+                        y = Math.max(y, -270);
                         params.x = x;
                         params.y = y;
                         windowManager.updateViewLayout(floatingView, params);

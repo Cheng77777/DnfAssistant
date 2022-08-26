@@ -27,7 +27,6 @@ public class AutoBattle extends Thread {
         try {
             while (RUN) {
                 if (isBattling) {
-                    MLog.info("自动战斗中");
                     if (hasMonster && isDamaging) {
                         /** 后跳 **/
                         if (backJump >= backJumpCD) {

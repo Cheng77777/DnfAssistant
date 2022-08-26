@@ -21,6 +21,7 @@ import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isBattling;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isDamaging;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isEnergyEmpty;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isPathFinding;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.screenFreezeTime;
 
 import com.slvrmn.DnfAssistant.Model.Robot;
 import com.slvrmn.DnfAssistant.Tools.MLog;
@@ -38,7 +39,6 @@ public class AutoPathFinding extends Thread {
                     if (hasReward) {
                         GetReward();
                     }
-                    MLog.info("自动寻路中");
                     if (beforeLion) {
                         do {
                             if (!RUN) {
@@ -89,16 +89,11 @@ public class AutoPathFinding extends Thread {
                             continue mainLoop;
                         }
 
-                        if(UseBuff()){
-                            continue mainLoop;
-                        }
-                        /** 检测闪避 **/
-                        if (canDodge) {
-                            Dodge();
+                        if (UseBuff()) {
                             continue mainLoop;
                         }
                         /** 检测战斗 **/
-                        if (isDamaging&&hasMonster) {
+                        if (isDamaging && hasMonster) {
                             stuckTime = 0;
                             isPathFinding = false;
                             isBattling = true;
@@ -106,12 +101,12 @@ public class AutoPathFinding extends Thread {
                         }
                         /** 检测卡住 **/
 
-                        if (stuckTime >= 2) {
+                        if (stuckTime >= 1) {
+                            MoveAround();
+                            stuckTime = 0;
                             if (!inHell) {
-                                MoveAround();
                                 continue mainLoop;
                             } else {
-                                MoveAround();
                                 int random = Utility.RandomInt(1500, 2000);
                                 PressLongAttack(random, random);
                                 PressMultipleAttacks(3);
@@ -122,10 +117,15 @@ public class AutoPathFinding extends Thread {
                                 }
                             }
                         } else {
-                            if (stuckTime >= 2500 / CHECK_INTERVAL) {
+                            if (screenFreezeTime >= 2500 / CHECK_INTERVAL) {
                                 stuckTime++;
                                 continue mainLoop;
                             }
+                        }
+                        /** 检测闪避 **/
+                        if (canDodge) {
+                            Dodge();
+                            continue mainLoop;
                         }
                         sleep(CHECK_INTERVAL);
                     }

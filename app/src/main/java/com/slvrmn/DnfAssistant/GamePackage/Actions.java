@@ -1,9 +1,13 @@
 package com.slvrmn.DnfAssistant.GamePackage;
 
 import static com.slvrmn.DnfAssistant.GamePackage.Assistant.RUN;
+import static com.slvrmn.DnfAssistant.GamePackage.Presets.buffRecs;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.CHECK_INTERVAL;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.buffs;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.directionalBuff;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.directionalBuffs;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasContinue;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasGoBack;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasRepair;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isEnergyEmpty;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isInventoryFull;
@@ -48,6 +52,7 @@ public class Actions {
         sleep(2000);
         Robot.Press(Presets.homeRec);
         sleep(2000);
+        ScreenCheck.InitializeParameters();
         Robot.Press(Presets.confirmGoOutRec);
         sleep(2000);
     }
@@ -93,14 +98,16 @@ public class Actions {
             CleanInventory();
         }
 
-        /** 进入下一次副本 **/
+        ScreenCheck.InitializeParameters();
+
         if (isEnergyEmpty) {
-            //TODO
+            /** 回城 **/
+            Robot.Press(hasGoBack);
             return;
         } else {
+            /** 进入下一次副本 **/
             Robot.Press(hasContinue);
             sleep(1000);
-            ScreenCheck.InitializeParameters();
             Robot.Press(Presets.continueConfirmRec);
             sleep(3000);
         }
@@ -133,6 +140,7 @@ public class Actions {
         PressBack();
         PressBack();
         PressBack();
+        PressBack();
         sleep(1000);
     }
 
@@ -158,12 +166,43 @@ public class Actions {
     static boolean UseBuff() throws InterruptedException {
         for (int i = 0; i < buffs.length; i++) {
             if (buffs[i]) {
+                if (i == 0 && directionalBuff) {
+                    for (int j = 0; j < directionalBuffs.length;j++) {
+                        boolean b = directionalBuffs[j];
+                        if (b) {
+                            UseDirectionalBuff(j);
+                            return true;
+                        }
+                    }
+                    return false;
+                }
                 sleep(500);
-                Robot.Press(Presets.buffRecs[i]);
+                MLog.info("Use Buff "+i);
+                Robot.Press(buffRecs[i]);
                 sleep(500);
                 return true;
             }
         }
         return false;
+    }
+
+    static void UseDirectionalBuff(int direction) throws InterruptedException {
+        Rectangle destination = buffRecs[0].Copy();
+        switch (direction){
+            case 0:
+                destination.Move(0,destination.YLen()*2);
+                break;
+            case 1:
+                destination.Move(destination.XLen()*2,0);
+                break;
+            case 2:
+                destination.Move(0,-destination.YLen()*2);
+                break;
+            case 3:
+                destination.Move(-destination.XLen()*2,0);
+                break;
+        }
+        Robot.swipe(buffRecs[0],destination,150);
+        sleep(150);
     }
 }
