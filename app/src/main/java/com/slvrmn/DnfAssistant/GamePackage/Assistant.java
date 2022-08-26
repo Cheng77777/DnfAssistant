@@ -7,13 +7,13 @@ public class Assistant {
     public static volatile boolean RUN = false;
     private static volatile Assistant instance;
     private ScreenCheck screenCheck;
-    private AutoPathFinding autoPathFinding;
+    private AutoFarmPathFinding autoFarmPathFinding;
     private AutoBattle autoBattle;
 
     private Assistant() {
         if(screenCheck == null){
             screenCheck = new ScreenCheck();
-            autoPathFinding = new AutoPathFinding();
+            autoFarmPathFinding = new AutoFarmPathFinding();
             autoBattle = new AutoBattle();
         }
     }
@@ -31,7 +31,7 @@ public class Assistant {
             MLog.setDebug(true);
             RUN=true;
             screenCheck.start();
-            autoPathFinding.start();
+            autoFarmPathFinding.start();
             autoBattle.start();
             Utility.show("开始运行");
         }

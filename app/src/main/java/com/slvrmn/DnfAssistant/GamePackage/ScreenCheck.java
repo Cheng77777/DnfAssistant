@@ -63,7 +63,7 @@ public class ScreenCheck extends Thread {
             inDungeon, inBoss, beforeLion, inLion, hasMonster, isDamaging,
             canDodge, hasResult, hasReward, inHell, hasContinueConfirm, isEnergyEmpty,
             canBreak, canSell, canBreakSelect, canSellSelect, canBreakConfirm,
-            isPathFinding, isBattling, directionalBuff;
+            isPathFinding, isBattling, directionalBuff, isDailyQuesting;
     public static volatile Rectangle hasContinue, hasRepair, isInventoryFull, hasGoBack;
     public static volatile boolean[] skills = {false, false, false, false, false, false, false, false, false, false, false};
     public static volatile boolean[] availableSkills = {false, false, false, false, false, false, false, false, false, false, false};
@@ -94,6 +94,7 @@ public class ScreenCheck extends Thread {
         isPathFinding = false;
         isBattling = false;
         directionalBuff = false;
+        isDailyQuesting = false;
         hasContinue = Rectangle.INVALID_RECTANGLE;
         hasRepair = Rectangle.INVALID_RECTANGLE;
         isInventoryFull = Rectangle.INVALID_RECTANGLE;
@@ -272,7 +273,7 @@ public class ScreenCheck extends Thread {
         if (hasReward) {
             return;
         }
-        if (Image.matchTemplate(screenshot, rewardIcon, 0.8,rewardRec).isValid()) {
+        if (Image.matchTemplate(screenshot, rewardIcon, 0.8, rewardRec).isValid()) {
             hasReward = true;
             MLog.info("可翻牌");
             return;

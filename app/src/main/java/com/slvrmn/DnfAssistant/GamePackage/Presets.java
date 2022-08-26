@@ -163,10 +163,20 @@ public class Presets {
             new Rectangle(5, 8, 36, 38),
             new Rectangle(5, 8, 36, 38)
     };
+
+    public static final Rectangle[] DailyQuestRecs = {
+            new Rectangle(1111,642,1143,681),
+            new Rectangle(845,547,880,582),
+            new Rectangle(1111,642,1143,681),
+    };
+
     private static final AssetManager assetManager = MainApplication.getInstance().getAssets();
     public static boolean initialized;
-    public static Bitmap monsterLevelNumberFive,resultIcon, rewardIcon, nextButton, continueConfirmButton,
-            repairButton, inventoryFullButton, goBackButton, directionalBuffIcon;
+    public static Bitmap monsterLevelNumberFive,resultIcon, rewardIcon, nextButton,
+            continueConfirmButton, repairButton, inventoryFullButton, goBackButton,
+            directionalBuffIcon, epicIcon,coalIcon,crystalIcon,towerIcon,ticketsIcon,goldIcon
+    ;
+    public static Bitmap[] dailyQuestIcons = {epicIcon,ticketsIcon,crystalIcon,coalIcon,goldIcon,towerIcon};
     private static InputStream input;
 
     public static void initialize() {
@@ -179,6 +189,13 @@ public class Presets {
         inventoryFullButton = readImage("InventoryFullButton.png");
         goBackButton = readImage("GoBackButton.png");
         directionalBuffIcon = readImage("DirectionalBuffIcon.png");
+
+        epicIcon = readImage("EpicIcon.png");
+        ticketsIcon = readImage("TicketsIcon.png");
+        crystalIcon = readImage("CrystalIcon.png");
+        coalIcon = readImage("CoalIcon.png");
+        goldIcon = readImage("GoldIcon.png");
+        towerIcon = readImage("TowerIcon.png");
         initialized = true;
     }
 

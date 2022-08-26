@@ -91,11 +91,7 @@ public class Actions {
             sleep(CHECK_INTERVAL);
         }
 
-        /** 拾取物品 **/
-        MLog.info("拾取物品");
-        MoveAround();
-        random = Utility.RandomInt(3000, 3200);
-        PressLongAttack(random, random);
+        PickDrops();
 
         /** 检测修理 **/
         if (hasRepair.isValid()) {
@@ -122,6 +118,14 @@ public class Actions {
             ScreenCheck.InitializeParameters();
             sleep(1000);
         }
+    }
+
+    static void PickDrops() throws InterruptedException {
+        /** 拾取物品 **/
+        MLog.info("拾取物品");
+        MoveAround();
+        int random = Utility.RandomInt(3000, 3200);
+        PressLongAttack(random, random);
     }
 
     static void RepairEquipments() throws InterruptedException {
