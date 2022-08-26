@@ -94,7 +94,7 @@ public class Actions {
         /** 拾取物品 **/
         MLog.info("拾取物品");
         MoveAround();
-        random = Utility.RandomInt(3500, 4000);
+        random = Utility.RandomInt(3000, 3200);
         PressLongAttack(random, random);
 
         /** 检测修理 **/

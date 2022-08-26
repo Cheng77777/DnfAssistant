@@ -14,6 +14,8 @@ import java.io.InputStream;
 public class Presets {
 
     public static final Rectangle mapRec = new Rectangle(1143, 29, 1225, 105);
+    public static final Rectangle resultRec= new Rectangle(845, 8, 1006, 63);
+    public static final Rectangle rewardRec= new Rectangle(485, 24, 793, 97);
 
     public static final Rectangle settingsRec = new Rectangle(1065, 8, 1104, 46);
     public static final Rectangle homeRec = new Rectangle(1013, 639, 1121, 661);
@@ -43,10 +45,7 @@ public class Presets {
     public static final Color dodgeColor = new Color(197, 255, 123);
     public static final Rectangle completeDungeonMenuRec = new Rectangle(999, 20, 1270, 600);
     public static final Rectangle continueConfirmRec = new Rectangle(665, 429, 791, 470);
-    public static final Rectangle inventoryRec = new Rectangle(813, 0, 880, 81);
-    public static final Rectangle breakAndSellCloseRec = new Rectangle(1185, 64, 1212, 92);
     public static final Rectangle confirmGoOutRec = new Rectangle(696, 436, 772, 463);
-    public static final String inventoryFullRules = "A4EBFF,10|1|6BAEDE,15|-12|212021,-1|-12|DEEBFF,-11|-13|002063,-14|-25|4A5D84,-5|-25|080C08,3|-23|080808,7|-21|080C10,5|-29|0000FF,7|-27|000084,9|-26|101410,18|-22|0000FF,21|-22|00003A,25|-26|0000EF,25|-30|0000EF,25|-32|0000B5,25|-23|0000EF,25|-20|0000EF,26|-26|0000FF,20|-22|08044A,16|-22|100C19,7|-21|080C10,4|-21|081010,2|-21|101010,1|-21|080808,-1|-21|191C21,1|-21|080808,2|-21|101010,4|-21|081010,6|-21|0000EF,8|-21|000810,10|-21|080C10,5|-29|0000FF,5|-31|0000FF,6|-32|00009C";
     public static final Rectangle energyRec = new Rectangle(101, 49, 153, 83);
     public static final String energyEmptyRules = "9CC2C5,-3|6|3186CE,-7|11|BD5D6B,-10|16|A4869C,-15|20|3181C5,13|7|000000,14|6|000021,16|5|0000FF,17|3|000010,19|3|000010,21|7|000073,23|11|0000FF,22|14|0000FF,17|16|0000F7,14|12|0000F7";
 
@@ -106,19 +105,6 @@ public class Presets {
     public static final Color skillCDColor = new Color(8, 206, 255);
     public static final Color skillFrameColor = new Color(197, 166, 99);
 
-//    public static final Color[] skillColors = {
-//            new Color(255, 255, 8),
-//            new Color(255, 255, 181),
-//            new Color(255, 255, 173),
-//            new Color(255, 255, 115)};
-
-//    public static final Rectangle[] buffCDRecs = {
-//            new Rectangle(996, 341, 999, 344),
-//            new Rectangle(1076, 341, 1079, 344),
-//            new Rectangle(1155, 341, 1158, 344)
-//    };
-
-//    public static final Color buffColor = new Color(230, 255, 206);
     public static final Rectangle[] directionalBuffRecs = {
             new Rectangle(1151, 411, 1160, 414),
             new Rectangle(1118, 369, 1121, 381),
@@ -179,12 +165,13 @@ public class Presets {
     };
     private static final AssetManager assetManager = MainApplication.getInstance().getAssets();
     public static boolean initialized;
-    public static Bitmap monsterLevelNumberFive, rewardIcon, nextButton, continueConfirmButton,
+    public static Bitmap monsterLevelNumberFive,resultIcon, rewardIcon, nextButton, continueConfirmButton,
             repairButton, inventoryFullButton, goBackButton, directionalBuffIcon;
     private static InputStream input;
 
     public static void initialize() {
         monsterLevelNumberFive = readImage("MonsterLevelNumberFive.jpg");
+        resultIcon = readImage("ResultIcon.jpeg");
         rewardIcon = readImage("RewardIcon.jpg");
         nextButton = readImage("NextButton.png");
         continueConfirmButton = readImage("ContinueConfirmButton.png");

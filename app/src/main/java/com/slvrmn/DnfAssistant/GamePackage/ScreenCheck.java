@@ -33,7 +33,10 @@ import static com.slvrmn.DnfAssistant.GamePackage.Presets.monsterLevelNumberFive
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.monsterLevelRec;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.nextButton;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.repairButton;
+import static com.slvrmn.DnfAssistant.GamePackage.Presets.resultIcon;
+import static com.slvrmn.DnfAssistant.GamePackage.Presets.resultRec;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.rewardIcon;
+import static com.slvrmn.DnfAssistant.GamePackage.Presets.rewardRec;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.sellConfirmRec;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.sellConfirmRule;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.sellRec;
@@ -58,7 +61,7 @@ public class ScreenCheck extends Thread {
     public static volatile int screenFreezeTime;
     public static volatile boolean
             inDungeon, inBoss, beforeLion, inLion, hasMonster, isDamaging,
-            canDodge, hasReward, inHell, hasContinueConfirm, isEnergyEmpty,
+            canDodge, hasResult, hasReward, inHell, hasContinueConfirm, isEnergyEmpty,
             canBreak, canSell, canBreakSelect, canSellSelect, canBreakConfirm,
             isPathFinding, isBattling, directionalBuff;
     public static volatile Rectangle hasContinue, hasRepair, isInventoryFull, hasGoBack;
@@ -78,6 +81,7 @@ public class ScreenCheck extends Thread {
         hasMonster = false;
         isDamaging = false;
         canDodge = false;
+        hasResult = false;
         hasReward = false;
         inHell = false;
         hasContinueConfirm = false;
@@ -123,6 +127,7 @@ public class ScreenCheck extends Thread {
                 CheckDamaging(screenshot);
                 CheckDodge(screenshot);
                 CheckStuck(screenshot);
+                CheckResult(screenshot);
                 CheckReward(screenshot);
                 CheckInventoryFull(screenshot);
                 CheckBreak(screenshot);
@@ -251,11 +256,23 @@ public class ScreenCheck extends Thread {
         }
     }
 
+    private void CheckResult(Bitmap screenshot) {
+        if (hasResult) {
+            return;
+        }
+        if (Image.matchTemplate(screenshot, resultIcon, 0.8, resultRec).isValid()) {
+            hasResult = true;
+            MLog.info("副本结束");
+            return;
+        }
+        hasResult = false;
+    }
+
     private void CheckReward(Bitmap screenshot) {
         if (hasReward) {
             return;
         }
-        if (Image.matchTemplate(screenshot, rewardIcon, 0.85).isValid()) {
+        if (Image.matchTemplate(screenshot, rewardIcon, 0.8,rewardRec).isValid()) {
             hasReward = true;
             MLog.info("可翻牌");
             return;
@@ -416,7 +433,7 @@ public class ScreenCheck extends Thread {
         isEnergyEmpty = false;
     }
 
-    private void CheckAvailableSkills(Bitmap screenshot){
+    private void CheckAvailableSkills(Bitmap screenshot) {
         for (int i = 0; i < availableSkills.length; i++) {
             if (Image.findPoint(screenshot, skillFrameColor, skillCDRecs[i]).isValid()) {
                 availableSkills[i] = true;
@@ -426,20 +443,20 @@ public class ScreenCheck extends Thread {
     }
 
     private void CheckSkillsCoolDown(Bitmap screenshot) {
-        if(!inDungeon){
+        if (!inDungeon) {
             return;
         }
         for (int i = 0; i < skills.length; i++) {
             if (availableSkills[i]) {
                 skills[i] = !Image.findPoint(screenshot, skillCDColor, skillCDRecs[i]).isValid();
-            }else {
+            } else {
                 skills[i] = false;
             }
         }
     }
 
     private void CheckDirectionBuffsCoolDown(Bitmap screenshot) {
-        if(!inDungeon){
+        if (!inDungeon) {
             return;
         }
         if (!directionalBuff && Image.matchTemplate(screenshot, directionalBuffIcon, 0.95, skillRecs[10]).isValid()) {

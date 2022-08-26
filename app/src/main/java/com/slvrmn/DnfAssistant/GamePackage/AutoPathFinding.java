@@ -13,6 +13,7 @@ import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.CHECK_INTERVAL;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.beforeLion;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.canDodge;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasMonster;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasResult;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasReward;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.inDungeon;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.inHell;
@@ -47,13 +48,17 @@ public class AutoPathFinding extends Thread {
                                 int random = Utility.RandomInt(2000, 2300);
                                 Robot.LongPress(Presets.moveRecs[0], random);
                                 sleep(random + 100);
+                                if(!beforeLion){
+                                    break;
+                                }
                                 random = Utility.RandomInt(1000, 1200);
                                 Robot.LongPress(Presets.moveRecs[2], random);
                                 sleep(3000);
 
                                 if (!inLion) {
-                                    PressJoystick(3, 100);
-                                    sleep(100);
+                                    random = Utility.RandomInt(100,150);
+                                    PressJoystick(3, random);
+                                    sleep(random);
                                     int pressTime = Utility.RandomInt(1500, 1600);
                                     PressLongAttack(pressTime, pressTime);
 
@@ -89,43 +94,45 @@ public class AutoPathFinding extends Thread {
                                 continue mainLoop;
                             }
 
-                            if (UseBuff()) {
-                                continue mainLoop;
-                            }
-                            /** 检测战斗 **/
-                            if (isDamaging && hasMonster) {
-                                stuckTime = 0;
-                                isPathFinding = false;
-                                isBattling = true;
-                                continue mainLoop;
-                            }
-                            /** 检测卡住 **/
-
-                            if (stuckTime >= 1) {
-                                MoveAround();
-                                stuckTime = 0;
-                                if (!inHell) {
+                            if (!hasResult) {
+                                if (UseBuff()) {
                                     continue mainLoop;
+                                }
+                                /** 检测战斗 **/
+                                if (isDamaging && hasMonster) {
+                                    stuckTime = 0;
+                                    isPathFinding = false;
+                                    isBattling = true;
+                                    continue mainLoop;
+                                }
+                                /** 检测卡住 **/
+
+                                if (stuckTime >= 1) {
+                                    MoveAround();
+                                    stuckTime = 0;
+                                    if (!inHell) {
+                                        continue mainLoop;
+                                    } else {
+                                        int random = Utility.RandomInt(1500, 2000);
+                                        PressLongAttack(random, random);
+                                        PressMultipleAttacks(3);
+                                        random = Utility.RandomInt(1500, 2000);
+                                        PressLongAttack(random, random);
+                                        if (isEnergyEmpty) {
+                                            GoOutDungeon();
+                                        }
+                                    }
                                 } else {
-                                    int random = Utility.RandomInt(1500, 2000);
-                                    PressLongAttack(random, random);
-                                    PressMultipleAttacks(3);
-                                    random = Utility.RandomInt(1500, 2000);
-                                    PressLongAttack(random, random);
-                                    if (isEnergyEmpty) {
-                                        GoOutDungeon();
+                                    if (screenFreezeTime >= 2500 / CHECK_INTERVAL) {
+                                        stuckTime++;
+                                        continue mainLoop;
                                     }
                                 }
-                            } else {
-                                if (screenFreezeTime >= 2500 / CHECK_INTERVAL) {
-                                    stuckTime++;
+                                /** 检测闪避 **/
+                                if (canDodge) {
+                                    Dodge();
                                     continue mainLoop;
                                 }
-                            }
-                            /** 检测闪避 **/
-                            if (canDodge) {
-                                Dodge();
-                                continue mainLoop;
                             }
                             sleep(CHECK_INTERVAL);
                         }
