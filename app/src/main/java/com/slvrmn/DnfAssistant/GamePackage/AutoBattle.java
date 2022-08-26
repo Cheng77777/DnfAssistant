@@ -4,7 +4,6 @@ import static com.slvrmn.DnfAssistant.GamePackage.Actions.BackJump;
 import static com.slvrmn.DnfAssistant.GamePackage.Actions.PressMultipleAttacks;
 import static com.slvrmn.DnfAssistant.GamePackage.Assistant.RUN;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.CHECK_INTERVAL;
-import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.buffs;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasMonster;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.inBoss;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.inHell;
@@ -53,15 +52,16 @@ public class AutoBattle extends Thread {
     }
 
     private void UseSkills() throws InterruptedException {
-        if (skills[7] && (inBoss || inLion || inHell)) {
-            Robot.Press(Presets.skillRecs[7]);
+        if (skills[skills.length - 4] && (inBoss || inLion || inHell)) {
+            Robot.Press(Presets.skillRecs[skills.length - 4]);
             return;
         }
-        for (int i = 0; i < skills.length - 1; i++) {
+        for (int i = 0; i < skills.length - 4; i++) {
             if (!RUN) {
                 return;
             }
             if (skills[i]) {
+                MLog.info("skill "+i);
                 Robot.Press(Presets.skillRecs[i]);
                 sleep(300);
                 if (!hasMonster||!isDamaging) {

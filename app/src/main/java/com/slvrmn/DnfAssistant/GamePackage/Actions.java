@@ -1,9 +1,8 @@
 package com.slvrmn.DnfAssistant.GamePackage;
 
 import static com.slvrmn.DnfAssistant.GamePackage.Assistant.RUN;
-import static com.slvrmn.DnfAssistant.GamePackage.Presets.buffRecs;
+import static com.slvrmn.DnfAssistant.GamePackage.Presets.skillRecs;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.CHECK_INTERVAL;
-import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.buffs;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.directionalBuff;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.directionalBuffs;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasContinue;
@@ -11,6 +10,7 @@ import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasGoBack;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasRepair;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isEnergyEmpty;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isInventoryFull;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.skills;
 import static java.lang.Thread.sleep;
 
 import android.os.SystemClock;
@@ -61,6 +61,9 @@ public class Actions {
         MLog.info("稍微移动");
         int random;
         for (int i = 0; i < 4; i++) {
+            if (!RUN) {
+                return;
+            }
             random = Utility.RandomInt(100, 200);
             Robot.LongPress(Presets.joystickRecs[0], Presets.joystickRecs[1], random);
             sleep(random);
@@ -71,12 +74,11 @@ public class Actions {
         MLog.info("翻牌并进入下次战斗");
         sleep(1000);
         int random = Utility.RandomInt(7, 8);
-        Robot.Press(Presets.skillRecs[0], random);
+        Robot.Press(skillRecs[0], random);
         sleep(3000);
 
         while (!hasContinue.isValid()) {
             if (!RUN) {
-                Utility.show("线程停止运行");
                 return;
             }
             sleep(CHECK_INTERVAL);
@@ -98,8 +100,6 @@ public class Actions {
             CleanInventory();
         }
 
-        ScreenCheck.InitializeParameters();
-
         if (isEnergyEmpty) {
             /** 回城 **/
             Robot.Press(hasGoBack);
@@ -109,7 +109,9 @@ public class Actions {
             Robot.Press(hasContinue);
             sleep(1000);
             Robot.Press(Presets.continueConfirmRec);
-            sleep(3000);
+            sleep(1000);
+            ScreenCheck.InitializeParameters();
+            sleep(1000);
         }
     }
 
@@ -164,10 +166,18 @@ public class Actions {
     }
 
     static boolean UseBuff() throws InterruptedException {
-        for (int i = 0; i < buffs.length; i++) {
-            if (buffs[i]) {
-                if (i == 0 && directionalBuff) {
-                    for (int j = 0; j < directionalBuffs.length;j++) {
+        for (int i = skills.length - 1; i >= skills.length - 3; i--) {
+            if (!RUN) {
+                Utility.show("线程停止运行");
+                return false;
+            }
+            if (skills[i]) {
+                if (i == skills.length - 1 && directionalBuff) {
+                    for (int j = 0; j < directionalBuffs.length; j++) {
+                        if (!RUN) {
+                            Utility.show("线程停止运行");
+                            return false;
+                        }
                         boolean b = directionalBuffs[j];
                         if (b) {
                             UseDirectionalBuff(j);
@@ -177,8 +187,8 @@ public class Actions {
                     return false;
                 }
                 sleep(500);
-                MLog.info("Use Buff "+i);
-                Robot.Press(buffRecs[i]);
+                MLog.info("Use Buff " + i);
+                Robot.Press(skillRecs[i]);
                 sleep(500);
                 return true;
             }
@@ -187,22 +197,22 @@ public class Actions {
     }
 
     static void UseDirectionalBuff(int direction) throws InterruptedException {
-        Rectangle destination = buffRecs[0].Copy();
-        switch (direction){
+        Rectangle destination = skillRecs[skillRecs.length - 1].Copy();
+        switch (direction) {
             case 0:
-                destination.Move(0,destination.YLen()*2);
+                destination.Move(0, destination.YLen() * 2);
                 break;
             case 1:
-                destination.Move(destination.XLen()*2,0);
+                destination.Move(destination.XLen() * 2, 0);
                 break;
             case 2:
-                destination.Move(0,-destination.YLen()*2);
+                destination.Move(0, -destination.YLen() * 2);
                 break;
             case 3:
-                destination.Move(-destination.XLen()*2,0);
+                destination.Move(-destination.XLen() * 2, 0);
                 break;
         }
-        Robot.swipe(buffRecs[0],destination,150);
+        Robot.swipe(skillRecs[skillRecs.length - 1], destination, 150);
         sleep(150);
     }
 }

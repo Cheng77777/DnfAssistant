@@ -82,34 +82,43 @@ public class Presets {
             new Rectangle(998, 440, 1055, 490),
             new Rectangle(940, 530, 996, 590),
             new Rectangle(893, 630, 942, 680),
-            new Rectangle(825, 530, 876, 590),
             new Rectangle(760, 630, 810, 680),
-            new Rectangle(899, 354, 938, 399)
+            new Rectangle(825, 530, 876, 590),
+            new Rectangle(899, 355, 938, 400),
+            new Rectangle(975, 355, 1019, 400),
+            new Rectangle(1053, 355, 1098, 400),
+            new Rectangle(1135, 355, 1178, 400),
+
     };
     public static final Rectangle[] skillCDRecs = {
-            new Rectangle(1082, 517, 1084, 520),
-            new Rectangle(1140, 427, 1142, 430),
-            new Rectangle(1024, 427, 1027, 429),
-            new Rectangle(967, 517, 969, 520),
-            new Rectangle(910, 607, 912, 610),
-            new Rectangle(790, 607, 792, 610),
-            new Rectangle(850, 517, 852, 520),
-            new Rectangle(916, 340, 919, 344)
+            new Rectangle(1083, 517, 1088, 519),
+            new Rectangle(1140, 427, 1145, 429),
+            new Rectangle(1025, 427, 1030, 429),
+            new Rectangle(968, 517, 973, 519),
+            new Rectangle(910, 607, 915, 609),
+            new Rectangle(790, 607, 795, 609),
+            new Rectangle(850, 517, 855, 519),
+            new Rectangle(917, 341, 922, 343),
+            new Rectangle(996, 341, 1001, 343),
+            new Rectangle(1076, 341, 1081, 343),
+            new Rectangle(1155, 341, 1160, 343)
     };
     public static final Color skillCDColor = new Color(8, 206, 255);
-    public static final Color[] skillColors = {
-            new Color(255, 255, 8),
-            new Color(255, 255, 181),
-            new Color(255, 255, 173),
-            new Color(255, 255, 115)};
+    public static final Color skillFrameColor = new Color(197, 166, 99);
 
+//    public static final Color[] skillColors = {
+//            new Color(255, 255, 8),
+//            new Color(255, 255, 181),
+//            new Color(255, 255, 173),
+//            new Color(255, 255, 115)};
 
-    public static final Rectangle[] buffRecs = {
-            new Rectangle(1135, 355, 1178, 400),
-            new Rectangle(1053, 355, 1098, 400),
-            new Rectangle(975, 355, 1019, 400)
-    };
-    public static final Color buffColor = new Color(230, 255, 206);
+//    public static final Rectangle[] buffCDRecs = {
+//            new Rectangle(996, 341, 999, 344),
+//            new Rectangle(1076, 341, 1079, 344),
+//            new Rectangle(1155, 341, 1158, 344)
+//    };
+
+//    public static final Color buffColor = new Color(230, 255, 206);
     public static final Rectangle[] directionalBuffRecs = {
             new Rectangle(1151, 411, 1160, 414),
             new Rectangle(1118, 369, 1121, 381),

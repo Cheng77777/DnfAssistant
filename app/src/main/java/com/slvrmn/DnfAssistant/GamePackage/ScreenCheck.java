@@ -8,8 +8,6 @@ import static com.slvrmn.DnfAssistant.GamePackage.Presets.breakConfirmRule;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.breakRec;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.breakRule;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.breakSelectRule;
-import static com.slvrmn.DnfAssistant.GamePackage.Presets.buffColor;
-import static com.slvrmn.DnfAssistant.GamePackage.Presets.buffRecs;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.completeDungeonMenuRec;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.continueConfirmButton;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.continueConfirmRec;
@@ -43,7 +41,7 @@ import static com.slvrmn.DnfAssistant.GamePackage.Presets.sellRule;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.sellSelectRule;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.skillCDColor;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.skillCDRecs;
-import static com.slvrmn.DnfAssistant.GamePackage.Presets.skillColors;
+import static com.slvrmn.DnfAssistant.GamePackage.Presets.skillFrameColor;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.skillRecs;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.stuckRec;
 
@@ -64,8 +62,8 @@ public class ScreenCheck extends Thread {
             canBreak, canSell, canBreakSelect, canSellSelect, canBreakConfirm,
             isPathFinding, isBattling, directionalBuff;
     public static volatile Rectangle hasContinue, hasRepair, isInventoryFull, hasGoBack;
-    public static volatile boolean[] skills = {false, false, false, false, false, false, false, false};
-    public static volatile boolean[] buffs = {false, false, false};
+    public static volatile boolean[] skills = {false, false, false, false, false, false, false, false, false, false, false};
+    public static volatile boolean[] availableSkills = {false, false, false, false, false, false, false, false, false, false, false};
     public static volatile boolean[] directionalBuffs = {false, false, false, false};
 
     private static volatile Bitmap lastScreenshot;
@@ -99,8 +97,8 @@ public class ScreenCheck extends Thread {
         for (int i = 0; i < skills.length; i++) {
             skills[i] = false;
         }
-        for (int i = 0; i < buffs.length; i++) {
-            buffs[i] = false;
+        for (int i = 0; i < availableSkills.length; i++) {
+            availableSkills[i] = false;
         }
         for (int i = 0; i < directionalBuffs.length; i++) {
             directionalBuffs[i] = false;
@@ -139,7 +137,6 @@ public class ScreenCheck extends Thread {
                 CheckContinueConfirmButton(screenshot);
                 CheckEnergyEmpty(screenshot);
                 CheckSkillsCoolDown(screenshot);
-                CheckBuffsCoolDown(screenshot);
                 CheckDirectionBuffsCoolDown(screenshot);
 
                 sleep(CHECK_INTERVAL);
@@ -164,6 +161,7 @@ public class ScreenCheck extends Thread {
             //MLog.info("地下城中");
             inDungeon = true;
             isPathFinding = true;
+            CheckAvailableSkills(screenshot);
             return;
         }
         inDungeon = false;
@@ -418,32 +416,33 @@ public class ScreenCheck extends Thread {
         isEnergyEmpty = false;
     }
 
-    private void CheckSkillsCoolDown(Bitmap screenshot) {
-        for (int i = 0; i < skills.length; i++) {
-            if (i <= 6) {
-                skills[i] = !Image.findPoint(screenshot, skillCDColor,
-                        skillCDRecs[i]).isValid() &&
-                        Image.findPoint(screenshot, skillColors, skillRecs[i]).isValid();
-            } else {
-                skills[i] = !Image.findPoint(screenshot, skillCDColor,
-                        skillCDRecs[i]).isValid();
+    private void CheckAvailableSkills(Bitmap screenshot){
+        for (int i = 0; i < availableSkills.length; i++) {
+            if (Image.findPoint(screenshot, skillFrameColor, skillCDRecs[i]).isValid()) {
+                availableSkills[i] = true;
+                skills[i] = false;
             }
         }
     }
 
-    private void CheckBuffsCoolDown(Bitmap screenshot) {
-        for (int i = 0; i < buffs.length; i++) {
-            if (Image.findPoint(screenshot, buffColor, buffRecs[i]).isValid()) {
-                //MLog.info("BUFF " + i + " 可用");
-                buffs[i] = true;
-            } else {
-                buffs[i] = false;
+    private void CheckSkillsCoolDown(Bitmap screenshot) {
+        if(!inDungeon){
+            return;
+        }
+        for (int i = 0; i < skills.length; i++) {
+            if (availableSkills[i]) {
+                skills[i] = !Image.findPoint(screenshot, skillCDColor, skillCDRecs[i]).isValid();
+            }else {
+                skills[i] = false;
             }
         }
     }
 
     private void CheckDirectionBuffsCoolDown(Bitmap screenshot) {
-        if (!directionalBuff && Image.matchTemplate(screenshot, directionalBuffIcon, 0.95, buffRecs[0]).isValid()) {
+        if(!inDungeon){
+            return;
+        }
+        if (!directionalBuff && Image.matchTemplate(screenshot, directionalBuffIcon, 0.95, skillRecs[10]).isValid()) {
             directionalBuff = true;
         }
         if (directionalBuff) {
