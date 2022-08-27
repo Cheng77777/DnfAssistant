@@ -1,6 +1,10 @@
 package com.slvrmn.DnfAssistant.GamePackage;
 
+import static com.slvrmn.DnfAssistant.GamePackage.Presets.ammoBuffIcon;
+import static com.slvrmn.DnfAssistant.GamePackage.Presets.ammoColor;
+import static com.slvrmn.DnfAssistant.GamePackage.Presets.ammoRec;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.beforeLionRules;
+import static com.slvrmn.DnfAssistant.GamePackage.Presets.blackScreenRule;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.bossRules;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.breakAndSellSelectRec;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.breakConfirmRec;
@@ -14,7 +18,6 @@ import static com.slvrmn.DnfAssistant.GamePackage.Presets.continueConfirmRec;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.damageNumberRec;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.damageNumberRule;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.directionalBuffCDColor;
-import static com.slvrmn.DnfAssistant.GamePackage.Presets.directionalBuffIcon;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.directionalBuffRecs;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.dodgeColor;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.dodgeRecs;
@@ -56,23 +59,31 @@ import com.slvrmn.DnfAssistant.Model.Rectangle;
 import com.slvrmn.DnfAssistant.Tools.MLog;
 import com.slvrmn.DnfAssistant.Tools.ScreenCaptureUtil;
 
+import java.util.Arrays;
+
 public class ScreenCheck extends Thread {
-    public static final int CHECK_INTERVAL = 50;
+    public static final int CHECK_INTERVAL = 150;
+
+    public static volatile boolean isFarming = true;
     public static volatile int screenFreezeTime;
     public static volatile boolean
             inDungeon, inBoss, beforeLion, inLion, hasMonster, isDamaging,
             canDodge, hasResult, hasReward, inHell, hasContinueConfirm, isEnergyEmpty,
             canBreak, canSell, canBreakSelect, canSellSelect, canBreakConfirm,
-            isPathFinding, isBattling, directionalBuff, isDailyQuesting;
+            isPathFinding, isBattling, ammoBuff, hasAmmo;
     public static volatile Rectangle hasContinue, hasRepair, isInventoryFull, hasGoBack;
     public static volatile boolean[] skills = {false, false, false, false, false, false, false, false, false, false, false};
     public static volatile boolean[] availableSkills = {false, false, false, false, false, false, false, false, false, false, false};
     public static volatile boolean[] directionalBuffs = {false, false, false, false};
 
+    public static volatile boolean isDailyQuesting = false;
+
+
+
     private static volatile Bitmap lastScreenshot;
     private static volatile Bitmap screenshot;
 
-    public static synchronized void InitializeParameters() {
+    public static synchronized void InitializeFarmingParameters() {
         screenFreezeTime = 0;
         inDungeon = false;
         inBoss = false;
@@ -93,60 +104,33 @@ public class ScreenCheck extends Thread {
         canBreakConfirm = false;
         isPathFinding = false;
         isBattling = false;
-        directionalBuff = false;
-        isDailyQuesting = false;
+        ammoBuff = false;
         hasContinue = Rectangle.INVALID_RECTANGLE;
         hasRepair = Rectangle.INVALID_RECTANGLE;
         isInventoryFull = Rectangle.INVALID_RECTANGLE;
         hasGoBack = Rectangle.INVALID_RECTANGLE;
-        for (int i = 0; i < skills.length; i++) {
-            skills[i] = false;
-        }
-        for (int i = 0; i < availableSkills.length; i++) {
-            availableSkills[i] = false;
-        }
-        for (int i = 0; i < directionalBuffs.length; i++) {
-            directionalBuffs[i] = false;
-        }
+        Arrays.fill(skills, false);
+        Arrays.fill(availableSkills, false);
+        Arrays.fill(directionalBuffs, false);
+    }
+
+    public static synchronized void StartDailyQuests() {
+        isDailyQuesting = true;
     }
 
     @Override
     public void run() {
         //MLog.info("Start Debugging");
-        InitializeParameters();
+        InitializeFarmingParameters();
         initialize();
         try {
             while (Assistant.RUN) {
                 //MLog.info("------------------------------------------");
-                screenshot = GetScreenshot();
-                CheckInDungeon(screenshot);
-                CheckBoss(screenshot);
-                CheckLion(screenshot);
-                CheckInLion(screenshot);
-                CheckInHell(screenshot);
-                CheckMonster(screenshot);
-                CheckDamaging(screenshot);
-                CheckDodge(screenshot);
-                CheckStuck(screenshot);
-                CheckResult(screenshot);
-                CheckReward(screenshot);
-                CheckInventoryFull(screenshot);
-                CheckBreak(screenshot);
-                CheckSell(screenshot);
-                CheckBreakSelectButton(screenshot);
-                CheckSellSelectButton(screenshot);
-                CheckBreakConfirmButton(screenshot);
-                CheckSellConfirmButton(screenshot);
-                CheckRepair(screenshot);
-                CheckContinueButton(screenshot);
-                CheckGoBackButton(screenshot);
-                CheckContinueConfirmButton(screenshot);
-                CheckEnergyEmpty(screenshot);
-                CheckSkillsCoolDown(screenshot);
-                CheckDirectionBuffsCoolDown(screenshot);
+                if (isFarming) {
+                    CheckFarmingParameters();
+                }
+                sleep(CHECK_INTERVAL / 2);
 
-                sleep(CHECK_INTERVAL);
-                lastScreenshot = screenshot;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -154,11 +138,51 @@ public class ScreenCheck extends Thread {
         }
     }
 
-    private Bitmap GetScreenshot() {
-        return ScreenCaptureUtil.getScreenCap();
+    private void CheckFarmingParameters() throws InterruptedException {
+
+        GetScreenshot();
+        if (CheckBlackScreen()) {
+            sleep(CHECK_INTERVAL);
+            return;
+        }
+        CheckInDungeon();
+        CheckBoss();
+        CheckLion();
+        CheckInLion();
+        CheckInHell();
+        CheckMonster();
+        CheckDamaging();
+        CheckDodge();
+        CheckStuck();
+        CheckResult();
+        CheckReward();
+        CheckInventoryFull();
+        CheckBreak();
+        CheckSell();
+        CheckBreakSelectButton();
+        CheckSellSelectButton();
+        CheckBreakConfirmButton();
+        CheckSellConfirmButton();
+        CheckRepair();
+        CheckContinueButton();
+        CheckGoBackButton();
+        CheckContinueConfirmButton();
+        CheckEnergyEmpty();
+        CheckSkillsCoolDown();
+        CheckDirectionBuffsCoolDown();
+        CheckAmmo();
+        lastScreenshot = screenshot;
     }
 
-    private void CheckInDungeon(Bitmap screenshot) {
+    private void GetScreenshot() {
+        screenshot = ScreenCaptureUtil.getScreenCap();
+    }
+
+    private boolean CheckBlackScreen() {
+        return Image.findPointByMulColor(screenshot, blackScreenRule).isValid();
+    }
+
+    private void CheckInDungeon() {
         if (inDungeon) {
             return;
         }
@@ -167,13 +191,13 @@ public class ScreenCheck extends Thread {
             //MLog.info("地下城中");
             inDungeon = true;
             isPathFinding = true;
-            CheckAvailableSkills(screenshot);
+            CheckAvailableSkills();
             return;
         }
         inDungeon = false;
     }
 
-    private void CheckBoss(Bitmap screenshot) {
+    private void CheckBoss() {
         if (Image.findPointByMulColor(screenshot, bossRules, mapCentreRec).isValid()) {
             //MLog.info("BOSS房中");
             inBoss = true;
@@ -182,7 +206,7 @@ public class ScreenCheck extends Thread {
         inBoss = false;
     }
 
-    private void CheckLion(Bitmap screenshot) {
+    private void CheckLion() {
         if (Image.findPointByMulColor(screenshot, beforeLionRules, mapRec).
                 isValid()) {
             //MLog.info("狮子头前");
@@ -192,7 +216,7 @@ public class ScreenCheck extends Thread {
         beforeLion = false;
     }
 
-    private void CheckInLion(Bitmap screenshot) {
+    private void CheckInLion() {
         if (Image.findPointByMulColor(screenshot, inLionRule, mapRec).isValid()) {
             //MLog.info("狮子头中");
             inLion = true;
@@ -201,7 +225,7 @@ public class ScreenCheck extends Thread {
         inLion = false;
     }
 
-    private void CheckInHell(Bitmap screenshot) {
+    private void CheckInHell() {
         if (Image.findPointByMulColor(screenshot, hellRules, mapRec).isValid()) {
             //MLog.info("深渊房中");
             inHell = true;
@@ -210,7 +234,7 @@ public class ScreenCheck extends Thread {
         inHell = false;
     }
 
-    private void CheckMonster(Bitmap screenshot) {
+    private void CheckMonster() {
         if (Image.matchTemplate(screenshot, monsterLevelNumberFive, 0.5,
                 monsterLevelRec).isValid()) {
             hasMonster = true;
@@ -220,7 +244,7 @@ public class ScreenCheck extends Thread {
         hasMonster = false;
     }
 
-    private void CheckDamaging(Bitmap screenshot) {
+    private void CheckDamaging() {
         if (Image.findPointByMulColor(screenshot, damageNumberRule,
                 damageNumberRec).isValid()) {
             isDamaging = true;
@@ -230,7 +254,7 @@ public class ScreenCheck extends Thread {
         isDamaging = false;
     }
 
-    private void CheckDodge(Bitmap screenshot) {
+    private void CheckDodge() {
         if (Image.findPoint(screenshot, dodgeColor, dodgeRecs[0]).isValid()) {
             canDodge = true;
             //MLog.info("可闪避");
@@ -239,7 +263,7 @@ public class ScreenCheck extends Thread {
         canDodge = false;
     }
 
-    private void CheckStuck(Bitmap screenshot) {
+    private void CheckStuck() {
         if (!isPathFinding) {
             screenFreezeTime = 0;
             return;
@@ -249,7 +273,7 @@ public class ScreenCheck extends Thread {
                     Image.cropBitmap(lastScreenshot, stuckRec),
                     Image.cropBitmap(screenshot, stuckRec),
                     0.95).isValid()) {
-                screenFreezeTime++;
+                AddStuck();
                 //MLog.info("屏幕静止" + stuckTime + "次");
                 return;
             }
@@ -257,19 +281,26 @@ public class ScreenCheck extends Thread {
         }
     }
 
-    private void CheckResult(Bitmap screenshot) {
+    private synchronized void AddStuck() {
+        screenFreezeTime++;
+    }
+
+    private void CheckResult() {
         if (hasResult) {
             return;
         }
         if (Image.matchTemplate(screenshot, resultIcon, 0.8, resultRec).isValid()) {
             hasResult = true;
             MLog.info("副本结束");
+            Arrays.fill(skills, false);
+            Arrays.fill(availableSkills, false);
+            Arrays.fill(directionalBuffs, false);
             return;
         }
         hasResult = false;
     }
 
-    private void CheckReward(Bitmap screenshot) {
+    private void CheckReward() {
         if (hasReward) {
             return;
         }
@@ -281,7 +312,7 @@ public class ScreenCheck extends Thread {
         hasReward = false;
     }
 
-    private void CheckInventoryFull(Bitmap screenshot) {
+    private void CheckInventoryFull() {
         if (isInventoryFull.isValid()) {
             return;
         }
@@ -290,16 +321,15 @@ public class ScreenCheck extends Thread {
         if (p.isValid()) {
             p.setX(p.getX() + completeDungeonMenuRec.x1);
             p.setY(p.getY() + completeDungeonMenuRec.y1);
-            Rectangle rectangle = new Rectangle(p.getX(), p.getY(),
-                    p.getX() + 50, p.getY() + 10);
             //MLog.info("背包满");
-            isInventoryFull = rectangle;
+            isInventoryFull = new Rectangle(p.getX(), p.getY(),
+                    p.getX() + 50, p.getY() + 10);
             return;
         }
         isInventoryFull = Rectangle.INVALID_RECTANGLE;
     }
 
-    private void CheckBreak(Bitmap screenshot) {
+    private void CheckBreak() {
         if (Image.findPointByMulColor(screenshot, breakRule, breakRec).isValid()) {
             canBreak = true;
             //MLog.info("可按分解");
@@ -308,7 +338,7 @@ public class ScreenCheck extends Thread {
         canBreak = false;
     }
 
-    private void CheckSell(Bitmap screenshot) {
+    private void CheckSell() {
         if (Image.findPointByMulColor(screenshot, sellRule, sellRec).isValid()) {
             canSell = true;
             //MLog.info("可按出售");
@@ -317,7 +347,7 @@ public class ScreenCheck extends Thread {
         canSell = false;
     }
 
-    private void CheckBreakSelectButton(Bitmap screenshot) {
+    private void CheckBreakSelectButton() {
         if (Image.findPointByMulColor(screenshot, breakSelectRule,
                 breakAndSellSelectRec).isValid()) {
             canBreakSelect = true;
@@ -327,7 +357,7 @@ public class ScreenCheck extends Thread {
         canBreakSelect = false;
     }
 
-    private void CheckSellSelectButton(Bitmap screenshot) {
+    private void CheckSellSelectButton() {
         if (Image.findPointByMulColor(screenshot, sellSelectRule,
                 breakAndSellSelectRec).isValid()) {
             canSellSelect = true;
@@ -337,7 +367,7 @@ public class ScreenCheck extends Thread {
         canSellSelect = false;
     }
 
-    private void CheckBreakConfirmButton(Bitmap screenshot) {
+    private void CheckBreakConfirmButton() {
         if (Image.findPointByMulColor(screenshot, breakConfirmRule,
                 breakConfirmRec).isValid()) {
             canBreakConfirm = true;
@@ -347,7 +377,7 @@ public class ScreenCheck extends Thread {
         canBreakConfirm = false;
     }
 
-    private void CheckSellConfirmButton(Bitmap screenshot) {
+    private void CheckSellConfirmButton() {
         if (Image.findPointByMulColor(screenshot, sellConfirmRule,
                 sellConfirmRec).isValid()) {
             canBreakConfirm = true;
@@ -357,7 +387,7 @@ public class ScreenCheck extends Thread {
         canBreakConfirm = false;
     }
 
-    private void CheckRepair(Bitmap screenshot) {
+    private void CheckRepair() {
         if (hasRepair.isValid()) {
             return;
         }
@@ -366,16 +396,15 @@ public class ScreenCheck extends Thread {
         if (p.isValid()) {
             p.setX(p.getX() + completeDungeonMenuRec.x1);
             p.setY(p.getY() + completeDungeonMenuRec.y1);
-            Rectangle rectangle = new Rectangle(p.getX(), p.getY(),
-                    p.getX() + 50, p.getY() + 10);
             //MLog.info("需要修理");
-            hasRepair = rectangle;
+            hasRepair = new Rectangle(p.getX(), p.getY(),
+                    p.getX() + 50, p.getY() + 10);
             return;
         }
         hasRepair = Rectangle.INVALID_RECTANGLE;
     }
 
-    private void CheckContinueButton(Bitmap screenshot) {
+    private void CheckContinueButton() {
         if (hasContinue.isValid()) {
             return;
         }
@@ -384,16 +413,15 @@ public class ScreenCheck extends Thread {
         if (p.isValid()) {
             p.setX(p.getX() + completeDungeonMenuRec.x1);
             p.setY(p.getY() + completeDungeonMenuRec.y1);
-            Rectangle rectangle = new Rectangle(p.getX(), p.getY(),
-                    p.getX() + 50, p.getY() + 10);
             //MLog.info("可点击继续");
-            hasContinue = rectangle;
+            hasContinue = new Rectangle(p.getX(), p.getY(),
+                    p.getX() + 50, p.getY() + 10);
             return;
         }
         hasContinue = Rectangle.INVALID_RECTANGLE;
     }
 
-    private void CheckGoBackButton(Bitmap screenshot) {
+    private void CheckGoBackButton() {
         if (hasGoBack.isValid()) {
             return;
         }
@@ -402,16 +430,15 @@ public class ScreenCheck extends Thread {
         if (p.isValid()) {
             p.setX(p.getX() + completeDungeonMenuRec.x1);
             p.setY(p.getY() + completeDungeonMenuRec.y1);
-            Rectangle rectangle = new Rectangle(p.getX(), p.getY(),
-                    p.getX() + 50, p.getY() + 10);
             //MLog.info("可点击回城");
-            hasGoBack = rectangle;
+            hasGoBack = new Rectangle(p.getX(), p.getY(),
+                    p.getX() + 50, p.getY() + 10);
             return;
         }
         hasGoBack = Rectangle.INVALID_RECTANGLE;
     }
 
-    private void CheckContinueConfirmButton(Bitmap screenshot) {
+    private void CheckContinueConfirmButton() {
         if (Image.matchTemplate(screenshot, continueConfirmButton, 0.9,
                 continueConfirmRec).isValid()) {
             hasContinueConfirm = true;
@@ -421,7 +448,7 @@ public class ScreenCheck extends Thread {
         hasContinueConfirm = false;
     }
 
-    private void CheckEnergyEmpty(Bitmap screenshot) {
+    private void CheckEnergyEmpty() {
         if (isEnergyEmpty) {
             return;
         }
@@ -434,7 +461,7 @@ public class ScreenCheck extends Thread {
         isEnergyEmpty = false;
     }
 
-    private void CheckAvailableSkills(Bitmap screenshot) {
+    private void CheckAvailableSkills() {
         for (int i = 0; i < availableSkills.length; i++) {
             if (Image.findPoint(screenshot, skillFrameColor, skillCDRecs[i]).isValid()) {
                 availableSkills[i] = true;
@@ -443,8 +470,8 @@ public class ScreenCheck extends Thread {
         }
     }
 
-    private void CheckSkillsCoolDown(Bitmap screenshot) {
-        if (!inDungeon) {
+    private void CheckSkillsCoolDown() {
+        if (!inDungeon || hasResult || hasReward) {
             return;
         }
         for (int i = 0; i < skills.length; i++) {
@@ -456,23 +483,30 @@ public class ScreenCheck extends Thread {
         }
     }
 
-    private void CheckDirectionBuffsCoolDown(Bitmap screenshot) {
-        if (!inDungeon) {
+    private void CheckDirectionBuffsCoolDown() {
+        if (!inDungeon || hasResult || hasReward) {
             return;
         }
-        if (!directionalBuff && Image.matchTemplate(screenshot, directionalBuffIcon, 0.95, skillRecs[10]).isValid()) {
-            directionalBuff = true;
+        if (!ammoBuff && Image.matchTemplate(screenshot, ammoBuffIcon, 0.95, skillRecs[10]).isValid()) {
+            ammoBuff = true;
         }
-        if (directionalBuff) {
+        if (ammoBuff) {
             for (int i = 0; i < directionalBuffs.length; i++) {
-                if (Image.findPoint(screenshot, directionalBuffCDColor, directionalBuffRecs[i]).isValid()) {
-                    //MLog.info("方向性BUFF " + i + " 可用");
-                    directionalBuffs[i] = true;
-                } else {
-                    directionalBuffs[i] = false;
-                }
+                //MLog.info("方向性BUFF " + i + " 可用");
+                directionalBuffs[i] = Image.findPoint(screenshot, directionalBuffCDColor, directionalBuffRecs[i]).isValid();
             }
         }
+    }
+
+    private void CheckAmmo() {
+        if (!ammoBuff) {
+            return;
+        }
+        if (Image.findPoint(screenshot, ammoColor, ammoRec).isValid()) {
+            hasAmmo = false;
+            return;
+        }
+        hasAmmo = true;
     }
 
 }

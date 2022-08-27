@@ -3,8 +3,10 @@ package com.slvrmn.DnfAssistant.GamePackage;
 import static com.slvrmn.DnfAssistant.GamePackage.Assistant.RUN;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.skillRecs;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.CHECK_INTERVAL;
-import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.directionalBuff;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.StartDailyQuests;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.ammoBuff;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.directionalBuffs;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasAmmo;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasContinue;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasGoBack;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.hasMonster;
@@ -59,7 +61,6 @@ public class Actions {
         sleep(2000);
         Robot.Press(Presets.homeRec);
         sleep(2000);
-        ScreenCheck.InitializeParameters();
         Robot.Press(Presets.confirmGoOutRec);
         sleep(2000);
     }
@@ -71,7 +72,7 @@ public class Actions {
             if (!RUN) {
                 return;
             }
-            random = Utility.RandomInt(100, 200);
+            random = Utility.RandomInt(50, 100);
             Robot.LongPress(Presets.joystickRecs[0], Presets.joystickRecs[1], random);
             sleep(random);
         }
@@ -93,63 +94,63 @@ public class Actions {
 
         PickDrops();
 
-        /** 检测修理 **/
         if (hasRepair.isValid()) {
             RepairEquipments();
         }
 
-        /** 检测背包 **/
         if (isInventoryFull.isValid()) {
             CleanInventory();
         }
 
         if (isEnergyEmpty) {
-            /** 回城 **/
             Robot.Press(hasGoBack);
             sleep(1000);
-            ScreenCheck.InitializeParameters();
+            ScreenCheck.InitializeFarmingParameters();
             return;
         } else {
-            /** 进入下一次副本 **/
+            if (!RUN) {
+                return;
+            }
             Robot.Press(hasContinue);
             sleep(1000);
             Robot.Press(Presets.continueConfirmRec);
             sleep(1000);
-            ScreenCheck.InitializeParameters();
+            ScreenCheck.InitializeFarmingParameters();
             sleep(1000);
+            StartDailyQuests();
         }
     }
 
     static void PickDrops() throws InterruptedException {
-        /** 拾取物品 **/
         MLog.info("拾取物品");
         MoveAround();
-        int random = Utility.RandomInt(3000, 3200);
+        int random = Utility.RandomInt(5500, 5600);
         PressLongAttack(random, random);
     }
 
     static void RepairEquipments() throws InterruptedException {
         Robot.Press(hasRepair);
-        sleep(1000);
+        sleep(2000);
         Robot.Press(Presets.confirmRepairRecs);
-        sleep(1000);
+        sleep(2000);
         PressBack();
-        sleep(1000);
+        sleep(2000);
     }
 
     static void CleanInventory() throws InterruptedException {
         Robot.Press(ScreenCheck.isInventoryFull);
-        sleep(1500);
+        sleep(4000);
         Robot.Press(Presets.breakAndSellSelectRec);
-        sleep(2000);
+        sleep(4000);
         Robot.Press(Presets.breakConfirmRec);
         sleep(4000);
         PressBack();
         PressBack();
+        sleep(2000);
         Robot.Press(Presets.sellRec);
-        sleep(2000);
+        sleep(4000);
         Robot.Press(Presets.breakAndSellSelectRec);
-        sleep(2000);
+        sleep(4000);
         Robot.Press(Presets.sellConfirmRec);
         sleep(4000);
         PressBack();
@@ -168,7 +169,7 @@ public class Actions {
     static void BackJump() throws InterruptedException {
         MLog.info("后跳");
         Robot.Press(Presets.backJumpRec);
-        sleep(300);
+        sleep(500);
     }
 
     static void Dodge() throws InterruptedException {
@@ -181,27 +182,30 @@ public class Actions {
     static boolean UseBuff() throws InterruptedException {
         for (int i = skills.length - 1; i >= skills.length - 3; i--) {
             if (!RUN) {
-                Utility.show("线程停止运行");
                 return false;
             }
             if (skills[i]) {
-                if (i == skills.length - 1 && directionalBuff) {
-                    for (int j = 0; j < directionalBuffs.length; j++) {
-                        if (!RUN) {
-                            Utility.show("线程停止运行");
-                            return false;
+                if (i == skills.length - 1) {
+                    if (ammoBuff) {
+                        if (hasAmmo) {
+                            for (int j = 0; j < directionalBuffs.length; j++) {
+                                if (!RUN) {
+                                    return false;
+                                }
+                                boolean b = directionalBuffs[j];
+                                if (b) {
+                                    BackJump();
+                                    UseDirectionalBuff(j);
+                                    return true;
+                                }
+                            }
                         }
-                        boolean b = directionalBuffs[j];
-                        if (b) {
-                            UseDirectionalBuff(j);
-                            return true;
-                        }
+                        return false;
                     }
-                    return false;
                 }
-                sleep(500);
-                Robot.Press(skillRecs[i]);
-                sleep(500);
+                BackJump();
+                Robot.Press(skillRecs[i], Utility.RandomInt(2, 3));
+                sleep(1000);
                 return true;
             }
         }
@@ -215,22 +219,24 @@ public class Actions {
                 destination.Move(0, destination.YLen() * 2);
                 break;
             case 1:
-                destination.Move(destination.XLen() * 2, 0);
-                break;
-            case 2:
-                destination.Move(0, -destination.YLen() * 2);
-                break;
-            case 3:
                 destination.Move(-destination.XLen() * 2, 0);
                 break;
+            case 2:
+                destination.Move(destination.XLen() * 2, 0);
+                break;
+            case 3:
+                destination.Move(0, -destination.YLen() * 2);
+                break;
         }
+
+
         Robot.swipe(skillRecs[skillRecs.length - 1], destination, 150);
-        sleep(150);
+        sleep(500);
     }
 
     static void UseSkills() throws InterruptedException {
         if (skills[skills.length - 4] && (inBoss || inLion || inHell)) {
-            Robot.Press(Presets.skillRecs[skills.length - 4]);
+            Robot.Press(Presets.skillRecs[skills.length - 4], Utility.RandomInt(2, 3));
             return;
         }
         for (int i = 0; i < skills.length - 4; i++) {
@@ -238,13 +244,13 @@ public class Actions {
                 return;
             }
             if (skills[i]) {
-                Robot.Press(Presets.skillRecs[i]);
-                sleep(300);
-                if (!hasMonster||!isDamaging) {
+                if (!hasMonster || !isDamaging) {
                     isBattling = false;
                     isPathFinding = true;
                     return;
                 }
+                Robot.Press(Presets.skillRecs[i], Utility.RandomInt(2, 3));
+                sleep(300);
             }
         }
     }

@@ -14,8 +14,8 @@ import java.io.InputStream;
 public class Presets {
 
     public static final Rectangle mapRec = new Rectangle(1143, 29, 1225, 105);
-    public static final Rectangle resultRec= new Rectangle(845, 8, 1006, 63);
-    public static final Rectangle rewardRec= new Rectangle(485, 24, 793, 97);
+    public static final Rectangle resultRec = new Rectangle(845, 8, 1006, 63);
+    public static final Rectangle rewardRec = new Rectangle(485, 24, 793, 97);
 
     public static final Rectangle settingsRec = new Rectangle(1065, 8, 1104, 46);
     public static final Rectangle homeRec = new Rectangle(1013, 639, 1121, 661);
@@ -36,7 +36,7 @@ public class Presets {
     };
     public static final Rectangle[] dodgeRecs = {
             new Rectangle(1020, 630, 1040, 640),
-            new Rectangle(1020, 700, 1040, 710)
+            new Rectangle(940, 630, 960, 640)
     };
     public static final Rectangle[] joystickRecs = {
             new Rectangle(114, 432, 283, 613),
@@ -75,6 +75,8 @@ public class Presets {
 
     public static final Rectangle confirmRepairRecs = new Rectangle(997, 604, 1126, 644);
 
+    public static final String blackScreenRule = "000000,-12|-24|000000,101|-33|000000,77|34|000000,-45|156|000000,77|160|000000,182|53|000000,168|-14|000000,258|-14|000000,247|63|000000,165|187|000000,-52|278|000000";
+
     public static final Rectangle[] skillRecs = {
             new Rectangle(1056, 530, 1115, 590),
             new Rectangle(1117, 440, 1173, 490),
@@ -86,7 +88,7 @@ public class Presets {
             new Rectangle(899, 355, 938, 400),
             new Rectangle(975, 355, 1019, 400),
             new Rectangle(1053, 355, 1098, 400),
-            new Rectangle(1135, 355, 1178, 400),
+            new Rectangle(1134, 352, 1178, 400),
 
     };
     public static final Rectangle[] skillCDRecs = {
@@ -106,12 +108,15 @@ public class Presets {
     public static final Color skillFrameColor = new Color(197, 166, 99);
 
     public static final Rectangle[] directionalBuffRecs = {
-            new Rectangle(1151, 411, 1160, 414),
-            new Rectangle(1118, 369, 1121, 381),
-            new Rectangle(1191, 367, 1195, 381),
-            new Rectangle(1151, 336, 1164, 340),
+            new Rectangle(1153, 412, 1160, 413),
+            new Rectangle(1118, 371, 1119, 378),
+            new Rectangle(1193, 371, 1194, 378),
+            new Rectangle(1153, 337, 1160, 338),
     };
     public static final Color directionalBuffCDColor = new Color(107, 255, 255);
+
+    public static final Color ammoColor = new Color(206, 170, 107);
+    public static final Rectangle ammoRec = new Rectangle(1133, 349, 1135, 433);
 
     public static final Rectangle backRec = new Rectangle(5, 8, 36, 38);
 
@@ -165,18 +170,17 @@ public class Presets {
     };
 
     public static final Rectangle[] DailyQuestRecs = {
-            new Rectangle(1111,642,1143,681),
-            new Rectangle(845,547,880,582),
-            new Rectangle(1111,642,1143,681),
+            new Rectangle(1111, 642, 1143, 681),
+            new Rectangle(845, 547, 880, 582),
+            new Rectangle(1111, 642, 1143, 681),
     };
 
     private static final AssetManager assetManager = MainApplication.getInstance().getAssets();
     public static boolean initialized;
-    public static Bitmap monsterLevelNumberFive,resultIcon, rewardIcon, nextButton,
+    public static Bitmap monsterLevelNumberFive, resultIcon, rewardIcon, nextButton,
             continueConfirmButton, repairButton, inventoryFullButton, goBackButton,
-            directionalBuffIcon, epicIcon,coalIcon,crystalIcon,towerIcon,ticketsIcon,goldIcon
-    ;
-    public static Bitmap[] dailyQuestIcons = {epicIcon,ticketsIcon,crystalIcon,coalIcon,goldIcon,towerIcon};
+            ammoBuffIcon, epicIcon, coalIcon, crystalIcon, towerIcon, ticketsIcon, goldIcon;
+    public static Bitmap[] dailyQuestIcons = {epicIcon, ticketsIcon, crystalIcon, coalIcon, goldIcon, towerIcon};
     private static InputStream input;
 
     public static void initialize() {
@@ -188,7 +192,7 @@ public class Presets {
         repairButton = readImage("RepairButton.png");
         inventoryFullButton = readImage("InventoryFullButton.png");
         goBackButton = readImage("GoBackButton.png");
-        directionalBuffIcon = readImage("DirectionalBuffIcon.png");
+        ammoBuffIcon = readImage("AmmoBuffIcon.png");
 
         epicIcon = readImage("EpicIcon.png");
         ticketsIcon = readImage("TicketsIcon.png");

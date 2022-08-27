@@ -1,6 +1,6 @@
 package com.slvrmn.DnfAssistant.GamePackage;
 
-import static com.slvrmn.DnfAssistant.GamePackage.Actions.BackJump;
+import static com.slvrmn.DnfAssistant.GamePackage.Actions.PressLongAttack;
 import static com.slvrmn.DnfAssistant.GamePackage.Actions.PressMultipleAttacks;
 import static com.slvrmn.DnfAssistant.GamePackage.Actions.UseSkills;
 import static com.slvrmn.DnfAssistant.GamePackage.Assistant.RUN;
@@ -10,9 +10,9 @@ import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isBattling;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isDamaging;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isPathFinding;
 
+import com.slvrmn.DnfAssistant.Tools.Utility;
+
 public class AutoBattle extends Thread {
-    private static final int backJumpCD = 30;
-    private int backJump;
 
     @Override
     public void run() {
@@ -23,20 +23,13 @@ public class AutoBattle extends Thread {
                     continue;
                 }
                 if (hasMonster && isDamaging) {
-                    /** 后跳 **/
-                    if (backJump >= backJumpCD) {
-                        BackJump();
-                        backJump = 0;
-                    }
-                    PressMultipleAttacks(2);
-                    /** 使用技能 **/
+                    int random = Utility.RandomInt(300,500);
+                    PressLongAttack(random,random);
                     UseSkills();
-                    backJump++;
                 }
                 if (!hasMonster || !isDamaging) {
                     isBattling = false;
                     isPathFinding = true;
-                    continue;
                 }
             }
         } catch (InterruptedException e) {
