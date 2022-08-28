@@ -62,7 +62,7 @@ import com.slvrmn.DnfAssistant.Tools.ScreenCaptureUtil;
 import java.util.Arrays;
 
 public class ScreenCheck extends Thread {
-    public static final int CHECK_INTERVAL = 150;
+    public static final int CHECK_INTERVAL = 200;
 
     public static volatile boolean isFarming = true;
     public static volatile int screenFreezeTime;
