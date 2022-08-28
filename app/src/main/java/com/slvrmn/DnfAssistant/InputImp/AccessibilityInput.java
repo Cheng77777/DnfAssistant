@@ -5,6 +5,7 @@ import android.graphics.Path;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
+import com.slvrmn.DnfAssistant.GamePackage.Assistant;
 import com.slvrmn.DnfAssistant.Model.Point;
 import com.slvrmn.DnfAssistant.Service.Accessibility;
 import com.slvrmn.DnfAssistant.Tools.MLog;
@@ -51,6 +52,9 @@ public class AccessibilityInput implements Input {
 
     @Override
     public void tap(int x, int y, long delay) {
+        if(!Assistant.RUN){
+            return;
+        }
         if (x < 0 || y < 0) {
             return;
         }

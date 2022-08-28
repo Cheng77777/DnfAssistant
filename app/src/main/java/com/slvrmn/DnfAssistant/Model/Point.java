@@ -40,4 +40,13 @@ public class Point {
     public String toString() {
         return "{" + x + "," + y + "}";
     }
+
+    public Rectangle MakeRectangle(int width, int height) {
+        if(isValid()){
+            return new Rectangle(x,y,x+width,y+height);
+        }
+        else {
+            return Rectangle.INVALID_RECTANGLE;
+        }
+    }
 }

@@ -96,7 +96,7 @@ public class Image {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 if (Color.isSame(getPoint(img, i, j), color)) {
-                    Point p = new Point();
+                    Point p = new Point(i, j);
                     return p;
                 }
             }
@@ -111,7 +111,7 @@ public class Image {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 if (Color.isSame(getPoint(bitmap, i, j), color)) {
-                    Point p = new Point();
+                    Point p = new Point(i, j);
                     return p;
                 }
             }
@@ -127,7 +127,7 @@ public class Image {
             for (int j = 0; j < height; j++) {
                 for (Color color : colors) {
                     if (Color.isSame(getPoint(bitmap, i, j), color)) {
-                        Point p = new Point();
+                        Point p = new Point(i, j);
                         return p;
                     }
                 }
@@ -587,6 +587,38 @@ public class Image {
 
     }
 
+    public static Point matchTemplate(Bitmap screenshot, Bitmap[] templateImages, double threshold, Rectangle rectangle) {
+
+        for (Bitmap templateImg :
+                templateImages) {
+            if (threshold <= 0) {
+                threshold = 0.5;
+            }
+
+            Bitmap bitmap = cropBitmap(screenshot, rectangle);
+
+            Mat tpl = new Mat();
+            Mat src = new Mat();
+            Utils.bitmapToMat(bitmap, src);
+            Utils.bitmapToMat(templateImg, tpl);
+
+
+            int height = src.rows() - tpl.rows() + 1;
+            int width = src.cols() - tpl.cols() + 1;
+            Mat result = new Mat(height, width, CvType.CV_32FC1);
+            int method = Imgproc.TM_CCOEFF_NORMED;
+            Imgproc.matchTemplate(src, tpl, result, method);
+            Core.MinMaxLocResult minMaxResult = Core.minMaxLoc(result);
+            org.opencv.core.Point maxloc = minMaxResult.maxLoc;
+            if (minMaxResult.maxVal >= threshold) {
+                org.opencv.core.Point minloc = minMaxResult.minLoc;
+                org.opencv.core.Point matchloc = null;
+                matchloc = maxloc;
+                return new Point((int) matchloc.x, (int) matchloc.y);
+            }
+        }
+        return Point.INVALID_POINT;
+    }
 
     /**
      * 根据给定的宽和高进行resize
@@ -613,4 +645,21 @@ public class Image {
         return newBM;
     }
 
+
+    public static Point findPointByCheckRuleModel(Bitmap screenshot, CheckRuleModel checkRuleModel) {
+        return Image.findPointByMulColor(screenshot, checkRuleModel.rule, checkRuleModel.rectangle);
+    }
+
+    public static Point findPointByCheckRuleModels(Bitmap screenshot, CheckRuleModel[] checkRuleModels) {
+        Point p;
+        for (CheckRuleModel checkRuleModel :
+                checkRuleModels) {
+            p = Image.findPointByMulColor(screenshot, checkRuleModel.rule, checkRuleModel.rectangle);
+            if (p.isValid()) {
+
+                return p;
+            }
+        }
+        return Point.INVALID_POINT;
+    }
 }

@@ -75,7 +75,7 @@ public class Color {
      * @return
      */
     public static boolean isSame(Color color1, Color color2) {
-        return isSame(color1, color2, 20);
+        return isSame(color1, color2, 30);
     }
 
     /**

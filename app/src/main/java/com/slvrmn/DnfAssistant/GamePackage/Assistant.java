@@ -1,5 +1,9 @@
 package com.slvrmn.DnfAssistant.GamePackage;
 
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.GetScreenshot;
+import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isFarming;
+
+import com.slvrmn.DnfAssistant.Model.Image;
 import com.slvrmn.DnfAssistant.Tools.*;
 
 public class Assistant {
@@ -7,14 +11,17 @@ public class Assistant {
     public static volatile boolean RUN = false;
     private static volatile Assistant instance;
     private ScreenCheck screenCheck;
-    private AutoFarmPathFinding autoFarmPathFinding;
+    private AutoPathFinding autoPathFinding;
     private AutoBattle autoBattle;
+    private DailyQuest dailyQuest;
+    private static boolean initialized = false;
 
     private Assistant() {
         if(screenCheck == null){
             screenCheck = new ScreenCheck();
-            autoFarmPathFinding = new AutoFarmPathFinding();
+            autoPathFinding = new AutoPathFinding();
             autoBattle = new AutoBattle();
+            dailyQuest = new DailyQuest();
         }
     }
 
@@ -27,12 +34,26 @@ public class Assistant {
 
 
     public void start() {
+        if(!initialized){
+            Presets.Initialize();
+            initialized = true;
+        }
         if(!RUN){
+            ScreenCheck.InitializeDailyQuestParameters();
+            ScreenCheck.InitializeFarmingParameters();
+            ScreenCheck.InitializeCharacterParameters();
             MLog.setDebug(true);
             RUN=true;
+            if(Image.findPointByCheckRuleModel(GetScreenshot(),Presets.mainMenuModel).isValid()){
+                isFarming = false;
+            }
+            else {
+                isFarming = true;
+            }
             screenCheck.start();
-            autoFarmPathFinding.start();
+            autoPathFinding.start();
             autoBattle.start();
+            dailyQuest.start();
             Utility.show("开始运行");
         }
         else {

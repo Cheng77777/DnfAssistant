@@ -10,6 +10,7 @@ import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isBattling;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isDamaging;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.isPathFinding;
 
+import com.slvrmn.DnfAssistant.Tools.MLog;
 import com.slvrmn.DnfAssistant.Tools.Utility;
 
 public class AutoBattle extends Thread {
@@ -22,6 +23,7 @@ public class AutoBattle extends Thread {
                     sleep(CHECK_INTERVAL);
                     continue;
                 }
+                MLog.info("自动战斗中");
                 if (hasMonster && isDamaging) {
                     int random = Utility.RandomInt(300,500);
                     PressLongAttack(random,random);

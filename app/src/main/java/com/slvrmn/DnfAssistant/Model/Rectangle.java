@@ -1,6 +1,6 @@
 package com.slvrmn.DnfAssistant.Model;
 
-public class Rectangle {
+public class Rectangle{
     public static Rectangle INVALID_RECTANGLE = new Rectangle(-1, -1, -1, -1);
 
     public int x1, y1, x2, y2;
@@ -37,11 +37,11 @@ public class Rectangle {
         y2 += y;
     }
 
-    public int XLen() {
+    public int Width() {
         return x2 - x1;
     }
 
-    public int YLen() {
+    public int Height() {
         return y2 - y1;
     }
 }

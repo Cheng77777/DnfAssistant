@@ -148,8 +148,8 @@ public class FloatingViewService extends Service implements View.OnClickListener
                         int y = initialY + (int) (event.getRawY() - initialTouchY);
                         x = Math.min(x, 600);
                         x = Math.max(x, -600);
-                        y = Math.min(y, 270);
-                        y = Math.max(y, -270);
+                        y = Math.min(y, 300);
+                        y = Math.max(y, -300);
                         params.x = x;
                         params.y = y;
                         windowManager.updateViewLayout(floatingView, params);

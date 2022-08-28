@@ -30,7 +30,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    compileOnly 'de.robv.android.xposed:api:82'
     implementation 'com.github.dfqin:grantor:2.5'
     implementation 'com.lahm.library:easy-protector-release:1.1.0'
     implementation project(path: ':tesseract4android-2.0.0')
