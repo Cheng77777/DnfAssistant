@@ -57,7 +57,7 @@ import com.slvrmn.DnfAssistant.Tools.MLog;
 import com.slvrmn.DnfAssistant.Tools.ScreenCaptureUtil;
 
 public class ScreenCheck extends Thread {
-    public static final int CHECK_INTERVAL = 50;
+    public static final int CHECK_INTERVAL = 200;
     public static volatile int screenFreezeTime;
     public static volatile boolean
             inDungeon, inBoss, beforeLion, inLion, hasMonster, isDamaging,
