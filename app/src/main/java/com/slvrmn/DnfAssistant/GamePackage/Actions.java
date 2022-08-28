@@ -113,8 +113,8 @@ public class Actions {
 
         if (isEnergyEmpty) {
             Robot.Press(hasGoBack);
-            sleep(1000);
-            ScreenCheck.InitializeFarmingParameters();
+            sleep(3000);
+            SwitchCharacter();
             return;
         } else {
             if (!RUN) {
@@ -126,7 +126,6 @@ public class Actions {
             sleep(1000);
             ScreenCheck.InitializeFarmingParameters();
             sleep(1000);
-            SwitchCharacter();
         }
     }
 
