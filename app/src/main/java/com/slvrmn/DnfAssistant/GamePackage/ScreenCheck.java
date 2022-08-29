@@ -231,7 +231,7 @@ public class ScreenCheck extends Thread {
     }
 
     private void CheckDodge() {
-        if (Image.findPoint(screenshot, Presets.dodgeColor, Presets.dodgeRecs[0]).isValid()) {
+        if (Image.matchTemplate(screenshot, Presets.crouchingIcon,0.8, Presets.attackRec).isValid()) {
             canDodge = true;
             //MLog.info("可闪避");
             return;

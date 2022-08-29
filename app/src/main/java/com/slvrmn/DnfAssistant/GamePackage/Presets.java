@@ -26,7 +26,7 @@ public class Presets {
     public static final String beforeLionRules = "294D5A,13|-1|314D63,22|1|294D5A,1|10|7BBAD6,13|11|7BBAD6,26|11|214552,2|21|214D5A,13|22|7BBAD6,25|21|294D63,2|36|21394A,12|38|7BBAD6,23|38|295163,1|49|31556B,14|49|73B6D6,24|49|73B6D6,2|59|214152,13|61|7BBADE,23|60|295163,41|38|294152,51|37|7BBAD6,64|39|295163,39|50|7BBAD6,49|50|FFBE52,55|50|E6D25A,52|43|DED763,52|55|DE5500,66|50|7BBAD6,41|63|295163,51|62|295163,64|62|214152,49|27|1041F7,54|27|0039FF,52|23|083DF7,75|61|101821,76|37|081419";
     public static final Rectangle damageNumberRec = new Rectangle(894, 4, 1161, 210);
     public static final Rectangle stuckRec = new Rectangle(121, 623, 183, 654);
-    public static final Rectangle attackRec = new Rectangle(1102, 637, 1171, 679);
+    public static final Rectangle attackRec = new Rectangle(1114, 617, 1169, 683);
     public static final Rectangle backJumpRec = new Rectangle(1008, 630, 1048, 660);
 
     public static final Rectangle[] moveRecs = {
@@ -218,7 +218,7 @@ public class Presets {
     public static Bitmap resultIcon, rewardIcon, nextButton,
             continueConfirmButton, repairButton, inventoryFullButton, goBackButton,
             ammoBuffIcon, epicIcon, coalIcon, crystalIcon, towerIcon, ticketsIcon, goldIcon,
-            dailyContinueButton, dailySelectButton, dailyGoBackButton;
+            dailyContinueButton, dailySelectButton, dailyGoBackButton,crouchingIcon;
     public static Bitmap[] dailyDungeonIcons;
     private static InputStream input;
 
@@ -234,6 +234,7 @@ public class Presets {
         inventoryFullButton = readImage("InventoryFullButton.png");
         goBackButton = readImage("GoBackButton.png");
         ammoBuffIcon = readImage("AmmoBuffIcon.png");
+        crouchingIcon = readImage("CrouchingIcon.jpeg");
 
         epicIcon = readImage("EpicIcon.png");
         ticketsIcon = readImage("TicketsIcon.png");

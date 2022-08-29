@@ -8,6 +8,7 @@ import static com.slvrmn.DnfAssistant.GamePackage.Actions.PressJoystick;
 import static com.slvrmn.DnfAssistant.GamePackage.Actions.PressLongAttack;
 import static com.slvrmn.DnfAssistant.GamePackage.Actions.PressMultipleAttacks;
 import static com.slvrmn.DnfAssistant.GamePackage.Actions.UseBuff;
+import static com.slvrmn.DnfAssistant.GamePackage.Actions.UseSkills;
 import static com.slvrmn.DnfAssistant.GamePackage.Assistant.RUN;
 import static com.slvrmn.DnfAssistant.GamePackage.Presets.continueConfirmRec;
 import static com.slvrmn.DnfAssistant.GamePackage.ScreenCheck.CHECK_INTERVAL;
@@ -46,8 +47,10 @@ public class AutoPathFinding extends Thread {
                 }
 
                 if (canDodge) {
-                    int pressTime = Utility.RandomInt(1500, 2000);
-                    PressLongAttack(pressTime, pressTime);
+                    Dodge();
+                    UseSkills();
+                    isPathFinding = false;
+                    isBattling = true;
                     continue mainLoop;
                 }
                 if (UseBuff()) {
