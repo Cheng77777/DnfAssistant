@@ -11,13 +11,12 @@ import static com.noxen.FarmKing.GamePackage.Actions.PetDaily;
 import static com.noxen.FarmKing.GamePackage.Actions.StoreDaily;
 import static com.noxen.FarmKing.GamePackage.Actions.SwitchCharacter;
 import static com.noxen.FarmKing.GamePackage.Assistant.RUN;
+import static com.noxen.FarmKing.GamePackage.BattleController.isBattling;
+import static com.noxen.FarmKing.GamePackage.BattleController.isFarming;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.CHECK_INTERVAL;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.GetScreenshot;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.dailyDungeons;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.isBattling;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.isEnergyEmpty;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.isFarming;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.isPathFinding;
 
 import com.noxen.FarmKing.Model.Image;
 import com.noxen.FarmKing.Model.Robot;
@@ -25,15 +24,10 @@ import com.noxen.FarmKing.Tools.MLog;
 
 public class DailyQuest extends Thread {
     public static void StartUIDaily() throws InterruptedException {
-        sleep(1000);
         StoreDaily();
-        sleep(1000);
         FriendDaily();
-        sleep(1000);
         GuildDaily();
-        sleep(1000);
         MailDaily();
-        sleep(1000);
         PetDaily();
     }
 
@@ -44,12 +38,8 @@ public class DailyQuest extends Thread {
         sleep(3000);
         mainLoop:
         while (RUN) {
-            if(isFarming){
-                sleep(10000);
-                continue;
-            }
             //如果正在战斗,continue
-            if (isPathFinding || isBattling) {
+            if (BattleController.isBattling) {
                 sleep(3000);
                 continue;
             }
@@ -58,7 +48,7 @@ public class DailyQuest extends Thread {
             }
             ScreenCheck.RefreshDailyDungeons(GetScreenshot());
             //进入副本
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < dailyDungeons.length-2; i++) {
                 if (dailyDungeons[i].isValid()) {
                     Robot.Press(dailyDungeons[i]);
                     while (!Actions.FindAndTap(Presets.dailyDungeonConfirmModels)) {
@@ -70,6 +60,7 @@ public class DailyQuest extends Thread {
                         }
                         sleep(1000);
                     }
+                    isBattling = true;
                     continue mainLoop;
                 }
             }
@@ -95,16 +86,10 @@ public class DailyQuest extends Thread {
     public void run() {
         try {
             while (RUN) {
-                MLog.info(""+isFarming);
                 if (isFarming) {
                     return;
                 }
-                while (!Image.findPointByCheckRuleModel(GetScreenshot(), Presets.mainMenuModel).isValid()) {
-                    if (!RUN) {
-                        return;
-                    }
-                    sleep(CHECK_INTERVAL);
-                }
+                GoBackToMainScene();
                 StartUIDaily();
                 StartDailyDungeon();
             }

@@ -53,8 +53,9 @@ public class Presets {
             ,new CheckRuleModel(108,59,148,76,"08284A,-5|5|1065AD,-11|10|949AB5,15|3|0000FF,14|7|0000FF,18|13|00008C,22|7|0000EF,21|2|0000FF")
     };
 
-    public static final String inDungeonRule = "B5EFFF,23|0|BDF3FF,-1|12|BDF3FF,23|12|BDF3FF,11|17|B5EFFF,67|-1|E6FBFF,64|7|E6FBF7,67|15|E6FFFF,75|18|EFFFFF,83|14|DEFFFF,86|6|E6F7FF,82|-1|DEFBFF,75|-4|EFFBFF,75|7|D6FBF7";
-    public static final Rectangle inDungeonRec = new Rectangle(999, 4, 1114, 49);
+    public static final CheckRuleModel inDungeonModel = new CheckRuleModel(1116,618,1160,665,"00DFFF,2|34|B5FFFF,15|12|00DBFF,16|38|9CFFFF,36|6|52FFFF,32|40|08D7DE");
+//    public static final String inDungeonRule = "B5EFFF,23|0|BDF3FF,-1|12|BDF3FF,23|12|BDF3FF,11|17|B5EFFF,67|-1|E6FBFF,64|7|E6FBF7,67|15|E6FFFF,75|18|EFFFFF,83|14|DEFFFF,86|6|E6F7FF,82|-1|DEFBFF,75|-4|EFFBFF,75|7|D6FBF7";
+//    public static final Rectangle inDungeonRec = new Rectangle(999, 4, 1114, 49);
 
     public static final String hellRules = "D66508,0|0|D66508,-1|1|E66508,-1|4|FFBE52,-1|6|DE5900,0|7|DE5900,3|10|100010,-3|10|BD359C,-7|4|000408,-8|0|E671E6,-10|0|FF61FF,7|0|FF14DE,10|0|E681D6,14|-2|F718DE,9|6|E628D6";
 

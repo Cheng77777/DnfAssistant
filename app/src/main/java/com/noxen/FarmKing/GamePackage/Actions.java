@@ -1,29 +1,20 @@
 package com.noxen.FarmKing.GamePackage;
 
 import static com.noxen.FarmKing.GamePackage.Assistant.RUN;
+import static com.noxen.FarmKing.GamePackage.BattleController.isAttacking;
+import static com.noxen.FarmKing.GamePackage.BattleController.isFarming;
+import static com.noxen.FarmKing.GamePackage.BattleController.isPathfinding;
 import static com.noxen.FarmKing.GamePackage.Presets.GuildRewardRec;
 import static com.noxen.FarmKing.GamePackage.Presets.skillRecs;
 import static com.noxen.FarmKing.GamePackage.Presets.switchCharacterModels;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.CHECK_INTERVAL;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.GetScreenshot;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.ammoBuff;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.dailyNonMapDungeon;
+import static com.noxen.FarmKing.GamePackage.ScreenCheck.beforeLion;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.directionalBuffs;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.hasAmmo;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.hasContinue;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.hasGoBack;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.hasMonster;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.hasRepair;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.hasResult;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.inBoss;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.inHell;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.inLion;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.isBattling;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.isDamaging;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.isEnergyEmpty;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.isFarming;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.isInventoryFull;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.isPathFinding;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.skills;
 import static java.lang.Thread.sleep;
 
@@ -38,6 +29,8 @@ import com.noxen.FarmKing.Model.Rectangle;
 import com.noxen.FarmKing.Model.Robot;
 import com.noxen.FarmKing.Tools.MLog;
 import com.noxen.FarmKing.Tools.Utility;
+
+import java.util.Random;
 
 public class Actions {
 
@@ -58,7 +51,12 @@ public class Actions {
     }
 
     static void PressMultipleAttacks(int multiple) throws InterruptedException {
-        Robot.Press(Presets.attackRec, multiple);
+        for (int i = 0; i < multiple; i++) {
+            if(isPathfinding){
+                return;
+            }
+            Robot.Press(Presets.attackRec);
+        }
     }
 
     static void PressLongAttack(int pressTime, int sleepTime) throws InterruptedException {
@@ -85,48 +83,6 @@ public class Actions {
             random = Utility.RandomInt(100, 150);
             Robot.LongPress(Presets.joystickRecs[0], Presets.joystickRecs[1], random);
             sleep(random);
-        }
-    }
-
-    static void GetReward() throws InterruptedException {
-//        MLog.info("翻牌并进入下次战斗");
-        sleep(1000);
-        int random = Utility.RandomInt(7, 8);
-        Robot.Press(skillRecs[0], random);
-        sleep(3000);
-
-        while (!hasContinue.isValid()) {
-            if (!RUN) {
-                return;
-            }
-            sleep(CHECK_INTERVAL);
-        }
-
-        PickDrops();
-
-        if (hasRepair.isValid()) {
-            RepairEquipments();
-        }
-
-        if (isInventoryFull.isValid()) {
-            CleanInventory();
-        }
-
-        if (isEnergyEmpty) {
-            Robot.Press(hasGoBack, Utility.RandomInt(2, 3));
-            sleep(3000);
-            SwitchCharacter();
-            return;
-        } else {
-            if (!RUN) {
-                return;
-            }
-            Robot.Press(hasContinue);
-            sleep(1000);
-            Robot.Press(Presets.continueConfirmRec);
-            sleep(1000);
-            ScreenCheck.InitializeFarmingParameters();
-            sleep(1000);
         }
     }
 
@@ -211,7 +167,7 @@ public class Actions {
                         return false;
                     }
                 }
-                Robot.Press(skillRecs[i], Utility.RandomInt(2, 3));
+                Robot.Press(skillRecs[i], Utility.RandomInt(1,2));
                 sleep(1000);
                 return true;
             }
@@ -241,27 +197,6 @@ public class Actions {
         sleep(500);
     }
 
-    static void UseSkills() throws InterruptedException {
-        if (skills[skills.length - 4] && (inBoss || inLion || inHell || dailyNonMapDungeon)) {
-            Robot.Press(Presets.skillRecs[skills.length - 4], Utility.RandomInt(2, 3));
-            return;
-        }
-        for (int i = 0; i < skills.length - 4; i++) {
-            if (!RUN) {
-                return;
-            }
-            if (skills[i]) {
-                if (!hasMonster || !isDamaging || hasResult) {
-                    isBattling = false;
-                    isPathFinding = true;
-                    return;
-                }
-                Robot.Press(Presets.skillRecs[i], Utility.RandomInt(2, 3));
-                sleep(300);
-            }
-        }
-    }
-
     public static void GoBackToMainScene() throws InterruptedException {
         while (!Image.findPointByCheckRuleModel(GetScreenshot(), Presets.mainMenuModel).isValid()) {
             sleep(1000);
@@ -279,7 +214,7 @@ public class Actions {
             if (!RUN) {
                 return;
             }
-            while (!FindAndTap(m)) {
+            if (!FindAndTap(m)) {
                 break;
             }
             sleep(2000);
@@ -383,10 +318,8 @@ public class Actions {
         Bitmap screenshot = GetScreenshot();
         Point p = Image.findPoint(screenshot, color, rectangle);
         if (p.isValid()) {
-            MLog.info(p.toString());
             p.setX(p.getX() + rectangle.x1);
             p.setY(p.getY() + rectangle.y1);
-            MLog.info(p.toString());
             Rectangle r = p.MakeRectangle(5, 5);
             Robot.Press(r);
             return true;
@@ -437,15 +370,15 @@ public class Actions {
             p = Image.findPointByCheckRuleModel(screenshot, checkRuleModel);
             sleep(CHECK_INTERVAL);
             count++;
-        } while (!p.isValid() && count < 5);
+        } while (!p.isValid() && count < 20);
 
         if (p.isValid()) {
             p.setX(checkRuleModel.rectangle.x1 + p.getX());
             p.setY(checkRuleModel.rectangle.y1 + p.getY());
-            Robot.Press(p.MakeRectangle(5, 5));
+            Robot.Press(p.MakeRectangle(10, 10));
+            sleep(1000);
             return true;
         }
-        MLog.info(checkRuleModel.toString());
         return false;
     }
 
@@ -485,7 +418,6 @@ public class Actions {
                 if (!RUN) {
                     return;
                 }
-                MLog.info(i + "");
                 sleep(2000);
             }
         }
@@ -522,5 +454,35 @@ public class Actions {
             Robot.swipe(new Rectangle(1078, 551, 1083, 556), new Rectangle(1078, 154, 1083, 159), 1000);
         }
         return false;
+    }
+
+    public static boolean SleepCheckBeforeLion(int random) throws InterruptedException {
+        for (int i = 0; i < random / CHECK_INTERVAL - 1; i++) {
+            sleep(CHECK_INTERVAL);
+            if (!beforeLion) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean SleepCheckIsPathfinding(int random) throws InterruptedException {
+        for (int i = 0; i < random / CHECK_INTERVAL - 1; i++) {
+            sleep(CHECK_INTERVAL);
+            if (!isPathfinding) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean SleepCheckIsDamaging(int random) throws InterruptedException {
+        for (int i = 0; i < random / CHECK_INTERVAL - 1; i++) {
+            sleep(CHECK_INTERVAL);
+            if (!isDamaging) {
+                return false;
+            }
+        }
+        return true;
     }
 }

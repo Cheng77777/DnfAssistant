@@ -1,5 +1,7 @@
 package com.noxen.FarmKing.GamePackage;
 
+import static com.noxen.FarmKing.GamePackage.BattleController.isFarming;
+
 import android.graphics.Bitmap;
 
 import com.noxen.FarmKing.Model.Image;
@@ -8,18 +10,19 @@ import com.noxen.FarmKing.Model.Rectangle;
 import com.noxen.FarmKing.Tools.MLog;
 import com.noxen.FarmKing.Tools.ScreenCaptureUtil;
 
+import org.opencv.android.BaseLoaderCallback;
+
 import java.util.Arrays;
 
 public class ScreenCheck extends Thread {
     public static final int CHECK_INTERVAL = 100;
-
-    public static volatile boolean isFarming = false;
     public static volatile int screenFreezeTime;
     public static volatile boolean
-            inDungeon, inBoss, beforeLion, inLion, hasMonster, isDamaging,
+            inDungeon,
+            inBoss, beforeLion, inLion, hasMonster, isDamaging,
             canDodge, hasResult, hasReward, inHell, hasContinueConfirm, isEnergyEmpty,
             canBreak, canSell, canBreakSelect, canSellSelect, canBreakConfirm,
-            isPathFinding, isBattling, ammoBuff, hasAmmo, dailyNonMapDungeon;
+            ammoBuff, hasAmmo, dailyNonMapDungeon;
     public static volatile Rectangle hasContinue, hasRepair, isInventoryFull, hasGoBack,
             hasDailyContinue, hasDailySelect, hasDailyGoBack;
     public static volatile boolean[] skills = {false, false, false, false, false, false, false, false, false, false, false};
@@ -38,8 +41,6 @@ public class ScreenCheck extends Thread {
         hasMonster = false;
         isDamaging = false;
         canDodge = false;
-        isPathFinding = false;
-        isBattling = false;
         ammoBuff = false;
         Arrays.fill(skills, true);
         Arrays.fill(directionalBuffs, true);
@@ -75,7 +76,7 @@ public class ScreenCheck extends Thread {
         hasDailyGoBack = Rectangle.INVALID_RECTANGLE;
     }
 
-    public static synchronized void InitializeCharacterParameters(){
+    public static synchronized void InitializeCharacterParameters() {
         Arrays.fill(availableSkills, false);
         isEnergyEmpty = false;
     }
@@ -98,9 +99,12 @@ public class ScreenCheck extends Thread {
         try {
             while (Assistant.RUN) {
                 screenshot = GetScreenshot();
-                CheckInDungeon();
+                if (CheckBlackScreen()) {
+                    sleep(CHECK_INTERVAL);
+                    continue;
+                }
                 //MLog.info("------------------------------------------");
-                if (inDungeon) {
+                if (BattleController.isBattling) {
                     CheckBattlingParameters();
                 }
                 if (isFarming) {
@@ -119,16 +123,21 @@ public class ScreenCheck extends Thread {
     }
 
     private void CheckBattlingParameters() throws InterruptedException {
-
-        if (CheckBlackScreen()) {
-            sleep(CHECK_INTERVAL);
-            return;
+        if (!dailyNonMapDungeon) {
+            CheckBoss();
+            CheckStuck();
         }
-        CheckBoss();
+        CheckInDungeon();
         CheckMonster();
         CheckDamaging();
         CheckDodge();
-        CheckStuck();
+        CheckSkillsCoolDown();
+        CheckDirectionBuffsCoolDown();
+        CheckAmmo();
+    }
+
+    private void CheckFarmingParameters() {
+
         CheckInventoryFull();
         CheckBreak();
         CheckSell();
@@ -137,13 +146,6 @@ public class ScreenCheck extends Thread {
         CheckBreakConfirmButton();
         CheckSellConfirmButton();
         CheckRepair();
-        CheckSkillsCoolDown();
-        CheckDirectionBuffsCoolDown();
-        CheckAmmo();
-    }
-
-    private void CheckFarmingParameters() throws InterruptedException {
-
         CheckLion();
         CheckInLion();
         CheckInHell();
@@ -158,15 +160,15 @@ public class ScreenCheck extends Thread {
         return Image.findPointByMulColor(screenshot, Presets.blackScreenRule).isValid();
     }
 
-    private void CheckInDungeon() {
+    private void CheckInDungeon() throws InterruptedException {
         if (inDungeon) {
             return;
         }
-        if (Image.findPointByMulColor(screenshot, Presets.inDungeonRule, Presets.inDungeonRec).
+        if (Image.findPointByCheckRuleModel(screenshot, Presets.inDungeonModel).
                 isValid()) {
             //MLog.info("地下城中");
             inDungeon = true;
-            isPathFinding = true;
+            BattleController.StartPathfinding();
             CheckAvailableSkills();
             return;
         }
@@ -231,7 +233,7 @@ public class ScreenCheck extends Thread {
     }
 
     private void CheckDodge() {
-        if (Image.matchTemplate(screenshot, Presets.crouchingIcon,0.8, Presets.attackRec).isValid()) {
+        if (Image.matchTemplate(screenshot, Presets.crouchingIcon, 0.8, Presets.attackRec).isValid()) {
             canDodge = true;
             //MLog.info("可闪避");
             return;
@@ -240,7 +242,7 @@ public class ScreenCheck extends Thread {
     }
 
     private void CheckStuck() {
-        if (!isPathFinding) {
+        if (!BattleController.isPathfinding) {
             screenFreezeTime = 0;
             return;
         }
@@ -444,7 +446,7 @@ public class ScreenCheck extends Thread {
     }
 
     private void CheckSkillsCoolDown() {
-        if (!inDungeon || hasResult || hasReward) {
+        if (!BattleController.isBattling || hasResult || hasReward) {
             return;
         }
         for (int i = 0; i < skills.length; i++) {
@@ -457,7 +459,7 @@ public class ScreenCheck extends Thread {
     }
 
     private void CheckDirectionBuffsCoolDown() {
-        if (!inDungeon || hasResult || hasReward) {
+        if (!BattleController.isBattling || hasResult || hasReward) {
             return;
         }
         if (!ammoBuff && Image.matchTemplate(screenshot, Presets.ammoBuffIcon, 0.85, Presets.skillRecs[10]).isValid()) {

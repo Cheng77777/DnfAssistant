@@ -1,9 +1,7 @@
 package com.noxen.FarmKing.GamePackage;
 
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.GetScreenshot;
-import static com.noxen.FarmKing.GamePackage.ScreenCheck.isFarming;
-
-import android.content.res.Resources;
+import static com.noxen.FarmKing.GamePackage.BattleController.*;
 
 import com.noxen.FarmKing.Model.Image;
 import com.noxen.FarmKing.Tools.*;
@@ -13,19 +11,15 @@ public class Assistant {
     public static volatile boolean RUN = false;
     private static volatile Assistant instance;
     private ScreenCheck screenCheck;
-    private AutoPathFinding autoPathFinding;
-    private AutoBattle autoBattle;
     private DailyQuest dailyQuest;
-    private TestThread testThread;
+    private BattleController battleController;
     private static boolean initialized = false;
 
     private Assistant() {
         if(screenCheck == null){
             screenCheck = new ScreenCheck();
-            autoPathFinding = new AutoPathFinding();
-            autoBattle = new AutoBattle();
             dailyQuest = new DailyQuest();
-            testThread = new TestThread();
+            battleController = new BattleController();
         }
     }
 
@@ -46,6 +40,7 @@ public class Assistant {
             }
             else {
                 isFarming = true;
+                isBattling = true;
             }
         }
         if(!RUN){
@@ -55,10 +50,8 @@ public class Assistant {
             MLog.setDebug(true);
             RUN=true;
             screenCheck.start();
-            autoPathFinding.start();
-            autoBattle.start();
             dailyQuest.start();
-//            testThread.start();
+            battleController.start();
             Utility.show("开始运行");
         }
         else {
