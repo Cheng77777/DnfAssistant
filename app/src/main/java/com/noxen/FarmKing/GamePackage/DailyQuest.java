@@ -41,8 +41,13 @@ public class DailyQuest extends Thread {
         sleep(1000);
         GoBackToMainScene();
         EnterDailyDungeonSelectScene();
+        sleep(3000);
         mainLoop:
         while (RUN) {
+            if(isFarming){
+                sleep(10000);
+                continue;
+            }
             //如果正在战斗,continue
             if (isPathFinding || isBattling) {
                 sleep(3000);
@@ -75,10 +80,10 @@ public class DailyQuest extends Thread {
                 GoBackToMainScene();
                 if (!isEnergyEmpty) {
                     EnterFarming();
-                    return;
+                    continue ;
                 }else {
                     if(SwitchCharacter()){
-                        return;
+                        continue ;
                     }
                 }
             }

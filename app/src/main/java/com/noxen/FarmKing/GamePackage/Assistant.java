@@ -3,6 +3,8 @@ package com.noxen.FarmKing.GamePackage;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.GetScreenshot;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.isFarming;
 
+import android.content.res.Resources;
+
 import com.noxen.FarmKing.Model.Image;
 import com.noxen.FarmKing.Tools.*;
 
@@ -14,6 +16,7 @@ public class Assistant {
     private AutoPathFinding autoPathFinding;
     private AutoBattle autoBattle;
     private DailyQuest dailyQuest;
+    private TestThread testThread;
     private static boolean initialized = false;
 
     private Assistant() {
@@ -22,6 +25,7 @@ public class Assistant {
             autoPathFinding = new AutoPathFinding();
             autoBattle = new AutoBattle();
             dailyQuest = new DailyQuest();
+            testThread = new TestThread();
         }
     }
 
@@ -37,6 +41,12 @@ public class Assistant {
         if(!initialized){
             Presets.Initialize();
             initialized = true;
+            if(Image.findPointByCheckRuleModel(GetScreenshot(),Presets.mainMenuModel).isValid()){
+                isFarming = false;
+            }
+            else {
+                isFarming = true;
+            }
         }
         if(!RUN){
             ScreenCheck.InitializeDailyQuestParameters();
@@ -44,16 +54,11 @@ public class Assistant {
             ScreenCheck.InitializeCharacterParameters();
             MLog.setDebug(true);
             RUN=true;
-            if(Image.findPointByCheckRuleModel(GetScreenshot(),Presets.mainMenuModel).isValid()){
-                isFarming = false;
-            }
-            else {
-                isFarming = true;
-            }
             screenCheck.start();
             autoPathFinding.start();
             autoBattle.start();
             dailyQuest.start();
+//            testThread.start();
             Utility.show("开始运行");
         }
         else {

@@ -14,6 +14,7 @@ import static com.noxen.FarmKing.GamePackage.ScreenCheck.hasContinue;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.hasGoBack;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.hasMonster;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.hasRepair;
+import static com.noxen.FarmKing.GamePackage.ScreenCheck.hasResult;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.inBoss;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.inHell;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.inLion;
@@ -112,7 +113,7 @@ public class Actions {
         }
 
         if (isEnergyEmpty) {
-            Robot.Press(hasGoBack);
+            Robot.Press(hasGoBack, Utility.RandomInt(2, 3));
             sleep(3000);
             SwitchCharacter();
             return;
@@ -250,7 +251,7 @@ public class Actions {
                 return;
             }
             if (skills[i]) {
-                if (!hasMonster || !isDamaging) {
+                if (!hasMonster || !isDamaging || hasResult) {
                     isBattling = false;
                     isPathFinding = true;
                     return;
@@ -263,6 +264,7 @@ public class Actions {
 
     public static void GoBackToMainScene() throws InterruptedException {
         while (!Image.findPointByCheckRuleModel(GetScreenshot(), Presets.mainMenuModel).isValid()) {
+            sleep(1000);
             if (!RUN) {
                 return;
             }
@@ -277,7 +279,7 @@ public class Actions {
             if (!RUN) {
                 return;
             }
-            if (!FindAndTap(m)) {
+            while (!FindAndTap(m)) {
                 break;
             }
             sleep(2000);
@@ -347,6 +349,36 @@ public class Actions {
         GoBackToMainScene();
     }
 
+    public static void SaveItems() throws InterruptedException {
+        sleep(1000);
+        GoBackToMainScene();
+        for (CheckRuleModel m : Presets.saveItemsModels) {
+            if (!RUN) {
+                return;
+            }
+            if (!FindAndTap(m)) {
+                break;
+            }
+            sleep(2000);
+        }
+        GoBackToMainScene();
+    }
+
+    public static void GetDailyReward() throws InterruptedException {
+        sleep(1000);
+        GoBackToMainScene();
+        for (CheckRuleModel m : Presets.getDailyRewardModels) {
+            if (!RUN) {
+                return;
+            }
+            if (!FindAndTap(m)) {
+                break;
+            }
+            sleep(2000);
+        }
+        GoBackToMainScene();
+    }
+
     public static boolean FindAndTap(Color color, Rectangle rectangle) throws InterruptedException {
         Bitmap screenshot = GetScreenshot();
         Point p = Image.findPoint(screenshot, color, rectangle);
@@ -397,15 +429,23 @@ public class Actions {
     }
 
     public static boolean FindAndTap(CheckRuleModel checkRuleModel) throws InterruptedException {
-        Bitmap screenshot = GetScreenshot();
-        Point p = Image.findPointByCheckRuleModel(screenshot, checkRuleModel);
+        Bitmap screenshot;
+        Point p;
+        int count = 0;
+        do {
+            screenshot = GetScreenshot();
+            p = Image.findPointByCheckRuleModel(screenshot, checkRuleModel);
+            sleep(CHECK_INTERVAL);
+            count++;
+        } while (!p.isValid() && count < 5);
+
         if (p.isValid()) {
             p.setX(checkRuleModel.rectangle.x1 + p.getX());
             p.setY(checkRuleModel.rectangle.y1 + p.getY());
             Robot.Press(p.MakeRectangle(5, 5));
-            sleep(500);
             return true;
         }
+        MLog.info(checkRuleModel.toString());
         return false;
     }
 
@@ -453,7 +493,11 @@ public class Actions {
     }
 
     public static boolean SwitchCharacter() throws InterruptedException {
-        GoBackToMainScene();
+        sleep(3000);
+        SaveItems();
+        sleep(3000);
+        GetDailyReward();
+
         while (!FindAndTap(switchCharacterModels[0])) {
             if (!RUN) {
                 return false;
@@ -469,17 +513,14 @@ public class Actions {
                         return false;
                     }
                 }
-                sleep(10000);
-                ScreenCheck.InitializeCharacterParameters();
-                ScreenCheck.InitializeFarmingParameters();
-                ScreenCheck.InitializeBattleParameters();
-                ScreenCheck.InitializeDailyQuestParameters();
+                RUN = false;
                 isFarming = false;
+                sleep(10000);
+                Assistant.getInstance().start();
                 return true;
             }
             Robot.swipe(new Rectangle(1078, 551, 1083, 556), new Rectangle(1078, 154, 1083, 159), 1000);
         }
-        RUN = false;
         return false;
     }
 }

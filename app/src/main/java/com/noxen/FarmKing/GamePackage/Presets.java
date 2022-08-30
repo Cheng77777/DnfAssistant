@@ -137,7 +137,7 @@ public class Presets {
     public static final Rectangle backRec = new Rectangle(5, 8, 36, 38);
 
     public static final CheckRuleModel[] storeModels = {
-            new CheckRuleModel(905, 642, 943, 672, "3A59CE,0|11|21457B,-1|21|3A61A4,11|0|B5EBFF,11|11|193973,11|22|426584,23|0|BDEBFF,22|13|738194,22|21|10183A")
+            new CheckRuleModel(915,637,945,677, "BDF3F7,10|27|4269F7,15|-2|B5EBFF,21|28|5A7DE6,22|-1|4265DE")
             , new CheckRuleModel(896, 544, 926, 570, "21246B,1|4|94A2AD,0|11|42598C,9|-4|3155DE,9|3|211842,9|11|D6EBFF,20|-5|4265E6,19|1|292431,20|11|CEF3EF")
             , new CheckRuleModel(8, 226, 84, 257, "101C21,0|5|7392AD,30|-4|738EA4,30|3|7392AD,29|12|32353A,50|-2|738EA4,50|5|7391AC,50|11|7392AD")
             , new CheckRuleModel(530, 73, 619, 104, "638194,0|4|425563,0|12|738EA4,37|1|738EA4,37|5|63798C,37|14|4A596B,65|0|7392AD,65|6|4A5D73,65|14|7392AD")
@@ -202,6 +202,21 @@ public class Presets {
             , new CheckRuleModel(1013, 581, 1140, 621, "006DA4,10|16|B5D7E6,27|23|DEEFF7,40|11|CEE3EF,53|18|FFFFFF,62|25|9CCAE6,76|30|007DBD,82|15|94C2DE,83|29|F7FBFF")
     };
 
+    public static final CheckRuleModel[] saveItemsModels = {
+            new CheckRuleModel(1204,635,1249,681,"4A4D5A,-1|12|5299DE,-9|-2|424563,-8|21|63C2F7,13|-6|5AA1F6,14|16|D6E3F7,23|-9|B5B6BD,24|16|3A395B,4|19|6BC2F7")
+            ,new CheckRuleModel(13,302,61,334,"101819,0|3|637D94,0|9|7392AD,12|-4|191821,15|4|191C21,18|10|63798C,29|-2|7392AD,30|10|63798C")
+            ,new CheckRuleModel(326,72,418,103,"425563,3|5|425563,6|11|425563,17|3|738EA4,27|5|4A596B,45|6|525D73,52|6|738EA4,72|0|4A596B,73|10|4A5D73")
+            ,new CheckRuleModel(701,343,774,371,"BDF3FF,13|8|101819,20|1|101819,24|-2|191922,36|2|BDF3FF,43|8|101419,44|6|BDF3FF,53|0|B5EFFF,63|8|101819")
+            ,new CheckRuleModel(594,594,688,644,"0875AD,4|4|DEF7FF,4|9|0075B5,8|17|DEF3FF,13|6|DEF3FF,19|0|0071AD,26|8|0079B5,24|18|E6F7FF,34|24|0081C5")
+
+    };
+
+    public static final CheckRuleModel[] getDailyRewardModels = {
+            new CheckRuleModel(1104, 642, 1138, 678, "B5E6F7,0|11|08284A,2|25|6B8EBD,13|4|0896F7,12|13|009AE6,11|22|2965A4,23|2|7CF3F7,23|16|0071E6,23|24|2171F7")
+            ,new CheckRuleModel(1064,546,1094,571,"102D42,2|14|6B9ACE,2|20|08243A,11|1|8CCAFF,11|11|087DF7,13|21|313152,22|0|10355A,19|8|399EF7,21|18|101421")
+            ,new CheckRuleModel(1108,657,1225,694,"0071AD,1|8|0075B5,8|14|DEF3FF,11|20|0982BD,31|4|0075B5,39|12|0079B5,45|20|007DBD,48|18|DEF3FF,71|4|ADD7EF,81|13|DEF3FF")
+    };
+
     public static final CheckRuleModel[] switchCharacterModels = {
             new CheckRuleModel(15, 54, 34, 73, "6BAABD,3|10|63AACE,6|1|314152,8|12|102021,11|4|84CADE,14|13|102021")
             , new CheckRuleModel(1057, 603, 1180, 641, "107DBD,5|11|0881BD,17|-8|0071AD,20|-2|0075B5,20|8|DEF3FF,41|-8|0071AD,48|1|DEF3FF,53|12|007DBD,58|-6|DEF3FF,71|1|DEF7FF,79|11|E6F7FF")
@@ -210,7 +225,7 @@ public class Presets {
     public static final Rectangle characterRemainRec = new Rectangle(661,183,737,564);
     public static final Color characterRemainColor = new Color(255,243,222);
 
-    public static final CheckRuleModel mainMenuModel = new CheckRuleModel(1208, 20, 1257, 65, "F7F7F7,2|11|B5D7E6,2|23|6BB2BD");
+    public static final CheckRuleModel mainMenuModel = new CheckRuleModel(15, 54, 34, 73, "6BAABD,3|10|63AACE,6|1|314152,8|12|102021,11|4|84CADE,14|13|102021");
 
     private static final AssetManager assetManager = MainApplication.getInstance().getAssets();
     public static boolean initialized;

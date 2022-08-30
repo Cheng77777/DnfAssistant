@@ -1,10 +1,12 @@
 package com.noxen.FarmKing.GamePackage;
 
 import static com.noxen.FarmKing.GamePackage.Actions.PressLongAttack;
+import static com.noxen.FarmKing.GamePackage.Actions.PressMultipleAttacks;
 import static com.noxen.FarmKing.GamePackage.Actions.UseSkills;
 import static com.noxen.FarmKing.GamePackage.Assistant.RUN;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.CHECK_INTERVAL;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.hasMonster;
+import static com.noxen.FarmKing.GamePackage.ScreenCheck.hasResult;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.isBattling;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.isDamaging;
 import static com.noxen.FarmKing.GamePackage.ScreenCheck.isPathFinding;
@@ -24,11 +26,11 @@ public class AutoBattle extends Thread {
                 }
                 MLog.info("自动战斗中");
                 if (hasMonster && isDamaging) {
-                    int random = Utility.RandomInt(300,500);
-                    PressLongAttack(random,random);
+                    int random = Utility.RandomInt(2, 5);
+                    PressMultipleAttacks(random);
                     UseSkills();
                 }
-                if (!hasMonster || !isDamaging) {
+                if (!hasMonster || !isDamaging || hasResult) {
                     isBattling = false;
                     isPathFinding = true;
                 }

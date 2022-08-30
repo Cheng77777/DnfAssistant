@@ -51,10 +51,10 @@ public class AutoPathFinding extends Thread {
                     UseSkills();
                     isPathFinding = false;
                     isBattling = true;
-                    continue mainLoop;
+                    continue;
                 }
                 if (UseBuff()) {
-                    continue mainLoop;
+                    continue;
                 }
                 MLog.info("自动寻路中");
                 if (isFarming) {
