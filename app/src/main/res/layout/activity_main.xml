@@ -13,13 +13,6 @@
         android:text="打开悬浮窗" />
 
     <Button
-        android:id="@+id/close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="closeDialog"
-        android:text="关闭悬浮窗" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="openLog"
