@@ -1,5 +1,6 @@
 package com.slvrmn.DNFAssistant.GamePackage;
 
+import com.slvrmn.DNFAssistant.Model.Rectangle;
 import com.slvrmn.DNFAssistant.Model.Robot;
 import com.slvrmn.DNFAssistant.Tools.MLog;
 import com.slvrmn.DNFAssistant.Tools.Utility;
@@ -18,14 +19,20 @@ public class Battle extends Thread {
                     continue;
                 }
                 if (BattleController.isPathfinding) {
+                    if (!ScreenCheck.hasMonster && ScreenCheck.hasRepair.isValid()) {
+                        MLog.info("BattleController: 需要修理");
+                        Actions.RepairEquipments();
+                    }
                     if (Actions.UseBuff() && !buffUsed) {
                         buffUsed = true;
                         continue;
                     }
                     buffUsed = false;
                     MLog.info("PathFind: 自动寻路中");
-                    int pressTime = Utility.RandomInt(4400, 4500);
+                    int pressTime = Utility.RandomInt(5400, 5500);
                     Actions.PressLongAttack(pressTime, ScreenCheck.CHECK_INTERVAL);
+
+                    ScreenCheck.hasRepair = Rectangle.INVALID_RECTANGLE;
 
                     if (!Actions.SleepCheckIsPathfinding(pressTime)) {
                         MLog.info("PathFind: ----------停止寻路----------");

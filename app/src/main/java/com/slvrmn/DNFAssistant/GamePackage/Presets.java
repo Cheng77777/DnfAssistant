@@ -49,13 +49,11 @@ public class Presets {
     public static final Rectangle continueConfirmRec = new Rectangle(665, 429, 791, 470);
     public static final Rectangle confirmGoOutRec = new Rectangle(696, 436, 772, 463);
 
+    public static final CheckImageModel repairButtonModel = new CheckImageModel(12,8,97,92,"RepairButton.png");
 
     public static final CheckRuleModel inDungeonModel = new CheckRuleModel(996, 1, 1115, 50, "BDEFFF,11|13|B5EFFF,21|2|BDF3FF,66|1|E6F7FF,73|9|E6FFFF,81|17|E6F7FF");
 
     public static final String hellRules = "73B6D6,-13|12|7BBADE,0|12|73B6D6,15|11|003DFF,0|22|215163,30|9|EF24EF,51|8|EF24EF,40|12|FFBA42,39|-36|4A8AFF,39|-21|0014DE";
-
-    public static final Rectangle mapCentreRec = new Rectangle(1183, 69, 1218, 103);
-    public static final String bossRules = "101073,2|3|4265FF,3|6|1935DE,8|3|2965F7,15|1|2961E6,21|4|2155FF,25|6|1035EF,28|0|000063,19|10|000019,9|10|000000,7|8|000029,21|8|000042,18|11|000010,10|12|000000,11|16|001CD6,8|19|0010CE,11|21|000008,17|22|000010,21|17|0010CE,16|15|0035EF,12|16|0020E6";
 
     public static final CheckImageModel inBoosModel= new CheckImageModel(1183,69,1216,103,"BossIcon.png");
 
@@ -257,7 +255,7 @@ public class Presets {
     public static boolean initialized;
     public static Bitmap[] numbers = new Bitmap[3];
     public static Bitmap resultIcon, rewardIcon, nextButton,
-            continueConfirmButton, repairButton, inventoryFullButton, goBackButton,
+            continueConfirmButton, inventoryFullButton, goBackButton,
             ammoBuffIcon, epicIcon, coalIcon, crystalIcon, towerIcon, ticketsIcon, goldIcon,
             dailyContinueButton, dailySelectButton, dailyGoBackButton, crouchingIcon,
             switchCharacterButton;
@@ -271,7 +269,6 @@ public class Presets {
         rewardIcon = readImage("RewardIcon.jpg");
         nextButton = readImage("NextButton.png");
         continueConfirmButton = readImage("ContinueConfirmButton.png");
-        repairButton = readImage("RepairButton.png");
         inventoryFullButton = readImage("InventoryFullButton.png");
         goBackButton = readImage("GoBackButton.png");
         ammoBuffIcon = readImage("AmmoBuffIcon.png");

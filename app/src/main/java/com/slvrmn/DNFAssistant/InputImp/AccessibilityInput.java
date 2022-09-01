@@ -95,14 +95,16 @@ public class AccessibilityInput implements Input {
         xLen = x2 - x1;
         yLen = y2 - y1;
         path.moveTo(x1, y1);
-        path.lineTo(x1 + 0.2f * xLen, y1 + 0.2f * yLen);
-        path.lineTo(x1 + 0.3f * xLen, y1 + 0.3f * yLen);
-        path.lineTo(x1 + 0.4f * xLen, y1 + 0.4f * yLen);
-        path.lineTo(x1 + 0.5f * xLen, y1 + 0.5f * yLen);
+        path.lineTo(x1 + 0.01f * xLen, y1 + 0.01f * yLen);
+        path.lineTo(x1 + 0.02f * xLen, y1 + 0.02f * yLen);
+        path.lineTo(x1 + 0.04f * xLen, y1 + 0.04f * yLen);
+        path.lineTo(x1 + 0.08f * xLen, y1 + 0.08f * yLen);
+        path.lineTo(x1 + 0.16f * xLen, y1 + 0.16f * yLen);
+        path.lineTo(x1 + 0.32f * xLen, y1 + 0.32f * yLen);
         path.lineTo(x1 + 0.6f * xLen, y1 + 0.6f * yLen);
-        path.lineTo(x1 + 0.7f * xLen, y1 + 0.7f * yLen);
-        path.lineTo(x1 + 0.8f * xLen, y1 + 0.8f * yLen);
-        path.lineTo(x1 + 0.9f * xLen, y1 + 0.9f * yLen);
+        path.lineTo(x1 + 0.92f * xLen, y1 + 0.92f * yLen);
+        path.lineTo(x1 + 0.96f * xLen, y1 + 0.96f * yLen);
+        path.lineTo(x1 + 0.98f * xLen, y1 + 0.98f * yLen);
         path.lineTo(x2, y2);
         /**
          * 参数path：笔画路径

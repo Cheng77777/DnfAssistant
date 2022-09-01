@@ -83,11 +83,9 @@ public class Actions {
     static void RepairEquipments() throws InterruptedException {
         MLog.info("Actions: ==========修理装备==========");
         Robot.Press(ScreenCheck.hasRepair);
-        sleep(2000);
+        sleep(500);
         Robot.Press(Presets.confirmRepairRecs);
-        sleep(2000);
-        PressBack("Actions.RepairEquipments");
-        sleep(2000);
+        sleep(500);
     }
 
     static void CleanInventory() throws InterruptedException {

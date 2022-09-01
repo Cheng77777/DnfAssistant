@@ -38,11 +38,6 @@ public class BattleController extends Thread {
 
         Actions.PickDrops();
 
-        if (ScreenCheck.hasRepair.isValid()) {
-            MLog.info("BattleController: 需要修理");
-            Actions.RepairEquipments();
-        }
-
         if (ScreenCheck.isInventoryFull.isValid()) {
             MLog.info("BattleController: 背包满");
             Actions.CleanInventory();
@@ -120,7 +115,7 @@ public class BattleController extends Thread {
                     }
                     if (isPathfinding) {
                         MLog.info("BattleController: 寻路中");
-                        if (ScreenCheck.isDamaging) {
+                        if (ScreenCheck.isDamaging && ScreenCheck.hasMonster) {
                             StartAttacking();
                             continue;
                         }
@@ -167,7 +162,6 @@ public class BattleController extends Thread {
                                         continue mainLoop;
                                     }
                                 } while (beforeLion);
-                                Actions.DodgeDown();
                                 StartPathfinding();
                                 MLog.info("BattleController: 不在狮子头前");
                             }

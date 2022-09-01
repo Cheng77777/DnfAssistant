@@ -237,7 +237,7 @@ public class ScreenCheck extends Thread {
     }
 
     private void CheckStuck() {
-        if (!BattleController.isPathfinding) {
+        if (!BattleController.isPathfinding || hasRepair.isValid()) {
             screenFreezeTime = 0;
             return;
         }
@@ -363,14 +363,14 @@ public class ScreenCheck extends Thread {
         if (hasRepair.isValid()) {
             return;
         }
-        Point p = Image.matchTemplate(screenshot, Presets.repairButton, 0.85,
-                Presets.completeDungeonMenuRec);
+        Point p = Image.findPointByCheckImageModel(screenshot, Presets.repairButtonModel);
         if (p.isValid()) {
-            p.setX(p.getX() + Presets.completeDungeonMenuRec.x1);
-            p.setY(p.getY() + Presets.completeDungeonMenuRec.y1);
+            p.setX(p.getX() + Presets.repairButtonModel.rectangle.x1);
+            p.setY(p.getY() + Presets.repairButtonModel.rectangle.y1);
             MLog.info("ScreenCheck: __________需要修理__________");
             hasRepair = new Rectangle(p.getX(), p.getY(),
-                    p.getX() + 50, p.getY() + 10);
+                    p.getX() + Presets.repairButtonModel.image.getWidth(),
+                    p.getY() + +Presets.repairButtonModel.image.getHeight());
             return;
         }
         hasRepair = Rectangle.INVALID_RECTANGLE;
@@ -424,7 +424,7 @@ public class ScreenCheck extends Thread {
         if (isEnergyEmpty) {
             return;
         }
-        if(Image.findPointByCheckImageModels(screenshot,Presets.energyEmptyModels).isValid()){
+        if (Image.findPointByCheckImageModels(screenshot, Presets.energyEmptyModels).isValid()) {
             isEnergyEmpty = true;
             MLog.info("ScreenCheck: __________疲劳为0__________");
             return;
