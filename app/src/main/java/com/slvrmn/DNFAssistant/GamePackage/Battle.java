@@ -50,7 +50,8 @@ public class Battle extends Thread {
                                 continue mainLoop;
                             }
                             Robot.Press(Presets.skillRecs[i], Utility.RandomInt(2, 3));
-                            sleep(300);
+                            int pressTime = Utility.RandomInt(3, 4);
+                            Actions.PressMultipleAttacks(pressTime);
                         }
                     }
                 }

@@ -10,7 +10,6 @@ import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.InitializeDailyQue
 import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.beforeLion;
 import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.hasDailyContinue;
 import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.hasDailySelect;
-import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.inHell;
 
 import com.slvrmn.DNFAssistant.Model.Robot;
 import com.slvrmn.DNFAssistant.Tools.MLog;
@@ -114,7 +113,7 @@ public class BattleController extends Thread {
                 if (isBattling) {
                     if (ScreenCheck.canDodge) {
                         MLog.info("BattleController: 可闪避");
-                        Actions.Dodge();
+                        Actions.DodgeLeft();
                         StartAttacking();
                         sleep(3000);
                         continue;
@@ -168,6 +167,7 @@ public class BattleController extends Thread {
                                         continue mainLoop;
                                     }
                                 } while (beforeLion);
+                                Actions.DodgeDown();
                                 StartPathfinding();
                                 MLog.info("BattleController: 不在狮子头前");
                             }
@@ -206,9 +206,7 @@ public class BattleController extends Thread {
                         }
                         if (ScreenCheck.screenFreezeTime >= 15) {
                             MLog.info("BattleController: 卡住次数大于15");
-                            if (!inHell) {
-                                Actions.MoveAround();
-                            }
+                            Actions.MoveAround();
                             if (ScreenCheck.inHell && !ScreenCheck.hasMonster && ScreenCheck.isEnergyEmpty) {
                                 MLog.info("BattleController: ");
                                 int random;

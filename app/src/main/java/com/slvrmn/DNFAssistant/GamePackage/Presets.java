@@ -38,7 +38,8 @@ public class Presets {
     };
     public static final Rectangle[] dodgeRecs = {
             new Rectangle(1020, 630, 1040, 640),
-            new Rectangle(940, 630, 960, 640)
+            new Rectangle(940, 630, 960, 640),
+            new Rectangle(1020, 710, 1040, 720)
     };
     public static final Rectangle[] joystickRecs = {
             new Rectangle(114, 432, 283, 613),
@@ -55,6 +56,8 @@ public class Presets {
 
     public static final Rectangle mapCentreRec = new Rectangle(1183, 69, 1218, 103);
     public static final String bossRules = "101073,2|3|4265FF,3|6|1935DE,8|3|2965F7,15|1|2961E6,21|4|2155FF,25|6|1035EF,28|0|000063,19|10|000019,9|10|000000,7|8|000029,21|8|000042,18|11|000010,10|12|000000,11|16|001CD6,8|19|0010CE,11|21|000008,17|22|000010,21|17|0010CE,16|15|0035EF,12|16|0020E6";
+
+    public static final CheckImageModel inBoosModel= new CheckImageModel(1183,69,1216,103,"BossIcon.png");
 
     public static final Rectangle breakRec = new Rectangle(1159, 653, 1260, 701);
     public static final String breakRule = "8BBACE,4|0|DEEFF7,9|0|0871B5,18|-1|EEF7FF,28|-1|0871AD,38|-2|006DAD,51|-1|0071AD,63|-2|0871B5,75|-2|0871B5,-1|8|0079B5,6|8|087AB5,18|7|107DBD,29|7|0075B5,47|7|0075B5,55|8|218AC5,65|8|007ABD,71|8|0079B5,72|8|DEF3FF,0|12|0075B5,4|12|94C6E6,10|12|84BAD6,15|12|097EBD,21|12|1075B5,27|12|0079BD,35|12|0079BD,39|12|DEF7FF,41|12|2186C6,44|11|0079B5,48|11|0079B5,49|11|DEF3FF,53|12|E6F7FF,57|12|0879BD,61|12|E6F7FF,63|12|DEF7FF,68|12|DEF3FF,72|12|DEF3FF,2|18|6BB2DE,6|18|6BB2DE,11|18|73B6DE,17|18|6BB2DE,21|17|73B6DE,32|17|007DBD,36|17|007DBD,41|17|0079BD,45|17|0079BD,49|17|DEF3FF,53|17|DEF3FF,58|17|007DBD,63|18|007DBD,65|18|007DBD,68|18|DEF3FF,72|18|DEF3FF";
@@ -198,6 +201,14 @@ public class Presets {
             , new CheckRuleModel(1013, 581, 1140, 621, "006DA4,10|16|B5D7E6,27|23|DEEFF7,40|11|CEE3EF,53|18|FFFFFF,62|25|9CCAE6,76|30|007DBD,82|15|94C2DE,83|29|F7FBFF")
     };
 
+    public static CheckImageModel[] damagingModels ={
+            new CheckImageModel(908,48,1113,300, "ComboIcon_1.png"),
+            new CheckImageModel(908,48,1113,300, "ComboIcon_2.png"),
+            new CheckImageModel(908,48,1113,300, "ComboIcon_3.png")
+    };
+
+    public static final CheckImageModel DailyMenuModel = new CheckImageModel(267, 10, 336, 76,"DailyMenuButton.png");
+
     public static final CheckImageModel[] energyEmptyModels = {
             new CheckImageModel(126,52,156,81,"EnergyEmptyIcon_1.png"),
             new CheckImageModel(126,52,156,81,"EnergyEmptyIcon_2.png")
@@ -208,7 +219,7 @@ public class Presets {
             new CheckImageModel(11,306,58,335,"SaveButton.png"),
             new CheckImageModel(313,61,432,115,"AccountSaveButton.png"),
             new CheckImageModel(648,330,815,388,"TransferAllButton.png"),
-            new CheckImageModel(611,607,664,637,"ConfirmButton.png"),
+            new CheckImageModel(546,597,730,647, "SaveConfirmButton.png")
     };
 
     public static final CheckImageModel[] getDailyRewardModels = {
@@ -217,15 +228,28 @@ public class Presets {
             new CheckImageModel(1092,652,1224,690,"AchievementGetAllButton.png"),
     };
 
+    public static final CheckImageModel[] FriendAndGuildModels = {
+            DailyMenuModel,
+            new CheckImageModel(384,140,423,170, "DailyDungeonCollapseButton.png"),
+            new CheckImageModel(385,228,417,249,"DailyDungeonCollapseButton.png"),
+            new CheckImageModel(561,428,661,449,"DailyGuildCheckInButton.png"),
+            new CheckImageModel(696,549,760,588, "SaveConfirmButton.png"),
+            new CheckImageModel(604,437,678,475, "SaveConfirmButton.png"),
+            new CheckImageModel(674,424,776,455,"DailyGuildRewardButton.png"),
+            new CheckImageModel(614,527,671,565, "SaveConfirmButton.png"),
+            new CheckImageModel(938,629,1054,663,"FriendSendButton.png"),
+            new CheckImageModel(683,427,802,472, "SaveConfirmButton.png"),
+            new CheckImageModel(1085,630,1198,656,"FriendReceiveButton.png"),
+    };
+
     public static final CheckRuleModel[] switchCharacterModels = {
             new CheckRuleModel(15, 54, 34, 73, "6BAABD,3|10|63AACE,6|1|314152,8|12|102021,11|4|84CADE,14|13|102021")
             , new CheckRuleModel(1057, 603, 1180, 641, "107DBD,5|11|0881BD,17|-8|0071AD,20|-2|0075B5,20|8|DEF3FF,41|-8|0071AD,48|1|DEF3FF,53|12|007DBD,58|-6|DEF3FF,71|1|DEF7FF,79|11|E6F7FF")
     };
 
-    public static final Rectangle characterRemainRec = new Rectangle(661, 183, 737, 564);
+    public static final Rectangle characterRemainRec = new Rectangle(664,204,731,547);
     public static final Color characterRemainColor = new Color(255, 243, 222);
 
-    public static final Rectangle dailyMenuButtonRec = new Rectangle(267, 10, 336, 76);
     public static final Rectangle switchCharacterButtonRec = new Rectangle(6,46,43,82);
 
     private static final AssetManager assetManager = MainApplication.getInstance().getAssets();
@@ -235,7 +259,7 @@ public class Presets {
     public static Bitmap resultIcon, rewardIcon, nextButton,
             continueConfirmButton, repairButton, inventoryFullButton, goBackButton,
             ammoBuffIcon, epicIcon, coalIcon, crystalIcon, towerIcon, ticketsIcon, goldIcon,
-            dailyContinueButton, dailySelectButton, dailyGoBackButton, crouchingIcon, dailyMenuButton,
+            dailyContinueButton, dailySelectButton, dailyGoBackButton, crouchingIcon,
             switchCharacterButton;
     public static Bitmap[] dailyDungeonIcons;
 
@@ -264,7 +288,6 @@ public class Presets {
         dailyContinueButton = readImage("DailyContinueButton.png");
         dailySelectButton = readImage("DailySelectButton.png");
         dailyGoBackButton = readImage("DailyGoBackButton.png");
-        dailyMenuButton = readImage("DailyMenuButton.png");
         switchCharacterButton = readImage("SwitchCharacterButton.png");
         initialized = true;
     }

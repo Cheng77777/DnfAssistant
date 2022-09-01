@@ -96,6 +96,13 @@ public class AccessibilityInput implements Input {
         yLen = y2 - y1;
         path.moveTo(x1, y1);
         path.lineTo(x1 + 0.2f * xLen, y1 + 0.2f * yLen);
+        path.lineTo(x1 + 0.3f * xLen, y1 + 0.3f * yLen);
+        path.lineTo(x1 + 0.4f * xLen, y1 + 0.4f * yLen);
+        path.lineTo(x1 + 0.5f * xLen, y1 + 0.5f * yLen);
+        path.lineTo(x1 + 0.6f * xLen, y1 + 0.6f * yLen);
+        path.lineTo(x1 + 0.7f * xLen, y1 + 0.7f * yLen);
+        path.lineTo(x1 + 0.8f * xLen, y1 + 0.8f * yLen);
+        path.lineTo(x1 + 0.9f * xLen, y1 + 0.9f * yLen);
         path.lineTo(x2, y2);
         /**
          * 参数path：笔画路径

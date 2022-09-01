@@ -126,9 +126,16 @@ public class Actions {
         sleep(500);
     }
 
-    static void Dodge() throws InterruptedException {
-        MLog.info("Actions: ==========闪避==========");
+    static void DodgeLeft() throws InterruptedException {
+        MLog.info("Actions: ==========向后闪避==========");
         Robot.swipe(Presets.dodgeRecs[0], Presets.dodgeRecs[1], Utility.RandomInt(120, 130));
+        SystemClock.sleep(800);
+        PressMultipleAttacks(3);
+    }
+
+    static void DodgeDown() throws InterruptedException {
+        MLog.info("Actions: ==========向下闪避==========");
+        Robot.swipe(Presets.dodgeRecs[0], Presets.dodgeRecs[2], Utility.RandomInt(120, 130));
         SystemClock.sleep(800);
         PressMultipleAttacks(3);
     }
@@ -190,7 +197,7 @@ public class Actions {
 
     public static void GoBackToMainScene(String caller) throws InterruptedException {
         MLog.info("Actions: " + caller + " ==========回到主界面==========");
-        while (!Image.matchTemplate(ScreenCheck.GetScreenshot(), Presets.dailyMenuButton, 0.9, Presets.dailyMenuButtonRec).isValid()) {
+        while (!Image.findPointByCheckImageModel(ScreenCheck.GetScreenshot(),Presets.DailyMenuModel).isValid()){
             sleep(1000);
             if (!Assistant.getInstance().isRunning()) {
                 return;
@@ -256,6 +263,25 @@ public class Actions {
         Robot.Press(Presets.GuildRewardRec);
         sleep(2000);
         GoBackToMainScene("Actions.GuildDaily2");
+    }
+
+    public static void FriendAndGuildDaily() throws InterruptedException {
+        MLog.info("Actions: ==========日常友情点与公会==========");
+        if (!Assistant.getInstance().isRunning()) {
+            return;
+        }
+        sleep(1000);
+        GoBackToMainScene("Actions.FriendAndGuildDaily1");
+        for (CheckImageModel m : Presets.FriendAndGuildModels) {
+            if (!Assistant.getInstance().isRunning()) {
+                return;
+            }
+            if (!FindAndTap(m)) {
+                break;
+            }
+            sleep(2000);
+        }
+        GoBackToMainScene("Actions.FriendAndGuildDaily2");
     }
 
     public static void MailDaily() throws InterruptedException {
@@ -342,6 +368,7 @@ public class Actions {
             p.setY(p.getY() + rectangle.y1);
             Rectangle r = p.MakeRectangle(10, 10);
             Robot.Press(r);
+            sleep(300);
             return true;
         }
         return false;
@@ -445,7 +472,6 @@ public class Actions {
             p.setX(checkImageModel.rectangle.x1 + p.getX());
             p.setY(checkImageModel.rectangle.y1 + p.getY());
             Robot.Press(p.MakeRectangle(checkImageModel.image.getWidth(), checkImageModel.image.getHeight()));
-            sleep(1000);
             return true;
         }
         return false;

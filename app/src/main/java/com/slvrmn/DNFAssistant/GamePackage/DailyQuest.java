@@ -3,6 +3,7 @@ package com.slvrmn.DNFAssistant.GamePackage;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.EnterDailyDungeonSelectScene;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.EnterFarming;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.FindAndTap;
+import static com.slvrmn.DNFAssistant.GamePackage.Actions.FriendAndGuildDaily;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.FriendDaily;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.GoBackToMainScene;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.GuildDaily;
@@ -34,23 +35,24 @@ public class DailyQuest extends Thread {
         if (!Assistant.getInstance().isRunning()) {
             return;
         }
-        StoreDaily();
-        if (!Assistant.getInstance().isRunning()) {
-            return;
-        }
-        FriendDaily();
-        if (!Assistant.getInstance().isRunning()) {
-            return;
-        }
-        GuildDaily();
-        if (!Assistant.getInstance().isRunning()) {
-            return;
-        }
         MailDaily();
         if (!Assistant.getInstance().isRunning()) {
             return;
         }
         PetDaily();
+        if (!Assistant.getInstance().isRunning()) {
+            return;
+        }
+        StoreDaily();
+        if (!Assistant.getInstance().isRunning()) {
+            return;
+        }
+//        FriendDaily();
+//        if (!Assistant.getInstance().isRunning()) {
+//            return;
+//        }
+//        GuildDaily();
+        FriendAndGuildDaily();
         if (!Assistant.getInstance().isRunning()) {
             return;
         }

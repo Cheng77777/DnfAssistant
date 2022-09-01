@@ -172,7 +172,7 @@ public class ScreenCheck extends Thread {
     }
 
     private void CheckBoss() {
-        if (Image.findPointByMulColor(screenshot, Presets.bossRules, Presets.mapCentreRec).isValid()) {
+        if (Image.findPointByCheckImageModel(screenshot, Presets.inBoosModel).isValid()) {
             MLog.info("ScreenCheck: __________在BOSS房中__________");
             inBoss = true;
             return;
@@ -219,8 +219,7 @@ public class ScreenCheck extends Thread {
     }
 
     private void CheckDamaging() {
-        if (Image.findPointByMulColor(screenshot, Presets.damageNumberRule,
-                Presets.damageNumberRec).isValid()) {
+        if (Image.findPointByCheckImageModels(screenshot, Presets.damagingModels).isValid()) {
             isDamaging = true;
             MLog.info("ScreenCheck: __________造成伤害中__________");
             return;
