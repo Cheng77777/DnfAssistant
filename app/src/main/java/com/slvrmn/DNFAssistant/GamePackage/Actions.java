@@ -322,7 +322,7 @@ public class Actions {
         }
         sleep(1000);
         GoBackToMainScene("Actions.GetDailyReward1");
-        for (CheckRuleModel m : Presets.getDailyRewardModels) {
+        for (CheckImageModel m : Presets.getDailyRewardModels) {
             if (!Assistant.getInstance().isRunning()) {
                 return;
             }

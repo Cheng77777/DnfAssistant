@@ -211,10 +211,10 @@ public class Presets {
             new CheckImageModel(611,607,664,637,"ConfirmButton.png"),
     };
 
-    public static final CheckRuleModel[] getDailyRewardModels = {
-            new CheckRuleModel(1104, 642, 1138, 678, "B5E6F7,0|11|08284A,2|25|6B8EBD,13|4|0896F7,12|13|009AE6,11|22|2965A4,23|2|7CF3F7,23|16|0071E6,23|24|2171F7")
-            , new CheckRuleModel(1064, 546, 1094, 571, "102D42,2|14|6B9ACE,2|20|08243A,11|1|8CCAFF,11|11|087DF7,13|21|313152,22|0|10355A,19|8|399EF7,21|18|101421")
-            , new CheckRuleModel(1108, 657, 1225, 694, "0071AD,1|8|0075B5,8|14|DEF3FF,11|20|0982BD,31|4|0075B5,39|12|0079B5,45|20|007DBD,48|18|DEF3FF,71|4|ADD7EF,81|13|DEF3FF")
+    public static final CheckImageModel[] getDailyRewardModels = {
+            new CheckImageModel(1087,621,1162,693,"AdventureButton.png"),
+            new CheckImageModel(1053,534,1105,577, "AchievementButton.png"),
+            new CheckImageModel(1092,652,1224,690,"AchievementGetAllButton.png"),
     };
 
     public static final CheckRuleModel[] switchCharacterModels = {
