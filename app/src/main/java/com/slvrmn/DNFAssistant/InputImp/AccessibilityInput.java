@@ -52,7 +52,7 @@ public class AccessibilityInput implements Input {
 
     @Override
     public void tap(int x, int y, long delay) {
-        if(!Assistant.RUN){
+        if(!Assistant.getInstance().isRunning()){
             return;
         }
         if (x < 0 || y < 0) {

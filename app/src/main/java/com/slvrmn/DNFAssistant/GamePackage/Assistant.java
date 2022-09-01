@@ -15,10 +15,13 @@ public class Assistant {
     private ScreenCheck screenCheck;
     private DailyQuest dailyQuest;
     private BattleController battleController;
-    private Attack attack;
-    private PathFind pathFind;
+    private Battle pathFind;
 
     private Assistant() {
+        screenCheck = new ScreenCheck();
+        dailyQuest = new DailyQuest();
+        battleController = new BattleController();
+        pathFind = new Battle();
     }
 
     public static Assistant getInstance() {
@@ -35,25 +38,24 @@ public class Assistant {
                 Presets.Initialize();
                 initialized = true;
             }
-            if (!RUN) {
-                screenCheck = new ScreenCheck();
-                dailyQuest = new DailyQuest();
-                battleController = new BattleController();
-                attack = new Attack();
-                pathFind = new PathFind();
+            if (!isRunning()) {
                 battleController.Initialize();
                 ScreenCheck.InitializeDailyQuestParameters();
                 ScreenCheck.InitializeFarmingParameters();
                 ScreenCheck.InitializeCharacterParameters();
                 MLog.setDebug(true);
                 RUN = true;
-                if (Image.findPointByCheckRuleModel(GetScreenshot(), Presets.mainMenuModel).isValid()) {
-                    isFarming = false;
-                } else {
-                    isFarming = true;
+                if (Image.findPointByCheckRuleModel(GetScreenshot(), Presets.inDungeonModel).isValid()) {
+                    MLog.info("Assistant: 在地下城中,开始搬砖");
+                    DailyQuest.StopDailyQuesting();
+                    BattleController.StartFarming();
                     BattleController.StartBattle();
+                } else {
+                    MLog.info("Assistant: 不在地下城中,开始每日");
+                    BattleController.StopFarming();
+                    DailyQuest.StartDailyQuesting();
                 }
-                attack.start();
+//                attack.start();
                 pathFind.start();
                 screenCheck.start();
                 dailyQuest.start();
