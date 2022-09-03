@@ -2,11 +2,9 @@ package com.slvrmn.DNFAssistant.GamePackage;
 
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.EnterDailyDungeonSelectScene;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.EnterFarming;
-import static com.slvrmn.DNFAssistant.GamePackage.Actions.FindAndTap;
+import static com.slvrmn.DNFAssistant.GamePackage.Actions.FindAndTapTilDisappear;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.FriendAndGuildDaily;
-import static com.slvrmn.DNFAssistant.GamePackage.Actions.FriendDaily;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.GoBackToMainScene;
-import static com.slvrmn.DNFAssistant.GamePackage.Actions.GuildDaily;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.MailDaily;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.PetDaily;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.StoreDaily;
@@ -22,6 +20,7 @@ import com.slvrmn.DNFAssistant.Tools.MLog;
 
 public class DailyQuest extends Thread {
     public static volatile boolean isDailyQuesting;
+    public static volatile boolean inDailyDungeon;
 
     public static synchronized void StopDailyQuesting() {
         isDailyQuesting = false;
@@ -47,11 +46,6 @@ public class DailyQuest extends Thread {
         if (!Assistant.getInstance().isRunning()) {
             return;
         }
-//        FriendDaily();
-//        if (!Assistant.getInstance().isRunning()) {
-//            return;
-//        }
-//        GuildDaily();
         FriendAndGuildDaily();
         if (!Assistant.getInstance().isRunning()) {
             return;
@@ -92,6 +86,7 @@ public class DailyQuest extends Thread {
                         }
                         sleep(1000);
                     }
+                    inDailyDungeon = true;
                     BattleController.StartBattle();
                     continue mainLoop;
                 }
@@ -100,9 +95,12 @@ public class DailyQuest extends Thread {
                 if (!Assistant.getInstance().isRunning()) {
                     return;
                 }
-                Actions.PressBack("DailyQuest.StartDailyDungeon");
-                sleep(3000);
-                FindAndTap(Presets.dailyGoBackButton, Presets.completeDungeonMenuRec);
+                if (inDailyDungeon) {
+                    Actions.PressBack("DailyQuest.StartDailyDungeon");
+                    sleep(5000);
+                    FindAndTapTilDisappear(Presets.dailyReturnButtonModel);
+                    inDailyDungeon = false;
+                }
                 GoBackToMainScene("DailyQuest.StartDailyDungeon2");
                 if (!isEnergyEmpty) {
                     EnterFarming();

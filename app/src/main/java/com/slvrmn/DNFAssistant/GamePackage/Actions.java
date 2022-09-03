@@ -17,7 +17,7 @@ import com.slvrmn.DNFAssistant.Tools.Utility;
 
 public class Actions {
 
-    static void PressJoystick(int direction, int duration) {
+    static synchronized void PressJoystick(int direction, int duration) {
         MLog.info("Actions: ==========摇杆移动==========");
         if (direction == 1) {
             Robot.LongPress(new Rectangle(Presets.joystickRecs[1].x2,
@@ -34,7 +34,7 @@ public class Actions {
         }
     }
 
-    static void PressMultipleAttacks(int multiple) throws InterruptedException {
+    static synchronized void PressMultipleAttacks(int multiple) throws InterruptedException {
         MLog.info("Actions: ==========多次攻击==========");
         for (int i = 0; i < multiple; i++) {
             if (BattleController.isPathfinding) {
@@ -44,13 +44,13 @@ public class Actions {
         }
     }
 
-    static void PressLongAttack(int pressTime, int sleepTime) throws InterruptedException {
+    static synchronized void PressLongAttack(int pressTime, int sleepTime) throws InterruptedException {
         MLog.info("Actions: ==========长按攻击==========");
         Robot.LongPress(Presets.attackRec, pressTime);
         sleep(sleepTime);
     }
 
-    static void GoOutDungeon() throws InterruptedException {
+    static synchronized void GoOutDungeon() throws InterruptedException {
         MLog.info("Actions: ==========退出地下城==========");
         Robot.Press(Presets.settingsRec);
         sleep(2000);
@@ -60,7 +60,7 @@ public class Actions {
         sleep(2000);
     }
 
-    static void MoveAround() throws InterruptedException {
+    static synchronized void MoveAround() throws InterruptedException {
         MLog.info("Actions: ==========稍微移动==========");
         int random;
         for (int i = 0; i < 4; i++) {
@@ -73,65 +73,47 @@ public class Actions {
         }
     }
 
-    static void PickDrops() throws InterruptedException {
+    static synchronized void PickDrops() throws InterruptedException {
         MLog.info("Actions: ==========拾取物品==========");
         MoveAround();
         int random = Utility.RandomInt(5500, 5600);
         PressLongAttack(random, random);
     }
 
-    static void RepairEquipments() throws InterruptedException {
+    static synchronized void RepairEquipments() throws InterruptedException {
         MLog.info("Actions: ==========修理装备==========");
         Robot.Press(ScreenCheck.hasRepair);
-        sleep(500);
-        Robot.Press(Presets.confirmRepairRecs);
-        sleep(500);
-    }
-
-    static void CleanInventory() throws InterruptedException {
-        MLog.info("Actions: ==========清理背包==========");
-        Robot.Press(ScreenCheck.isInventoryFull);
-        sleep(4000);
-        Robot.Press(Presets.breakAndSellSelectRec);
-        sleep(4000);
-        Robot.Press(Presets.breakConfirmRec);
-        sleep(4000);
-        PressBack("Actions.CleanInventory");
-        PressBack("Actions.CleanInventory");
-        sleep(2000);
-        Robot.Press(Presets.sellRec);
-        sleep(4000);
-        Robot.Press(Presets.breakAndSellSelectRec);
-        sleep(4000);
-        Robot.Press(Presets.sellConfirmRec);
-        sleep(4000);
-        PressBack("Actions.CleanInventory");
-        PressBack("Actions.CleanInventory");
-        PressBack("Actions.CleanInventory");
-        PressBack("Actions.CleanInventory");
         sleep(1000);
+        Robot.Press(Presets.confirmRepairRecs);
+        sleep(1000);
+        PressBack("Actions.RepairEquipments");
     }
 
-    static void PressBack(String caller) throws InterruptedException {
+    static synchronized void CleanInventory() throws InterruptedException {
+        MLog.info("Actions: ==========清理背包==========");
+        Actions.FindAndTapTilDisappear(Presets.cleanInventoryModels);
+    }
+
+    static synchronized void PressBack(String caller) throws InterruptedException {
         MLog.info("Actions: " + caller + " ==========点击返回按钮==========");
         Robot.Press(Presets.backRec);
         sleep(1500);
     }
 
-    static void BackJump() throws InterruptedException {
+    static synchronized void BackJump() throws InterruptedException {
         MLog.info("Actions: ==========后跳==========");
         Robot.Press(Presets.backJumpRec);
         sleep(500);
     }
 
-    static void DodgeLeft() throws InterruptedException {
+    static synchronized void DodgeLeft() throws InterruptedException {
         MLog.info("Actions: ==========向后闪避==========");
         Robot.swipe(Presets.dodgeRecs[0], Presets.dodgeRecs[1], Utility.RandomInt(120, 130));
         SystemClock.sleep(800);
         PressMultipleAttacks(3);
     }
 
-    static void DodgeDown() throws InterruptedException {
+    static synchronized void DodgeDown() throws InterruptedException {
         MLog.info("Actions: ==========向下闪避==========");
         Robot.swipe(Presets.dodgeRecs[0], Presets.dodgeRecs[2], Utility.RandomInt(120, 130));
         SystemClock.sleep(800);
@@ -170,21 +152,21 @@ public class Actions {
         return false;
     }
 
-    static void UseDirectionalBuff(int direction) throws InterruptedException {
+    static synchronized void UseDirectionalBuff(int direction) throws InterruptedException {
         MLog.info("Actions: ==========使用方向性BUFF==========");
         Rectangle destination = Presets.skillRecs[Presets.skillRecs.length - 1].Copy();
         switch (direction) {
             case 0:
-                destination.Move(0, destination.Height() * 2);
+                destination.Move(0, destination.Height() * 3);
                 break;
             case 1:
-                destination.Move(-destination.Width() * 2, 0);
+                destination.Move(-destination.Width() * 3, 0);
                 break;
             case 2:
-                destination.Move(destination.Width() * 2, 0);
+                destination.Move(destination.Width() * 3, 0);
                 break;
             case 3:
-                destination.Move(0, -destination.Height() * 2);
+                destination.Move(0, -destination.Height() * 3);
                 break;
         }
 
@@ -193,9 +175,9 @@ public class Actions {
         sleep(500);
     }
 
-    public static void GoBackToMainScene(String caller) throws InterruptedException {
+    public static synchronized void GoBackToMainScene(String caller) throws InterruptedException {
         MLog.info("Actions: " + caller + " ==========回到主界面==========");
-        while (!Image.findPointByCheckImageModel(ScreenCheck.GetScreenshot(),Presets.DailyMenuModel).isValid()){
+        while (!Image.findPointByCheckImageModel(ScreenCheck.GetScreenshot(), Presets.dailyMenuModel).isValid()) {
             sleep(1000);
             if (!Assistant.getInstance().isRunning()) {
                 return;
@@ -204,7 +186,7 @@ public class Actions {
         }
     }
 
-    public static void StoreDaily() throws InterruptedException {
+    public static synchronized void StoreDaily() throws InterruptedException {
         MLog.info("Actions: ==========日常商城==========");
         if (!Assistant.getInstance().isRunning()) {
             return;
@@ -223,7 +205,7 @@ public class Actions {
         GoBackToMainScene("Actions.StoreDaily2");
     }
 
-    public static void FriendDaily() throws InterruptedException {
+    public static synchronized void FriendDaily() throws InterruptedException {
         MLog.info("Actions: ==========日常友情点==========");
         if (!Assistant.getInstance().isRunning()) {
             return;
@@ -242,7 +224,7 @@ public class Actions {
         GoBackToMainScene("Actions.FriendDaily2");
     }
 
-    public static void GuildDaily() throws InterruptedException {
+    public static synchronized void GuildDaily() throws InterruptedException {
         MLog.info("Actions: ==========日常公会==========");
         if (!Assistant.getInstance().isRunning()) {
             return;
@@ -263,7 +245,7 @@ public class Actions {
         GoBackToMainScene("Actions.GuildDaily2");
     }
 
-    public static void FriendAndGuildDaily() throws InterruptedException {
+    public static synchronized void FriendAndGuildDaily() throws InterruptedException {
         MLog.info("Actions: ==========日常友情点与公会==========");
         if (!Assistant.getInstance().isRunning()) {
             return;
@@ -282,7 +264,7 @@ public class Actions {
         GoBackToMainScene("Actions.FriendAndGuildDaily2");
     }
 
-    public static void MailDaily() throws InterruptedException {
+    public static synchronized void MailDaily() throws InterruptedException {
         MLog.info("Actions: ==========日常邮件==========");
         if (!Assistant.getInstance().isRunning()) {
             return;
@@ -301,7 +283,7 @@ public class Actions {
         GoBackToMainScene("Actions.MailDaily2");
     }
 
-    public static void PetDaily() throws InterruptedException {
+    public static synchronized void PetDaily() throws InterruptedException {
         MLog.info("Actions: ==========日常宠物==========");
         if (!Assistant.getInstance().isRunning()) {
             return;
@@ -320,7 +302,7 @@ public class Actions {
         GoBackToMainScene("Actions.PetDaily2");
     }
 
-    public static void SaveItems() throws InterruptedException {
+    public static synchronized void SaveItems() throws InterruptedException {
         MLog.info("Actions: ==========保存物品至金库==========");
         if (!Assistant.getInstance().isRunning()) {
             return;
@@ -339,7 +321,7 @@ public class Actions {
         GoBackToMainScene("Actions.SaveItems2");
     }
 
-    public static void GetDailyReward() throws InterruptedException {
+    public static synchronized void GetDailyReward() throws InterruptedException {
         MLog.info("Actions: ==========领取成就奖励==========");
         if (!Assistant.getInstance().isRunning()) {
             return;
@@ -358,7 +340,7 @@ public class Actions {
         GoBackToMainScene("Actions.GetDailyReward2");
     }
 
-    public static boolean FindAndTap(Color color, Rectangle rectangle) throws InterruptedException {
+    public static synchronized boolean FindAndTap(Color color, Rectangle rectangle) throws InterruptedException {
         Bitmap screenshot = ScreenCheck.GetScreenshot();
         Point p = Image.findPoint(screenshot, color, rectangle);
         if (p.isValid()) {
@@ -366,24 +348,25 @@ public class Actions {
             p.setY(p.getY() + rectangle.y1);
             Rectangle r = p.MakeRectangle(10, 10);
             Robot.Press(r);
-            sleep(300);
+            sleep(500);
             return true;
         }
         return false;
     }
 
-    public static boolean FindAndTap(Bitmap image) throws InterruptedException {
+    public static synchronized boolean FindAndTap(Bitmap image) throws InterruptedException {
         Bitmap screenshot = ScreenCheck.GetScreenshot();
         Point p = Image.matchTemplate(screenshot, image, 0.7);
         if (p.isValid()) {
             Rectangle rectangle = p.MakeRectangle(image.getWidth(), image.getHeight());
             Robot.Press(rectangle);
+            sleep(500);
             return true;
         }
         return false;
     }
 
-    public static boolean FindAndTap(Bitmap image, Rectangle rectangle) throws InterruptedException {
+    public static synchronized boolean FindAndTap(Bitmap image, Rectangle rectangle) throws InterruptedException {
         Bitmap screenshot = ScreenCheck.GetScreenshot();
         Point p = Image.matchTemplate(Image.cropBitmap(screenshot, rectangle), image, 0.7);
         if (p.isValid()) {
@@ -391,12 +374,13 @@ public class Actions {
             p.setY(p.getY() + rectangle.y1);
             Rectangle r = p.MakeRectangle(image.getWidth(), image.getHeight());
             Robot.Press(r);
+            sleep(500);
             return true;
         }
         return false;
     }
 
-    public static boolean FindAndTap(String imageRule, Rectangle rectangle) throws InterruptedException {
+    public static synchronized boolean FindAndTap(String imageRule, Rectangle rectangle) throws InterruptedException {
         if (!Assistant.getInstance().isRunning()) {
             return false;
         }
@@ -404,12 +388,13 @@ public class Actions {
         Point p = Image.findPointByMulColor(screenshot, imageRule, rectangle);
         if (p.isValid()) {
             Robot.Press(rectangle);
+            sleep(500);
             return true;
         }
         return false;
     }
 
-    public static boolean FindAndTap(CheckRuleModel checkRuleModel) throws InterruptedException {
+    public static synchronized boolean FindAndTap(CheckRuleModel checkRuleModel) throws InterruptedException {
         if (!Assistant.getInstance().isRunning()) {
             return false;
         }
@@ -427,13 +412,13 @@ public class Actions {
             p.setX(checkRuleModel.rectangle.x1 + p.getX());
             p.setY(checkRuleModel.rectangle.y1 + p.getY());
             Robot.Press(p.MakeRectangle(10, 10));
-            sleep(1000);
+            sleep(500);
             return true;
         }
         return false;
     }
 
-    public static boolean FindAndTap(CheckRuleModel[] checkRuleModels) throws InterruptedException {
+    public static synchronized boolean FindAndTap(CheckRuleModel[] checkRuleModels) throws InterruptedException {
         if (!Assistant.getInstance().isRunning()) {
             return false;
         }
@@ -446,13 +431,14 @@ public class Actions {
                 p.setX(checkRuleModel.rectangle.x1 + p.getX());
                 p.setY(checkRuleModel.rectangle.y1 + p.getY());
                 Robot.Press(p.MakeRectangle(5, 5));
+                sleep(500);
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean FindAndTap(CheckImageModel checkImageModel) throws InterruptedException {
+    public static synchronized boolean FindAndTap(CheckImageModel checkImageModel) throws InterruptedException {
         if (!Assistant.getInstance().isRunning()) {
             return false;
         }
@@ -470,12 +456,70 @@ public class Actions {
             p.setX(checkImageModel.rectangle.x1 + p.getX());
             p.setY(checkImageModel.rectangle.y1 + p.getY());
             Robot.Press(p.MakeRectangle(checkImageModel.image.getWidth(), checkImageModel.image.getHeight()));
+            sleep(500);
             return true;
         }
         return false;
     }
 
-    public static void EnterDailyDungeonSelectScene() throws InterruptedException {
+    public static synchronized void FindAndTapTilDisappear(CheckImageModel checkImageModel) throws InterruptedException {
+        if (!Assistant.getInstance().isRunning()) {
+            return;
+        }
+        Bitmap screenshot;
+        Point p;
+        do {
+            if (!Assistant.getInstance().isRunning()) {
+                return;
+            }
+            screenshot = ScreenCheck.GetScreenshot();
+            p = Image.findPointByCheckImageModel(screenshot, checkImageModel);
+            sleep(ScreenCheck.CHECK_INTERVAL);
+        } while (!p.isValid());
+        p.setX(checkImageModel.rectangle.x1 + p.getX());
+        p.setY(checkImageModel.rectangle.y1 + p.getY());
+        Rectangle rectangle = p.MakeRectangle(checkImageModel.image.getWidth(), checkImageModel.image.getHeight());
+        do {
+            if (!Assistant.getInstance().isRunning()) {
+                return;
+            }
+            Robot.Press(rectangle);
+            sleep(1000);
+            screenshot = ScreenCheck.GetScreenshot();
+        } while (Image.findPointByCheckImageModel(screenshot, checkImageModel).isValid());
+    }
+
+    public static synchronized void FindAndTapTilDisappear(CheckImageModel[] checkImageModels) throws InterruptedException {
+        for (CheckImageModel checkImageModel :
+                checkImageModels) {
+            if (!Assistant.getInstance().isRunning()) {
+                return;
+            }
+            Bitmap screenshot;
+            Point p;
+            do {
+                if (!Assistant.getInstance().isRunning()) {
+                    return;
+                }
+                screenshot = ScreenCheck.GetScreenshot();
+                p = Image.findPointByCheckImageModel(screenshot, checkImageModel);
+                sleep(ScreenCheck.CHECK_INTERVAL);
+            } while (!p.isValid());
+            p.setX(checkImageModel.rectangle.x1 + p.getX());
+            p.setY(checkImageModel.rectangle.y1 + p.getY());
+            Rectangle rectangle = p.MakeRectangle(checkImageModel.image.getWidth(), checkImageModel.image.getHeight());
+            do {
+                if (!Assistant.getInstance().isRunning()) {
+                    return;
+                }
+                Robot.Press(rectangle);
+                sleep(1000);
+                screenshot = ScreenCheck.GetScreenshot();
+            } while (Image.findPointByCheckImageModel(screenshot, checkImageModel).isValid());
+        }
+    }
+
+    public static synchronized void EnterDailyDungeonSelectScene() throws InterruptedException {
         MLog.info("Actions: ==========进入日常副本选择界面==========");
         if (!Assistant.getInstance().isRunning()) {
             return;
@@ -491,7 +535,7 @@ public class Actions {
         sleep(5000);
     }
 
-    public static void EnterFarming() throws InterruptedException {
+    public static synchronized void EnterFarming() throws InterruptedException {
         MLog.info("Actions: ==========移动进入搬砖==========");
         if (!Assistant.getInstance().isRunning()) {
             return;
@@ -512,7 +556,7 @@ public class Actions {
         BattleController.StartBattle();
     }
 
-    public static boolean SwitchCharacter() throws InterruptedException {
+    public static synchronized boolean SwitchCharacter() throws InterruptedException {
         MLog.info("Actions: ==========切换角色==========");
         sleep(3000);
         GoBackToMainScene("Actions.SwitchCharacter");
@@ -520,16 +564,11 @@ public class Actions {
         sleep(3000);
         GetDailyReward();
 
-        while (!FindAndTap(Presets.switchCharacterButton, Presets.switchCharacterButtonRec)) {
-            if (!Assistant.getInstance().isRunning()) {
-                return false;
-            }
-            sleep(200);
-        }
+        FindAndTapTilDisappear(Presets.switchCharacterButtonModel);
         for (int i = 0; i < 10; i++) {
-            sleep(1000);
+            sleep(3000);
             if (FindAndTap(Presets.characterRemainColor, Presets.characterRemainRec)) {
-                sleep(3000);
+                sleep(2000);
                 while (FindAndTap(Presets.switchCharacterModels[1])) {
                     if (!Assistant.getInstance().isRunning()) {
                         return false;
@@ -541,14 +580,15 @@ public class Actions {
                 Assistant.getInstance().start();
                 return true;
             }
-            Robot.swipe(new Rectangle(1078, 551, 1083, 556), new Rectangle(1078, 154, 1083, 159), 1000);
+            Robot.swipe(new Rectangle(1078, 551, 1083, 556), new Rectangle(1078, 154, 1083, 159), 1500);
+            sleep(2000);
         }
         return false;
     }
 
-    public static boolean SleepCheckBeforeLion(int random) throws InterruptedException {
+    public static synchronized boolean SleepCheckBeforeLion(int random) throws InterruptedException {
         MLog.info("Actions: ==========检查是否在狮子头前==========");
-        for (int i = 0; i < random / ScreenCheck.CHECK_INTERVAL - 1; i++) {
+        for (int i = 0; i < random / ScreenCheck.CHECK_INTERVAL; i++) {
             sleep(ScreenCheck.CHECK_INTERVAL);
             if (!ScreenCheck.beforeLion) {
                 return false;
@@ -557,9 +597,9 @@ public class Actions {
         return true;
     }
 
-    public static boolean SleepCheckIsPathfinding(int random) throws InterruptedException {
+    public static synchronized boolean SleepCheckIsPathfinding(int random) throws InterruptedException {
         MLog.info("Actions: ==========检查是否在寻路==========");
-        for (int i = 0; i < random / ScreenCheck.CHECK_INTERVAL - 1; i++) {
+        for (int i = 0; i < random / ScreenCheck.CHECK_INTERVAL; i++) {
             sleep(ScreenCheck.CHECK_INTERVAL);
             if (!BattleController.isPathfinding) {
                 return false;
@@ -568,9 +608,9 @@ public class Actions {
         return true;
     }
 
-    public static boolean SleepCheckHasMonster(int random) throws InterruptedException {
+    public static synchronized boolean SleepCheckHasMonster(int random) throws InterruptedException {
         MLog.info("Actions: ==========检查是否有怪物==========");
-        for (int i = 0; i < random / ScreenCheck.CHECK_INTERVAL - 1; i++) {
+        for (int i = 0; i < random / ScreenCheck.CHECK_INTERVAL; i++) {
             sleep(ScreenCheck.CHECK_INTERVAL);
             if (ScreenCheck.hasMonster) {
                 return false;

@@ -20,9 +20,8 @@ public class ScreenCheck extends Thread {
             inBoss, beforeLion, inLion, hasMonster, isDamaging,
             canDodge, hasResult, hasReward, inHell, hasContinueConfirm, isEnergyEmpty,
             canBreak, canSell, canBreakSelect, canSellSelect, canBreakConfirm,
-            ammoBuff, hasAmmo, dailyNonMapDungeon;
-    public static volatile Rectangle hasContinue, hasRepair, isInventoryFull, hasGoBack,
-            hasDailyContinue, hasDailySelect, hasDailyGoBack;
+            ammoBuff, hasAmmo, dailyNonMapDungeon, canRecover, hasDailyContinue, hasDailySelect;
+    public static volatile Rectangle hasRepair;
     public static volatile boolean[] skills = {false, false, false, false, false, false, false, false, false, false, false};
     public static volatile boolean[] availableSkills = {false, false, false, false, false, false, false, false, false, false, false};
     public static volatile boolean[] directionalBuffs = {false, false, false, false};
@@ -40,6 +39,7 @@ public class ScreenCheck extends Thread {
         isDamaging = false;
         canDodge = false;
         ammoBuff = false;
+        canRecover = false;
         Arrays.fill(skills, true);
         Arrays.fill(directionalBuffs, true);
     }
@@ -57,10 +57,7 @@ public class ScreenCheck extends Thread {
         canBreakSelect = false;
         canSellSelect = false;
         canBreakConfirm = false;
-        hasContinue = Rectangle.INVALID_RECTANGLE;
         hasRepair = Rectangle.INVALID_RECTANGLE;
-        isInventoryFull = Rectangle.INVALID_RECTANGLE;
-        hasGoBack = Rectangle.INVALID_RECTANGLE;
     }
 
     public static synchronized void InitializeDailyQuestParameters() {
@@ -69,9 +66,8 @@ public class ScreenCheck extends Thread {
             dailyDungeons[i] = Rectangle.INVALID_RECTANGLE;
         }
         dailyNonMapDungeon = false;
-        hasDailyContinue = Rectangle.INVALID_RECTANGLE;
-        hasDailySelect = Rectangle.INVALID_RECTANGLE;
-        hasDailyGoBack = Rectangle.INVALID_RECTANGLE;
+        hasDailyContinue = false;
+        hasDailySelect = false;
     }
 
     public static synchronized void InitializeCharacterParameters() {
@@ -123,6 +119,7 @@ public class ScreenCheck extends Thread {
             CheckBoss();
             CheckStuck();
         }
+        CheckRecover();
         CheckInDungeon();
         CheckMonster();
         CheckDamaging();
@@ -133,8 +130,6 @@ public class ScreenCheck extends Thread {
     }
 
     private void CheckFarmingParameters() {
-
-        CheckInventoryFull();
         CheckBreak();
         CheckSell();
         CheckBreakSelectButton();
@@ -142,14 +137,11 @@ public class ScreenCheck extends Thread {
         CheckBreakConfirmButton();
         CheckSellConfirmButton();
         CheckRepair();
-        CheckLion();
+        CheckBeforeLion();
         CheckInLion();
         CheckInHell();
         CheckResult();
         CheckReward();
-        CheckContinueButton();
-        CheckGoBackButton();
-        CheckContinueConfirmButton();
     }
 
     private boolean CheckBlackScreen() {
@@ -160,7 +152,7 @@ public class ScreenCheck extends Thread {
         if (inDungeon) {
             return;
         }
-        if (Image.findPointByCheckRuleModel(screenshot, Presets.inDungeonModel).
+        if (Image.findPointByCheckImageModel(screenshot, Presets.inDungeonModel).
                 isValid()) {
             MLog.info("ScreenCheck: __________在地下城中__________");
             inDungeon = true;
@@ -180,10 +172,10 @@ public class ScreenCheck extends Thread {
         inBoss = false;
     }
 
-    private void CheckLion() {
+    private void CheckBeforeLion() {
         if (Image.findPointByMulColor(screenshot, Presets.beforeLionRules, Presets.mapRec).
                 isValid()) {
-            MLog.info("ScreenCheck: __________在狮子头前__________");
+//            MLog.info("ScreenCheck: __________在狮子头前__________");
             beforeLion = true;
             return;
         }
@@ -284,23 +276,6 @@ public class ScreenCheck extends Thread {
         hasReward = false;
     }
 
-    private void CheckInventoryFull() {
-        if (isInventoryFull.isValid()) {
-            return;
-        }
-        Point p = Image.matchTemplate(screenshot, Presets.inventoryFullButton,
-                0.85, Presets.completeDungeonMenuRec);
-        if (p.isValid()) {
-            p.setX(p.getX() + Presets.completeDungeonMenuRec.x1);
-            p.setY(p.getY() + Presets.completeDungeonMenuRec.y1);
-            MLog.info("ScreenCheck: __________背包满__________");
-            isInventoryFull = new Rectangle(p.getX(), p.getY(),
-                    p.getX() + 50, p.getY() + 10);
-            return;
-        }
-        isInventoryFull = Rectangle.INVALID_RECTANGLE;
-    }
-
     private void CheckBreak() {
         if (Image.findPointByMulColor(screenshot, Presets.breakRule, Presets.breakRec).isValid()) {
             canBreak = true;
@@ -370,54 +345,10 @@ public class ScreenCheck extends Thread {
             MLog.info("ScreenCheck: __________需要修理__________");
             hasRepair = new Rectangle(p.getX(), p.getY(),
                     p.getX() + Presets.repairButtonModel.image.getWidth(),
-                    p.getY() + +Presets.repairButtonModel.image.getHeight());
+                    p.getY() + Presets.repairButtonModel.image.getHeight());
             return;
         }
         hasRepair = Rectangle.INVALID_RECTANGLE;
-    }
-
-    private void CheckContinueButton() {
-        if (hasContinue.isValid()) {
-            return;
-        }
-        Point p = Image.matchTemplate(screenshot, Presets.nextButton, 0.9,
-                Presets.completeDungeonMenuRec);
-        if (p.isValid()) {
-            p.setX(p.getX() + Presets.completeDungeonMenuRec.x1);
-            p.setY(p.getY() + Presets.completeDungeonMenuRec.y1);
-            MLog.info("ScreenCheck: __________可点击继续__________");
-            hasContinue = new Rectangle(p.getX(), p.getY(),
-                    p.getX() + 50, p.getY() + 10);
-            return;
-        }
-        hasContinue = Rectangle.INVALID_RECTANGLE;
-    }
-
-    private void CheckGoBackButton() {
-        if (hasGoBack.isValid()) {
-            return;
-        }
-        Point p = Image.matchTemplate(screenshot, Presets.goBackButton, 0.9,
-                Presets.completeDungeonMenuRec);
-        if (p.isValid()) {
-            p.setX(p.getX() + Presets.completeDungeonMenuRec.x1);
-            p.setY(p.getY() + Presets.completeDungeonMenuRec.y1);
-            MLog.info("ScreenCheck: __________可点击回城__________");
-            hasGoBack = new Rectangle(p.getX(), p.getY(),
-                    p.getX() + 50, p.getY() + 10);
-            return;
-        }
-        hasGoBack = Rectangle.INVALID_RECTANGLE;
-    }
-
-    private void CheckContinueConfirmButton() {
-        if (Image.matchTemplate(screenshot, Presets.continueConfirmButton, 0.9,
-                Presets.continueConfirmRec).isValid()) {
-            hasContinueConfirm = true;
-            //MLog.info("可点击确认继续");
-            return;
-        }
-        hasContinueConfirm = false;
     }
 
     private void CheckEnergyEmpty() {
@@ -430,6 +361,18 @@ public class ScreenCheck extends Thread {
             return;
         }
         isEnergyEmpty = false;
+    }
+
+    private void CheckRecover() {
+        if (canRecover) {
+            return;
+        }
+        if (Image.findPointByAllCheckImageModels(screenshot, Presets.recoverModels)) {
+            canRecover = true;
+            MLog.info("ScreenCheck: __________可复活__________");
+            return;
+        }
+        canRecover = false;
     }
 
     private void CheckAvailableSkills() {
@@ -481,38 +424,14 @@ public class ScreenCheck extends Thread {
     }
 
     private void CheckDailyMenu() {
-        Point p;
-        if (!hasDailyContinue.isValid()) {
-            p = Image.matchTemplate(screenshot, Presets.dailyContinueButton, 0.8, Presets.completeDungeonMenuRec);
-            if (p.isValid()) {
-                p.setX(p.getX() + Presets.completeDungeonMenuRec.x1);
-                p.setY(p.getY() + Presets.completeDungeonMenuRec.y1);
-                MLog.info("ScreenCheck: __________每日副本可继续__________");
-                hasDailyContinue = p.MakeRectangle(Presets.dailyContinueButton.getWidth(), Presets.dailyContinueButton.getHeight());
-            } else {
-                hasDailyContinue = Rectangle.INVALID_RECTANGLE;
+        if (!hasDailyContinue) {
+            if (Image.findPointByCheckImageModel(screenshot,Presets.dailyContinueButtonModel).isValid()) {
+                hasDailyContinue = true;
             }
         }
-        if (!hasDailySelect.isValid()) {
-            p = Image.matchTemplate(screenshot, Presets.dailySelectButton, 0.8, Presets.completeDungeonMenuRec);
-            if (p.isValid()) {
-                p.setX(p.getX() + Presets.completeDungeonMenuRec.x1);
-                p.setY(p.getY() + Presets.completeDungeonMenuRec.y1);
-                MLog.info("ScreenCheck: __________每日副本可选择__________");
-                hasDailySelect = p.MakeRectangle(Presets.dailySelectButton.getWidth(), Presets.dailySelectButton.getHeight());
-            } else {
-                hasDailySelect = Rectangle.INVALID_RECTANGLE;
-            }
-        }
-        if (!hasDailyGoBack.isValid()) {
-            p = Image.matchTemplate(screenshot, Presets.dailyGoBackButton, 0.8, Presets.completeDungeonMenuRec);
-            if (p.isValid()) {
-                p.setX(p.getX() + Presets.completeDungeonMenuRec.x1);
-                p.setY(p.getY() + Presets.completeDungeonMenuRec.y1);
-                MLog.info("ScreenCheck: __________每日副本可返回__________");
-                hasDailyGoBack = p.MakeRectangle(Presets.dailyGoBackButton.getWidth(), Presets.dailyGoBackButton.getHeight());
-            } else {
-                hasDailyGoBack = Rectangle.INVALID_RECTANGLE;
+        if (!hasDailySelect) {
+            if (Image.findPointByCheckImageModel(screenshot, Presets.dailySelectButtonModel).isValid()) {
+                hasDailySelect = true;
             }
         }
     }

@@ -21,7 +21,9 @@ public class Battle extends Thread {
                 if (BattleController.isPathfinding) {
                     if (!ScreenCheck.hasMonster && ScreenCheck.hasRepair.isValid()) {
                         MLog.info("BattleController: 需要修理");
-                        Actions.RepairEquipments();
+                        if (!ScreenCheck.inHell && !ScreenCheck.inBoss) {
+                            Actions.RepairEquipments();
+                        }
                     }
                     if (Actions.UseBuff() && !buffUsed) {
                         buffUsed = true;
@@ -47,6 +49,8 @@ public class Battle extends Thread {
                         Robot.Press(Presets.skillRecs[ScreenCheck.skills.length - 4], Utility.RandomInt(1, 2));
                         continue;
                     }
+                    int pressTime = Utility.RandomInt(3, 4);
+                    Actions.PressMultipleAttacks(pressTime);
                     for (int i = 0; i < ScreenCheck.skills.length - 4; i++) {
                         if (!Assistant.getInstance().isRunning()) {
                             return;
@@ -57,7 +61,7 @@ public class Battle extends Thread {
                                 continue mainLoop;
                             }
                             Robot.Press(Presets.skillRecs[i], Utility.RandomInt(2, 3));
-                            int pressTime = Utility.RandomInt(3, 4);
+                            pressTime = Utility.RandomInt(3, 4);
                             Actions.PressMultipleAttacks(pressTime);
                         }
                     }

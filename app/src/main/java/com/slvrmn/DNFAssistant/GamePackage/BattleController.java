@@ -4,13 +4,15 @@ package com.slvrmn.DNFAssistant.GamePackage;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.MoveAround;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.PressJoystick;
 import static com.slvrmn.DNFAssistant.GamePackage.Actions.PressLongAttack;
-import static com.slvrmn.DNFAssistant.GamePackage.Presets.continueConfirmRec;
 import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.CHECK_INTERVAL;
+import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.GetScreenshot;
 import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.InitializeDailyQuestParameters;
 import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.beforeLion;
+import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.canRecover;
 import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.hasDailyContinue;
 import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.hasDailySelect;
 
+import com.slvrmn.DNFAssistant.Model.Image;
 import com.slvrmn.DNFAssistant.Model.Robot;
 import com.slvrmn.DNFAssistant.Tools.MLog;
 import com.slvrmn.DNFAssistant.Tools.Utility;
@@ -29,7 +31,8 @@ public class BattleController extends Thread {
         Robot.Press(Presets.skillRecs[0], random);
         sleep(3000);
 
-        while (!ScreenCheck.hasContinue.isValid()) {
+
+        while (!Image.findPointByCheckImageModel(GetScreenshot(), Presets.continueButtonModel).isValid()) {
             if (!Assistant.getInstance().isRunning()) {
                 return;
             }
@@ -38,26 +41,27 @@ public class BattleController extends Thread {
 
         Actions.PickDrops();
 
-        if (ScreenCheck.isInventoryFull.isValid()) {
+        if (Image.findPointByCheckImageModel(GetScreenshot(), Presets.inventoryFullButtonModel).isValid()) {
             MLog.info("BattleController: 背包满");
             Actions.CleanInventory();
         }
 
+        if (!Assistant.getInstance().isRunning()) {
+            return;
+        }
         if (ScreenCheck.isEnergyEmpty) {
             isBattling = false;
             MLog.info("BattleController: 疲劳为0,切换角色");
-            Robot.Press(ScreenCheck.hasGoBack, Utility.RandomInt(2, 3));
-            sleep(3000);
+            Actions.FindAndTapTilDisappear(Presets.goOutDungeonButtonModel);
+            do {
+                sleep(3000);
+            }
+            while (!Image.findPointByCheckImageModel(GetScreenshot(), Presets.dailyMenuModel).isValid());
             Actions.SwitchCharacter();
             return;
         } else {
             MLog.info("BattleController: 疲劳不为0,继续副本");
-            if (!Assistant.getInstance().isRunning()) {
-                return;
-            }
-            Robot.Press(ScreenCheck.hasContinue);
-            sleep(1000);
-            Robot.Press(Presets.continueConfirmRec);
+            Actions.FindAndTapTilDisappear(Presets.continueModels);
             sleep(1000);
             ScreenCheck.InitializeFarmingParameters();
             sleep(1000);
@@ -113,8 +117,14 @@ public class BattleController extends Thread {
                         sleep(3000);
                         continue;
                     }
+                    if (canRecover) {
+                        StopAll();
+                        Actions.FindAndTapTilDisappear(Presets.recoverModels[1]);
+                        StartAttacking();
+                        continue;
+                    }
                     if (isPathfinding) {
-                        MLog.info("BattleController: 寻路中");
+//                        MLog.info("BattleController: 寻路中");
                         if (ScreenCheck.isDamaging && ScreenCheck.hasMonster) {
                             StartAttacking();
                             continue;
@@ -151,10 +161,10 @@ public class BattleController extends Thread {
                                         MLog.info("BattleController: 不在狮子头前");
                                         break;
                                     }
-                                    random = Utility.RandomInt(100, 150);
+                                    random = Utility.RandomInt(150, 200);
                                     PressJoystick(3, random);
                                     sleep(random);
-                                    random = Utility.RandomInt(1700, 1800);
+                                    random = Utility.RandomInt(1400, 1500);
                                     PressLongAttack(random, random);
                                     if (!Actions.SleepCheckHasMonster(random)) {
                                         MLog.info("BattleController: 狮子头前继续攻击");
@@ -162,11 +172,12 @@ public class BattleController extends Thread {
                                         continue mainLoop;
                                     }
                                 } while (beforeLion);
+                                sleep(500);
                                 StartPathfinding();
                                 MLog.info("BattleController: 不在狮子头前");
                             }
                         } else {
-                            if (hasDailyContinue.isValid()) {
+                            if (hasDailyContinue) {
                                 MLog.info("BattleController: 每日副本可继续");
                                 StopAll();
                                 MoveAround();
@@ -175,14 +186,14 @@ public class BattleController extends Thread {
                                     random = Utility.RandomInt(2000, 3000);
                                     PressLongAttack(random, random);
                                 }
-                                Robot.Press(hasDailyContinue);
+                                Actions.FindAndTapTilDisappear(Presets.dailyContinueButtonModel);
+                                Actions.FindAndTapTilDisappear(Presets.continueConfirmButtonModel);
                                 sleep(1000);
-                                Robot.Press(continueConfirmRec);
-                                sleep(3000);
                                 InitializeDailyQuestParameters();
+                                sleep(1000);
                                 continue;
                             }
-                            if (hasDailySelect.isValid()) {
+                            if (hasDailySelect) {
                                 MLog.info("BattleController: 每日副本可选择");
                                 StopAll();
                                 MoveAround();
@@ -191,7 +202,7 @@ public class BattleController extends Thread {
                                     random = Utility.RandomInt(2000, 3000);
                                     PressLongAttack(random, random);
                                 }
-                                Robot.Press(hasDailySelect);
+                                Actions.FindAndTapTilDisappear(Presets.dailySelectButtonModel);
                                 sleep(3000);
                                 InitializeDailyQuestParameters();
                                 isBattling = false;
@@ -200,6 +211,7 @@ public class BattleController extends Thread {
                         }
                         if (ScreenCheck.screenFreezeTime >= 15) {
                             MLog.info("BattleController: 卡住次数大于15");
+                            StopAll();
                             Actions.MoveAround();
                             if (ScreenCheck.inHell && !ScreenCheck.hasMonster && ScreenCheck.isEnergyEmpty) {
                                 MLog.info("BattleController: ");
@@ -215,9 +227,10 @@ public class BattleController extends Thread {
                                 Actions.SwitchCharacter();
                                 continue;
                             }
+                            StartPathfinding();
                         }
                     } else if (isAttacking) {
-                        MLog.info("BattleController: 攻击中");
+//                        MLog.info("BattleController: 攻击中");
                         if (!ScreenCheck.hasMonster || !ScreenCheck.isDamaging) {
                             StartPathfinding();
                             continue;

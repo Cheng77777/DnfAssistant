@@ -46,16 +46,60 @@ public class Presets {
             new Rectangle(165, 484, 231, 558)
     };
     public static final Rectangle completeDungeonMenuRec = new Rectangle(999, 20, 1270, 600);
-    public static final Rectangle continueConfirmRec = new Rectangle(665, 429, 791, 470);
     public static final Rectangle confirmGoOutRec = new Rectangle(696, 436, 772, 463);
 
-    public static final CheckImageModel repairButtonModel = new CheckImageModel(12,8,97,92,"RepairButton.png");
 
-    public static final CheckRuleModel inDungeonModel = new CheckRuleModel(996, 1, 1115, 50, "BDEFFF,11|13|B5EFFF,21|2|BDF3FF,66|1|E6F7FF,73|9|E6FFFF,81|17|E6F7FF");
+    public static final CheckImageModel backButtonModel = new CheckImageModel(0, 0, 47, 48, "BackButton.png");
+    public static final CheckImageModel continueButtonModel = new CheckImageModel(999, 20, 1270, 600, "ContinueButton.png");
+    public static final CheckImageModel continueConfirmButtonModel = new CheckImageModel(665, 429, 791, 470, "ConfirmButton_Bright.png");
+
+    public static final CheckImageModel[] continueModels = {continueButtonModel, continueConfirmButtonModel};
+
+    public static final CheckImageModel goOutDungeonButtonModel = new CheckImageModel(999, 20, 1270, 600, "GoOutDungeonButton.png");
+    public static final CheckImageModel repairButtonModel = new CheckImageModel(12, 8, 97, 92, "RepairButton.png");
+
+    public static final CheckImageModel inventoryFullButtonModel = new CheckImageModel(999, 20, 1270, 600, "InventoryFullButton.png");
+    public static final CheckImageModel breakSelectButtonModel = new CheckImageModel(954, 591, 1185, 653, "BreakSelectButton.png");
+    public static final CheckImageModel breakSelectConfirmButtonModel = new CheckImageModel(650, 500, 850, 600, "ConfirmButton_Bright.png");
+    public static final CheckImageModel breakResultButtonModel = new CheckImageModel(532, 494, 752, 591, "ConfirmButton_Bright.png");
+    public static final CheckImageModel breakCloseButtonModel = new CheckImageModel(1173, 51, 1226, 104, "CloseButton.png");
+    public static final CheckImageModel sellButtonModel = new CheckImageModel(1029, 640, 1156, 709, "SellButton.png");
+    public static final CheckImageModel sellSelectButtonModel = new CheckImageModel(963, 599, 1175, 660, "SellSelectButton.png");
+    public static final CheckImageModel sellSelectConfirmButtonModel = new CheckImageModel(657, 451, 849, 513, "ConfirmButton_Dark.png");
+    public static final CheckImageModel sellResultButtonModel = new CheckImageModel(540, 417, 744, 496, "ConfirmButton_Dark.png");
+    public static final CheckImageModel sellCloseButtonModel = new CheckImageModel(1173, 51, 1226, 104, "CloseButton.png");
+
+    public static final CheckImageModel dailyContinueButtonModel = new CheckImageModel(999, 20, 1270, 600,"DailyContinueButton.png");
+    public static final CheckImageModel dailySelectButtonModel = new CheckImageModel(999, 20, 1270, 600,"DailySelectButton.png");
+    public static final CheckImageModel dailyReturnButtonModel = new CheckImageModel(999, 20, 1270, 600, "DailyReturnButton.png");
+
+    public static final CheckImageModel switchCharacterButtonModel = new CheckImageModel(6, 46, 43, 82,"SwitchCharacterButton.png");
+
+    public static final CheckImageModel[] cleanInventoryModels = {
+            inventoryFullButtonModel,
+            breakSelectButtonModel,
+            breakSelectConfirmButtonModel,
+            breakResultButtonModel,
+            breakCloseButtonModel,
+            sellButtonModel,
+            sellSelectButtonModel,
+            sellSelectConfirmButtonModel,
+            sellResultButtonModel,
+            sellCloseButtonModel,
+            backButtonModel
+
+    };
+
+    public static final CheckImageModel[] recoverModels = {
+            new CheckImageModel(547, 250, 619, 324, "RecoverCoinIcon.png"),
+            new CheckImageModel(633, 536, 848, 625, "RecoverButton.png")
+    };
+
+    public static final CheckImageModel inDungeonModel = new CheckImageModel(1006, 8, 1113, 48, "InDungeonOptionsButton.png");
 
     public static final String hellRules = "73B6D6,-13|12|7BBADE,0|12|73B6D6,15|11|003DFF,0|22|215163,30|9|EF24EF,51|8|EF24EF,40|12|FFBA42,39|-36|4A8AFF,39|-21|0014DE";
 
-    public static final CheckImageModel inBoosModel= new CheckImageModel(1183,69,1216,103,"BossIcon.png");
+    public static final CheckImageModel inBoosModel = new CheckImageModel(1183, 69, 1216, 103, "BossIcon.png");
 
     public static final Rectangle breakRec = new Rectangle(1159, 653, 1260, 701);
     public static final String breakRule = "8BBACE,4|0|DEEFF7,9|0|0871B5,18|-1|EEF7FF,28|-1|0871AD,38|-2|006DAD,51|-1|0071AD,63|-2|0871B5,75|-2|0871B5,-1|8|0079B5,6|8|087AB5,18|7|107DBD,29|7|0075B5,47|7|0075B5,55|8|218AC5,65|8|007ABD,71|8|0079B5,72|8|DEF3FF,0|12|0075B5,4|12|94C6E6,10|12|84BAD6,15|12|097EBD,21|12|1075B5,27|12|0079BD,35|12|0079BD,39|12|DEF7FF,41|12|2186C6,44|11|0079B5,48|11|0079B5,49|11|DEF3FF,53|12|E6F7FF,57|12|0879BD,61|12|E6F7FF,63|12|DEF7FF,68|12|DEF3FF,72|12|DEF3FF,2|18|6BB2DE,6|18|6BB2DE,11|18|73B6DE,17|18|6BB2DE,21|17|73B6DE,32|17|007DBD,36|17|007DBD,41|17|0079BD,45|17|0079BD,49|17|DEF3FF,53|17|DEF3FF,58|17|007DBD,63|18|007DBD,65|18|007DBD,68|18|DEF3FF,72|18|DEF3FF";
@@ -192,74 +236,59 @@ public class Presets {
             new CheckRuleModel(1099, 628, 1152, 684, "214563,0|9|194D8C,0|19|08183A,11|0|005DFF,11|11|00D6EF,12|23|004DEE,25|1|63EBFF,24|13|0072F7,24|23|1175FF")
             , new CheckRuleModel(1138, 544, 1175, 576, "7BEFFF,0|8|73EBF7,0|15|3A4D6B,10|0|6BA6DE,10|8|315984,11|15|7392C5,22|0|213D63,22|8|21244A,22|16|84EBFF")
             , new CheckRuleModel(322, 140, 403, 181, "191C21,0|7|312D31,0|13|7392AD,-1|20|7392AD,20|0|191C21,21|5|738EA4,20|17|7392AD,20|22|738EA4,31|13|738EA4")
-            , new CheckRuleModel(66, 257, 111, 284, "101819,-1|5|191819,0|11|090D11,1|18|FFFFFF,21|1|191819,19|6|FFFFFF,21|17|212421,27|6|FFFFFF,32|17|292C29")
             , new CheckRuleModel(1061, 446, 1094, 464, "315573,7|-8|31516B,13|4|3175A4,22|4|3175A4")
             , new CheckRuleModel(91, 176, 157, 210, "19354A,3|8|A4EBFF,8|20|9CDFEF,18|6|213D5A,25|20|293D63,29|11|19395A,34|9|A4EBFF,41|7|9CEBF7,41|24|9CDFEF")
             , new CheckRuleModel(321, 458, 380, 478, "636D6B,3|6|000000,6|16|111111,15|4|292829,21|0|B5C6C5,29|6|C5C6C5,33|15|737173,39|5|D6D2D6,47|2|848284")
             , new CheckRuleModel(1013, 581, 1140, 621, "006DA4,10|16|B5D7E6,27|23|DEEFF7,40|11|CEE3EF,53|18|FFFFFF,62|25|9CCAE6,76|30|007DBD,82|15|94C2DE,83|29|F7FBFF")
     };
-
-    public static CheckImageModel[] damagingModels ={
-            new CheckImageModel(908,48,1113,300, "ComboIcon_1.png"),
-            new CheckImageModel(908,48,1113,300, "ComboIcon_2.png"),
-            new CheckImageModel(908,48,1113,300, "ComboIcon_3.png")
-    };
-
-    public static final CheckImageModel DailyMenuModel = new CheckImageModel(267, 10, 336, 76,"DailyMenuButton.png");
-
+    public static final CheckImageModel dailyMenuModel = new CheckImageModel(267, 10, 336, 76, "DailyMenuButton.png");
     public static final CheckImageModel[] energyEmptyModels = {
-            new CheckImageModel(126,52,156,81,"EnergyEmptyIcon_1.png"),
-            new CheckImageModel(126,52,156,81,"EnergyEmptyIcon_2.png")
+            new CheckImageModel(126, 52, 156, 81, "EnergyEmptyIcon_1.png"),
+            new CheckImageModel(126, 52, 156, 81, "EnergyEmptyIcon_2.png")
     };
-
     public static final CheckImageModel[] saveItemsModels = {
-            new CheckImageModel(1192,621,1261,689,"InventoryButton.png"),
-            new CheckImageModel(11,306,58,335,"SaveButton.png"),
-            new CheckImageModel(313,61,432,115,"AccountSaveButton.png"),
-            new CheckImageModel(648,330,815,388,"TransferAllButton.png"),
-            new CheckImageModel(546,597,730,647, "SaveConfirmButton.png")
+            new CheckImageModel(1192, 621, 1261, 689, "InventoryButton.png"),
+            new CheckImageModel(11, 306, 58, 335, "SaveButton.png"),
+            new CheckImageModel(313, 61, 432, 115, "AccountSaveButton.png"),
+            new CheckImageModel(648, 330, 815, 388, "TransferAllButton.png"),
+            new CheckImageModel(546, 597, 730, 647, "ConfirmButton_Dark.png")
     };
-
     public static final CheckImageModel[] getDailyRewardModels = {
-            new CheckImageModel(1087,621,1162,693,"AdventureButton.png"),
-            new CheckImageModel(1053,534,1105,577, "AchievementButton.png"),
-            new CheckImageModel(1092,652,1224,690,"AchievementGetAllButton.png"),
+            new CheckImageModel(1087, 621, 1162, 693, "AdventureButton.png"),
+            new CheckImageModel(1053, 534, 1105, 577, "AchievementButton.png"),
+            new CheckImageModel(1092, 652, 1224, 690, "AchievementGetAllButton.png"),
     };
-
     public static final CheckImageModel[] FriendAndGuildModels = {
-            DailyMenuModel,
-            new CheckImageModel(384,140,423,170, "DailyDungeonCollapseButton.png"),
-            new CheckImageModel(385,228,417,249,"DailyDungeonCollapseButton.png"),
-            new CheckImageModel(561,428,661,449,"DailyGuildCheckInButton.png"),
-            new CheckImageModel(696,549,760,588, "SaveConfirmButton.png"),
-            new CheckImageModel(604,437,678,475, "SaveConfirmButton.png"),
-            new CheckImageModel(674,424,776,455,"DailyGuildRewardButton.png"),
-            new CheckImageModel(614,527,671,565, "SaveConfirmButton.png"),
-            new CheckImageModel(938,629,1054,663,"FriendSendButton.png"),
-            new CheckImageModel(683,427,802,472, "SaveConfirmButton.png"),
-            new CheckImageModel(1085,630,1198,656,"FriendReceiveButton.png"),
+            dailyMenuModel,
+            new CheckImageModel(384, 140, 423, 170, "DailyDungeonCollapseButton.png"),
+            new CheckImageModel(385, 228, 417, 249, "DailyDungeonCollapseButton.png"),
+            new CheckImageModel(561, 428, 661, 449, "DailyGuildCheckInButton.png"),
+            new CheckImageModel(696, 549, 760, 588, "ConfirmButton_Dark.png"),
+            new CheckImageModel(604, 437, 678, 475, "ConfirmButton_Dark.png"),
+            new CheckImageModel(674, 424, 776, 455, "DailyGuildRewardButton.png"),
+            new CheckImageModel(614, 527, 671, 565, "ConfirmButton_Dark.png"),
+            new CheckImageModel(938, 629, 1054, 663, "FriendSendButton.png"),
+            new CheckImageModel(683, 427, 802, 472, "ConfirmButton_Dark.png"),
+            new CheckImageModel(1085, 630, 1198, 656, "FriendReceiveButton.png"),
     };
-
     public static final CheckRuleModel[] switchCharacterModels = {
             new CheckRuleModel(15, 54, 34, 73, "6BAABD,3|10|63AACE,6|1|314152,8|12|102021,11|4|84CADE,14|13|102021")
             , new CheckRuleModel(1057, 603, 1180, 641, "107DBD,5|11|0881BD,17|-8|0071AD,20|-2|0075B5,20|8|DEF3FF,41|-8|0071AD,48|1|DEF3FF,53|12|007DBD,58|-6|DEF3FF,71|1|DEF7FF,79|11|E6F7FF")
     };
-
-    public static final Rectangle characterRemainRec = new Rectangle(664,204,731,547);
+    public static final Rectangle characterRemainRec = new Rectangle(664, 204, 731, 547);
     public static final Color characterRemainColor = new Color(255, 243, 222);
-
-    public static final Rectangle switchCharacterButtonRec = new Rectangle(6,46,43,82);
-
     private static final AssetManager assetManager = MainApplication.getInstance().getAssets();
-    private static InputStream input;
+    public static CheckImageModel[] damagingModels = {
+            new CheckImageModel(908, 48, 1113, 300, "ComboIcon_1.png"),
+            new CheckImageModel(908, 48, 1113, 300, "ComboIcon_2.png"),
+            new CheckImageModel(908, 48, 1113, 300, "ComboIcon_3.png")
+    };
     public static boolean initialized;
     public static Bitmap[] numbers = new Bitmap[3];
-    public static Bitmap resultIcon, rewardIcon, nextButton,
-            continueConfirmButton, inventoryFullButton, goBackButton,
-            ammoBuffIcon, epicIcon, coalIcon, crystalIcon, towerIcon, ticketsIcon, goldIcon,
-            dailyContinueButton, dailySelectButton, dailyGoBackButton, crouchingIcon,
-            switchCharacterButton;
+    public static Bitmap resultIcon, rewardIcon, continueConfirmButton, ammoBuffIcon, epicIcon,
+            coalIcon, crystalIcon, towerIcon, ticketsIcon, goldIcon, crouchingIcon;
     public static Bitmap[] dailyDungeonIcons;
+    private static InputStream input;
 
     public static void Initialize() {
         numbers[0] = readImage("Number_5.png");
@@ -267,10 +296,7 @@ public class Presets {
         numbers[2] = readImage("Number_2.png");
         resultIcon = readImage("ResultIcon.jpeg");
         rewardIcon = readImage("RewardIcon.jpg");
-        nextButton = readImage("NextButton.png");
-        continueConfirmButton = readImage("ContinueConfirmButton.png");
-        inventoryFullButton = readImage("InventoryFullButton.png");
-        goBackButton = readImage("GoBackButton.png");
+        continueConfirmButton = readImage("ConfirmButton_Bright.png");
         ammoBuffIcon = readImage("AmmoBuffIcon.png");
         crouchingIcon = readImage("CrouchingIcon.jpeg");
 
@@ -281,11 +307,6 @@ public class Presets {
         goldIcon = readImage("GoldIcon.png");
         towerIcon = readImage("TowerIcon.png");
         dailyDungeonIcons = new Bitmap[]{epicIcon, ticketsIcon, crystalIcon, coalIcon, goldIcon};
-
-        dailyContinueButton = readImage("DailyContinueButton.png");
-        dailySelectButton = readImage("DailySelectButton.png");
-        dailyGoBackButton = readImage("DailyGoBackButton.png");
-        switchCharacterButton = readImage("SwitchCharacterButton.png");
         initialized = true;
     }
 
