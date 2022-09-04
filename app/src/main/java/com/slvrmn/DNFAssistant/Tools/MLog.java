@@ -11,13 +11,14 @@ import java.util.Date;
 
 public class MLog {
 
-    public static void setDebug(boolean debug) {
-        MLog.debug = debug;
-    }
-
-    private static  boolean debug = false;
-
     private static final String Tag = "DNF Assistant";
+    private static boolean debugToConsole = false;
+
+    private static boolean debugToFile = false;
+
+    public static void setDebugToConsole(boolean debugToConsole) {
+        MLog.debugToConsole = debugToConsole;
+    }
 
     private static String GetDate() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
@@ -27,50 +28,55 @@ public class MLog {
     }
 
     public static void error(String msg) {
-        if (debug) {
+        if (debugToConsole) {
             Log.e(Tag, MLog.GetDate() + ":" + msg);
-        } else {
+        }
+        if (debugToFile) {
             String storageDir = Environment.getExternalStorageDirectory().toString() + "/DNF Assistant.log";
-            writeLog2file(storageDir, MLog.GetDate() + ":" + msg+ "\n");
+            writeLog2file(storageDir, MLog.GetDate() + ":" + msg + "\n");
         }
 
     }
 
     public static void error(int[] msg) {
-        if (debug) {
+        if (debugToConsole) {
             Log.e(Tag, MLog.GetDate() + ":" + Arrays.toString(msg));
-        } else {
+        }
+        if (debugToFile) {
             String storageDir = Environment.getExternalStorageDirectory().toString() + "/DNF Assistant.log";
-            writeLog2file(storageDir, MLog.GetDate() + ":" + Arrays.toString(msg)+ "\n");
+            writeLog2file(storageDir, MLog.GetDate() + ":" + Arrays.toString(msg) + "\n");
         }
     }
 
 
     public static void error(String tag, String msg) {
-        if (debug) {
+        if (debugToConsole) {
             Log.e(tag, MLog.GetDate() + ":" + msg);
-        } else {
+        }
+        if (debugToFile) {
             String storageDir = Environment.getExternalStorageDirectory().toString() + "/DNF Assistant.log";
-            writeLog2file(storageDir, MLog.GetDate() + ":" + tag + ":" + msg+ "\n");
+            writeLog2file(storageDir, MLog.GetDate() + ":" + tag + ":" + msg + "\n");
         }
 
     }
 
     public static void info(String msg) {
-        if (debug) {
+        if (debugToConsole) {
             Log.i(Tag, MLog.GetDate() + ":" + msg);
-        } else {
+        }
+        if (debugToFile) {
             String storageDir = Environment.getExternalStorageDirectory().toString() + "/DNF Assistant.log";
-            writeLog2file(storageDir, MLog.GetDate() + ":" + msg+ "\n");
+            writeLog2file(storageDir, MLog.GetDate() + ":" + msg + "\n");
         }
     }
 
     public static void info(String tag, String msg) {
-        if (debug) {
+        if (debugToConsole) {
             Log.i(tag, MLog.GetDate() + ":" + msg);
-        } else {
+        }
+        if (debugToFile) {
             String storageDir = Environment.getExternalStorageDirectory().toString() + "/DNF Assistant.log";
-            writeLog2file(storageDir, tag + ":" + msg+ "\n");
+            writeLog2file(storageDir, tag + ":" + msg + "\n");
         }
     }
 

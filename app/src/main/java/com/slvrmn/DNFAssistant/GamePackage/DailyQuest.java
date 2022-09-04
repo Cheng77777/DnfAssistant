@@ -118,7 +118,11 @@ public class DailyQuest extends Thread {
     @Override
     public void run() {
         try {
-            while (Assistant.getInstance().isRunning()) {
+            while (!Assistant.getInstance().isStopped()) {
+                if (Assistant.getInstance().isPausing()) {
+                    sleep(3000);
+                    continue;
+                }
                 if (!isDailyQuesting) {
                     sleep(CHECK_INTERVAL * 100);
                     continue;

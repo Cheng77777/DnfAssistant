@@ -1,13 +1,19 @@
 package com.slvrmn.DNFAssistant.GamePackage;
 
-public class TestThread extends Thread{
+import com.slvrmn.DNFAssistant.Tools.MLog;
+
+public class TestThread implements Runnable{
     @Override
     public void run() {
         try {
-            Actions.GetDailyReward();
-            Actions.SaveItems();
-        } catch (InterruptedException e) {
+            int i = 0;
+            while (true){
+                MLog.info("Test Thread " + i);
+                i++;
+            }
+        } catch (Exception e) {
             e.printStackTrace();
+            MLog.info(e.toString());
         }
     }
 }

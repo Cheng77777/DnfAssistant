@@ -19,13 +19,10 @@ public class Presets {
     public static final Rectangle resultRec = new Rectangle(845, 8, 1006, 63);
     public static final Rectangle rewardRec = new Rectangle(485, 24, 793, 97);
 
-    public static final Rectangle settingsRec = new Rectangle(1065, 8, 1104, 46);
     public static final Rectangle homeRec = new Rectangle(1013, 639, 1121, 661);
     public static final Rectangle monsterLevelRec = new Rectangle(354, 53, 387, 88);
-    public static final String damageNumberRule = "006DFF,-1|3|198EFF,-2|5|089AF7";
     public static final String inLionRule = "213D4A,10|1|7BBADE,-2|10|7BBAD6,9|10|7BBAD6,24|10|003DFF,10|21|29516B,32|10|73B6D6,49|10|EFEB7B,49|-38|3A75F7,48|-29|195DFF,48|-21|0010D6,40|-28|0010DE,57|-29|001CC5";
     public static final String beforeLionRules = "214D5A,-11|10|7BBAD6,1|10|7BBAD6,12|11|294D63,1|24|7BBADE,0|38|73B6D6,-9|49|294D5A,-1|49|73BADE,12|49|7BBAD6,1|61|7BBAD6,40|36|73B6D6,28|48|73B6D6,40|48|D69A31,53|48|7BBADE,39|61|295163,40|24|0039FF,66|62|081821,66|35|081419";
-    public static final Rectangle damageNumberRec = new Rectangle(894, 4, 1161, 210);
     public static final Rectangle stuckRec = new Rectangle(121, 623, 183, 654);
     public static final Rectangle attackRec = new Rectangle(1114, 617, 1169, 683);
     public static final Rectangle backJumpRec = new Rectangle(1008, 630, 1048, 660);
@@ -45,9 +42,9 @@ public class Presets {
             new Rectangle(114, 432, 283, 613),
             new Rectangle(165, 484, 231, 558)
     };
-    public static final Rectangle completeDungeonMenuRec = new Rectangle(999, 20, 1270, 600);
     public static final Rectangle confirmGoOutRec = new Rectangle(696, 436, 772, 463);
 
+    public static final CheckImageModel dailyMenuModel = new CheckImageModel(267, 10, 336, 76, "DailyMenuButton.png");
 
     public static final CheckImageModel backButtonModel = new CheckImageModel(0, 0, 47, 48, "BackButton.png");
     public static final CheckImageModel continueButtonModel = new CheckImageModel(999, 20, 1270, 600, "ContinueButton.png");
@@ -94,6 +91,8 @@ public class Presets {
             new CheckImageModel(547, 250, 619, 324, "RecoverCoinIcon.png"),
             new CheckImageModel(633, 536, 848, 625, "RecoverButton.png")
     };
+
+    public static final CheckImageModel dodgeButtonModel = new CheckImageModel(975,599,1071,680,"DodgeButton.png");
 
     public static final CheckImageModel inDungeonModel = new CheckImageModel(1006, 8, 1113, 48, "InDungeonOptionsButton.png");
 
@@ -241,7 +240,6 @@ public class Presets {
             , new CheckRuleModel(321, 458, 380, 478, "636D6B,3|6|000000,6|16|111111,15|4|292829,21|0|B5C6C5,29|6|C5C6C5,33|15|737173,39|5|D6D2D6,47|2|848284")
             , new CheckRuleModel(1013, 581, 1140, 621, "006DA4,10|16|B5D7E6,27|23|DEEFF7,40|11|CEE3EF,53|18|FFFFFF,62|25|9CCAE6,76|30|007DBD,82|15|94C2DE,83|29|F7FBFF")
     };
-    public static final CheckImageModel dailyMenuModel = new CheckImageModel(267, 10, 336, 76, "DailyMenuButton.png");
     public static final CheckImageModel[] energyEmptyModels = {
             new CheckImageModel(126, 52, 156, 81, "EnergyEmptyIcon_1.png"),
             new CheckImageModel(126, 52, 156, 81, "EnergyEmptyIcon_2.png")

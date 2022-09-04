@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import com.slvrmn.DNFAssistant.Model.Image;
 import com.slvrmn.DNFAssistant.Model.Point;
 import com.slvrmn.DNFAssistant.Model.Rectangle;
+//import com.slvrmn.DNFAssistant.Tools.//MLog;
 import com.slvrmn.DNFAssistant.Tools.MLog;
 import com.slvrmn.DNFAssistant.Tools.ScreenCaptureUtil;
 
@@ -90,7 +91,11 @@ public class ScreenCheck extends Thread {
         InitializeFarmingParameters();
         InitializeDailyQuestParameters();
         try {
-            while (Assistant.getInstance().isRunning()) {
+            while (!Assistant.getInstance().isStopped()) {
+                if (Assistant.getInstance().isPausing()) {
+                    sleep(3000);
+                    continue;
+                }
                 screenshot = GetScreenshot();
                 CheckEnergyEmpty();
                 if (CheckBlackScreen()) {
@@ -119,11 +124,11 @@ public class ScreenCheck extends Thread {
             CheckBoss();
             CheckStuck();
         }
-        CheckRecover();
-        CheckInDungeon();
         CheckMonster();
         CheckDamaging();
-        CheckDodge();
+//        CheckDodge();
+        CheckRecover();
+        CheckInDungeon();
         CheckSkillsCoolDown();
         CheckDirectionBuffsCoolDown();
         CheckAmmo();
@@ -154,7 +159,7 @@ public class ScreenCheck extends Thread {
         }
         if (Image.findPointByCheckImageModel(screenshot, Presets.inDungeonModel).
                 isValid()) {
-            MLog.info("ScreenCheck: __________在地下城中__________");
+            //MLog.info("ScreenCheck: __________在地下城中__________");
             inDungeon = true;
             BattleController.StartPathfinding();
             CheckAvailableSkills();
@@ -165,7 +170,7 @@ public class ScreenCheck extends Thread {
 
     private void CheckBoss() {
         if (Image.findPointByCheckImageModel(screenshot, Presets.inBoosModel).isValid()) {
-            MLog.info("ScreenCheck: __________在BOSS房中__________");
+            //MLog.info("ScreenCheck: __________在BOSS房中__________");
             inBoss = true;
             return;
         }
@@ -175,7 +180,7 @@ public class ScreenCheck extends Thread {
     private void CheckBeforeLion() {
         if (Image.findPointByMulColor(screenshot, Presets.beforeLionRules, Presets.mapRec).
                 isValid()) {
-//            MLog.info("ScreenCheck: __________在狮子头前__________");
+//            //MLog.info("ScreenCheck: __________在狮子头前__________");
             beforeLion = true;
             return;
         }
@@ -184,7 +189,7 @@ public class ScreenCheck extends Thread {
 
     private void CheckInLion() {
         if (Image.findPointByMulColor(screenshot, Presets.inLionRule, Presets.mapRec).isValid()) {
-            MLog.info("ScreenCheck: __________在狮子头中__________");
+            //MLog.info("ScreenCheck: __________在狮子头中__________");
             inLion = true;
             return;
         }
@@ -193,7 +198,7 @@ public class ScreenCheck extends Thread {
 
     private void CheckInHell() {
         if (Image.findPointByMulColor(screenshot, Presets.hellRules, Presets.mapRec).isValid()) {
-            MLog.info("ScreenCheck: __________在深渊房中__________");
+            //MLog.info("ScreenCheck: __________在深渊房中__________");
             inHell = true;
             return;
         }
@@ -204,7 +209,7 @@ public class ScreenCheck extends Thread {
         if (Image.matchTemplate(screenshot, Presets.numbers, 0.95,
                 Presets.monsterLevelRec).isValid()) {
             hasMonster = true;
-            MLog.info("ScreenCheck: __________有怪物__________");
+            //MLog.info("ScreenCheck: __________有怪物__________");
             return;
         }
         hasMonster = false;
@@ -213,16 +218,20 @@ public class ScreenCheck extends Thread {
     private void CheckDamaging() {
         if (Image.findPointByCheckImageModels(screenshot, Presets.damagingModels).isValid()) {
             isDamaging = true;
-            MLog.info("ScreenCheck: __________造成伤害中__________");
+            //MLog.info("ScreenCheck: __________造成伤害中__________");
             return;
         }
         isDamaging = false;
     }
 
-    private void CheckDodge() {
-        if (Image.matchTemplate(screenshot, Presets.crouchingIcon, 0.8, Presets.attackRec).isValid()) {
+    private void CheckDodge() throws InterruptedException {
+        if (Image.findPointByCheckImageModel(screenshot,Presets.dodgeButtonModel).isValid()) {
             canDodge = true;
-            MLog.info("ScreenCheck: __________可闪避__________");
+            if (!ScreenCheck.isDamaging && !BattleController.isAttacking) {
+                MLog.info("ScreenCheck: 闪避");
+                Actions.DodgeLeft();
+            }
+            //MLog.info("ScreenCheck: __________可闪避__________");
             return;
         }
         canDodge = false;
@@ -239,7 +248,7 @@ public class ScreenCheck extends Thread {
                     Image.cropBitmap(screenshot, Presets.stuckRec),
                     0.95).isValid()) {
                 AddStuck();
-                MLog.info("ScreenCheck: __________屏幕静止" + screenFreezeTime + "次__________");
+                //MLog.info("ScreenCheck: __________屏幕静止" + screenFreezeTime + "次__________");
                 return;
             }
             screenFreezeTime = 0;
@@ -256,7 +265,7 @@ public class ScreenCheck extends Thread {
         }
         if (Image.matchTemplate(screenshot, Presets.resultIcon, 0.8, Presets.resultRec).isValid()) {
             hasResult = true;
-            MLog.info("ScreenCheck: __________副本结束__________");
+            //MLog.info("ScreenCheck: __________副本结束__________");
             Arrays.fill(skills, false);
             Arrays.fill(directionalBuffs, false);
             return;
@@ -270,7 +279,7 @@ public class ScreenCheck extends Thread {
         }
         if (Image.matchTemplate(screenshot, Presets.rewardIcon, 0.8, Presets.rewardRec).isValid()) {
             hasReward = true;
-            MLog.info("ScreenCheck: __________可翻牌__________");
+            //MLog.info("ScreenCheck: __________可翻牌__________");
             return;
         }
         hasReward = false;
@@ -342,7 +351,7 @@ public class ScreenCheck extends Thread {
         if (p.isValid()) {
             p.setX(p.getX() + Presets.repairButtonModel.rectangle.x1);
             p.setY(p.getY() + Presets.repairButtonModel.rectangle.y1);
-            MLog.info("ScreenCheck: __________需要修理__________");
+            //MLog.info("ScreenCheck: __________需要修理__________");
             hasRepair = new Rectangle(p.getX(), p.getY(),
                     p.getX() + Presets.repairButtonModel.image.getWidth(),
                     p.getY() + Presets.repairButtonModel.image.getHeight());
@@ -357,7 +366,7 @@ public class ScreenCheck extends Thread {
         }
         if (Image.findPointByCheckImageModels(screenshot, Presets.energyEmptyModels).isValid()) {
             isEnergyEmpty = true;
-            MLog.info("ScreenCheck: __________疲劳为0__________");
+            //MLog.info("ScreenCheck: __________疲劳为0__________");
             return;
         }
         isEnergyEmpty = false;
@@ -369,7 +378,7 @@ public class ScreenCheck extends Thread {
         }
         if (Image.findPointByAllCheckImageModels(screenshot, Presets.recoverModels)) {
             canRecover = true;
-            MLog.info("ScreenCheck: __________可复活__________");
+            //MLog.info("ScreenCheck: __________可复活__________");
             return;
         }
         canRecover = false;
@@ -425,7 +434,7 @@ public class ScreenCheck extends Thread {
 
     private void CheckDailyMenu() {
         if (!hasDailyContinue) {
-            if (Image.findPointByCheckImageModel(screenshot,Presets.dailyContinueButtonModel).isValid()) {
+            if (Image.findPointByCheckImageModel(screenshot, Presets.dailyContinueButtonModel).isValid()) {
                 hasDailyContinue = true;
             }
         }

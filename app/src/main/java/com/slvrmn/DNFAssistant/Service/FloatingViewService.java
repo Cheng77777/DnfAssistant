@@ -59,7 +59,7 @@ public class FloatingViewService extends Service implements View.OnClickListener
     }
 
     private void stopAssistant() {
-        Assistant.getInstance().stop();
+        Assistant.getInstance().Stop();
     }
 
     private void destroy() {

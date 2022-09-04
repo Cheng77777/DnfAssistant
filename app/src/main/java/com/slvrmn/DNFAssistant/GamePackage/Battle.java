@@ -13,14 +13,19 @@ public class Battle extends Thread {
     public void run() {
         try {
             mainLoop:
-            while (Assistant.getInstance().isRunning()) {
-                if (!BattleController.isBattling || (!BattleController.isPathfinding && !BattleController.isAttacking)) {
+            while (!Assistant.getInstance().isStopped()) {
+                if (!BattleController.isBattling || Assistant.getInstance().isPausing()) {
+                    sleep(3000);
+                    continue;
+                }
+                MLog.info("Battle: Looping");
+                if (!BattleController.isPathfinding && !BattleController.isAttacking) {
                     sleep(ScreenCheck.CHECK_INTERVAL);
                     continue;
                 }
                 if (BattleController.isPathfinding) {
                     if (!ScreenCheck.hasMonster && ScreenCheck.hasRepair.isValid()) {
-                        MLog.info("BattleController: 需要修理");
+                        MLog.info("Battle: 需要修理");
                         if (!ScreenCheck.inHell && !ScreenCheck.inBoss) {
                             Actions.RepairEquipments();
                         }
@@ -30,39 +35,40 @@ public class Battle extends Thread {
                         continue;
                     }
                     buffUsed = false;
-                    MLog.info("PathFind: 自动寻路中");
-                    int pressTime = Utility.RandomInt(5400, 5500);
-                    Actions.PressLongAttack(pressTime, ScreenCheck.CHECK_INTERVAL);
+                    MLog.info("Battle: 自动寻路中");
+                    int pressTime = Utility.RandomInt(7500, 8000);
+                    Actions.PressLongAttack(pressTime, ScreenCheck.CHECK_INTERVAL, "Battle.39");
 
                     ScreenCheck.hasRepair = Rectangle.INVALID_RECTANGLE;
 
                     if (!Actions.SleepCheckIsPathfinding(pressTime)) {
-                        MLog.info("PathFind: ----------停止寻路----------");
+                        MLog.info("Battle: ----------停止寻路----------");
                         continue;
                     }
-                } else if (BattleController.isAttacking) {
-                    MLog.info("PathFind: 自动攻击中");
+                }
+                else if (BattleController.isAttacking) {
+                    MLog.info("Battle: 自动攻击中");
                     if (ScreenCheck.skills[ScreenCheck.skills.length - 4] &&
                             (ScreenCheck.inBoss || ScreenCheck.inLion ||
                                     ScreenCheck.inHell || ScreenCheck.dailyNonMapDungeon)) {
-                        MLog.info("PathFind: ----------使用觉醒----------");
+                        MLog.info("Battle: ----------使用觉醒----------");
                         Robot.Press(Presets.skillRecs[ScreenCheck.skills.length - 4], Utility.RandomInt(1, 2));
                         continue;
                     }
                     int pressTime = Utility.RandomInt(3, 4);
-                    Actions.PressMultipleAttacks(pressTime);
+                    Actions.PressMultipleAttacks(pressTime, "Battle.57");
                     for (int i = 0; i < ScreenCheck.skills.length - 4; i++) {
                         if (!Assistant.getInstance().isRunning()) {
                             return;
                         }
                         if (ScreenCheck.skills[i]) {
                             if (!BattleController.isAttacking) {
-                                MLog.info("PathFind: ----------停止技能----------");
+                                MLog.info("Battle: ----------停止技能----------");
                                 continue mainLoop;
                             }
                             Robot.Press(Presets.skillRecs[i], Utility.RandomInt(2, 3));
                             pressTime = Utility.RandomInt(3, 4);
-                            Actions.PressMultipleAttacks(pressTime);
+                            Actions.PressMultipleAttacks(pressTime, "Battle.69");
                         }
                     }
                 }

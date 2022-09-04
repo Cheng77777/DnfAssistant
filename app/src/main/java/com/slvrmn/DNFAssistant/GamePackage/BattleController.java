@@ -108,15 +108,12 @@ public class BattleController extends Thread {
                 Initialize();
             }
             mainLoop:
-            while (Assistant.getInstance().isRunning()) {
+            while (!Assistant.getInstance().isStopped()) {
+                if (Assistant.getInstance().isPausing()) {
+                    sleep(3000);
+                    continue;
+                }
                 if (isBattling) {
-                    if (ScreenCheck.canDodge) {
-                        MLog.info("BattleController: 可闪避");
-                        Actions.DodgeLeft();
-                        StartAttacking();
-                        sleep(3000);
-                        continue;
-                    }
                     if (canRecover) {
                         StopAll();
                         Actions.FindAndTapTilDisappear(Presets.recoverModels[1]);
@@ -161,11 +158,11 @@ public class BattleController extends Thread {
                                         MLog.info("BattleController: 不在狮子头前");
                                         break;
                                     }
-                                    random = Utility.RandomInt(150, 200);
+                                    random = Utility.RandomInt(200, 250);
                                     PressJoystick(3, random);
                                     sleep(random);
                                     random = Utility.RandomInt(1400, 1500);
-                                    PressLongAttack(random, random);
+                                    PressLongAttack(random, random,"BattleController.171");
                                     if (!Actions.SleepCheckHasMonster(random)) {
                                         MLog.info("BattleController: 狮子头前继续攻击");
                                         StartAttacking();
@@ -184,7 +181,7 @@ public class BattleController extends Thread {
                                 int random;
                                 for (int i = 0; i < 3; i++) {
                                     random = Utility.RandomInt(2000, 3000);
-                                    PressLongAttack(random, random);
+                                    PressLongAttack(random, random,"BattleController.190");
                                 }
                                 Actions.FindAndTapTilDisappear(Presets.dailyContinueButtonModel);
                                 Actions.FindAndTapTilDisappear(Presets.continueConfirmButtonModel);
@@ -200,7 +197,7 @@ public class BattleController extends Thread {
                                 int random;
                                 for (int i = 0; i < 3; i++) {
                                     random = Utility.RandomInt(2000, 3000);
-                                    PressLongAttack(random, random);
+                                    PressLongAttack(random, random,"BattleController.206");
                                 }
                                 Actions.FindAndTapTilDisappear(Presets.dailySelectButtonModel);
                                 sleep(3000);
@@ -218,11 +215,11 @@ public class BattleController extends Thread {
                                 int random;
                                 for (int i = 0; i < 3; i++) {
                                     random = Utility.RandomInt(2000, 3000);
-                                    PressLongAttack(random, random);
+                                    PressLongAttack(random, random,"BattleController.224");
                                 }
                                 StopAll();
                                 isBattling = false;
-                                Actions.GoOutDungeon();
+                                Actions.GoOutDungeonFromMenu();
                                 sleep(10000);
                                 Actions.SwitchCharacter();
                                 continue;
