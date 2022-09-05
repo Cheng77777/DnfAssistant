@@ -126,7 +126,7 @@ public class ScreenCheck extends Thread {
         }
         CheckMonster();
         CheckDamaging();
-//        CheckDodge();
+        CheckDodge();
         CheckRecover();
         CheckInDungeon();
         CheckSkillsCoolDown();
@@ -227,10 +227,10 @@ public class ScreenCheck extends Thread {
     private void CheckDodge() throws InterruptedException {
         if (Image.findPointByCheckImageModel(screenshot,Presets.dodgeButtonModel).isValid()) {
             canDodge = true;
-            if (!ScreenCheck.isDamaging && !BattleController.isAttacking) {
-                MLog.info("ScreenCheck: 闪避");
-                Actions.DodgeLeft();
-            }
+//            if (!ScreenCheck.isDamaging && !BattleController.isAttacking) {
+//                MLog.info("ScreenCheck: 闪避");
+//                Actions.DodgeLeft();
+//            }
             //MLog.info("ScreenCheck: __________可闪避__________");
             return;
         }

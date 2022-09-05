@@ -95,7 +95,8 @@ public class BattleController extends Thread {
         sleep(500);
     }
 
-    public static synchronized void StopAll() throws InterruptedException {
+    public static synchronized void StopAll(String info) throws InterruptedException {
+        MLog.info(info);
         isPathfinding = false;
         isAttacking = false;
         sleep(500);
@@ -115,8 +116,9 @@ public class BattleController extends Thread {
                 }
                 if (isBattling) {
                     if (canRecover) {
-                        StopAll();
+                        StopAll("BattleController.119");
                         Actions.FindAndTapTilDisappear(Presets.recoverModels[1]);
+                        sleep(100);
                         StartAttacking();
                         continue;
                     }
@@ -129,7 +131,7 @@ public class BattleController extends Thread {
                         if (isFarming) {
                             if (ScreenCheck.hasReward) {
                                 MLog.info("BattleController: 可翻牌");
-                                StopAll();
+                                StopAll("BattleController.133");
                                 GetReward();
                                 continue;
                             }
@@ -140,7 +142,7 @@ public class BattleController extends Thread {
                             }
                             if (ScreenCheck.beforeLion && !ScreenCheck.hasMonster) {
                                 MLog.info("BattleController: 狮子头前");
-                                StopAll();
+                                StopAll("BattleController144");
                                 do {
                                     MLog.info("BattleController: 狮子头循环");
                                     if (!Assistant.getInstance().isRunning()) {
@@ -162,7 +164,7 @@ public class BattleController extends Thread {
                                     PressJoystick(3, random);
                                     sleep(random);
                                     random = Utility.RandomInt(1400, 1500);
-                                    PressLongAttack(random, random,"BattleController.171");
+                                    PressLongAttack(random, random, "BattleController.171");
                                     if (!Actions.SleepCheckHasMonster(random)) {
                                         MLog.info("BattleController: 狮子头前继续攻击");
                                         StartAttacking();
@@ -176,12 +178,12 @@ public class BattleController extends Thread {
                         } else {
                             if (hasDailyContinue) {
                                 MLog.info("BattleController: 每日副本可继续");
-                                StopAll();
+                                StopAll("BattleController180");
                                 MoveAround();
                                 int random;
                                 for (int i = 0; i < 3; i++) {
                                     random = Utility.RandomInt(2000, 3000);
-                                    PressLongAttack(random, random,"BattleController.190");
+                                    PressLongAttack(random, random, "BattleController.190");
                                 }
                                 Actions.FindAndTapTilDisappear(Presets.dailyContinueButtonModel);
                                 Actions.FindAndTapTilDisappear(Presets.continueConfirmButtonModel);
@@ -192,12 +194,12 @@ public class BattleController extends Thread {
                             }
                             if (hasDailySelect) {
                                 MLog.info("BattleController: 每日副本可选择");
-                                StopAll();
+                                StopAll("BattleController196");
                                 MoveAround();
                                 int random;
                                 for (int i = 0; i < 3; i++) {
                                     random = Utility.RandomInt(2000, 3000);
-                                    PressLongAttack(random, random,"BattleController.206");
+                                    PressLongAttack(random, random, "BattleController.206");
                                 }
                                 Actions.FindAndTapTilDisappear(Presets.dailySelectButtonModel);
                                 sleep(3000);
@@ -208,22 +210,29 @@ public class BattleController extends Thread {
                         }
                         if (ScreenCheck.screenFreezeTime >= 15) {
                             MLog.info("BattleController: 卡住次数大于15");
-                            StopAll();
                             Actions.MoveAround();
                             if (ScreenCheck.inHell && !ScreenCheck.hasMonster && ScreenCheck.isEnergyEmpty) {
                                 MLog.info("BattleController: ");
                                 int random;
                                 for (int i = 0; i < 3; i++) {
                                     random = Utility.RandomInt(2000, 3000);
-                                    PressLongAttack(random, random,"BattleController.224");
+                                    PressLongAttack(random, random, "BattleController.224");
+
+                                    if (!Actions.SleepCheckIsPathfinding(random)) {
+                                        MLog.info("BattleController: ----------进入战斗----------");
+                                        sleep(100);
+                                        StartAttacking();
+                                        continue mainLoop;
+                                    }
                                 }
-                                StopAll();
+                                StopAll("BattleController225");
                                 isBattling = false;
                                 Actions.GoOutDungeonFromMenu();
                                 sleep(10000);
                                 Actions.SwitchCharacter();
                                 continue;
                             }
+                            sleep(100);
                             StartPathfinding();
                         }
                     } else if (isAttacking) {

@@ -7,18 +7,19 @@ import com.slvrmn.DNFAssistant.Tools.Utility;
 
 public class Battle extends Thread {
 
-    boolean buffUsed = false;
+    int buffCoolDown = 0;
 
     @Override
     public void run() {
         try {
             mainLoop:
             while (!Assistant.getInstance().isStopped()) {
+                buffCoolDown--;
                 if (!BattleController.isBattling || Assistant.getInstance().isPausing()) {
                     sleep(3000);
                     continue;
                 }
-                MLog.info("Battle: Looping");
+                MLog.info("Battle: Looping " + BattleController.isPathfinding + " " + BattleController.isAttacking);
                 if (!BattleController.isPathfinding && !BattleController.isAttacking) {
                     sleep(ScreenCheck.CHECK_INTERVAL);
                     continue;
@@ -30,11 +31,12 @@ public class Battle extends Thread {
                             Actions.RepairEquipments();
                         }
                     }
-                    if (Actions.UseBuff() && !buffUsed) {
-                        buffUsed = true;
-                        continue;
+                    if (buffCoolDown <= 0) {
+                        if (Actions.UseBuff()) {
+                            buffCoolDown = 20;
+                            continue;
+                        }
                     }
-                    buffUsed = false;
                     MLog.info("Battle: 自动寻路中");
                     int pressTime = Utility.RandomInt(7500, 8000);
                     Actions.PressLongAttack(pressTime, ScreenCheck.CHECK_INTERVAL, "Battle.39");
@@ -45,8 +47,7 @@ public class Battle extends Thread {
                         MLog.info("Battle: ----------停止寻路----------");
                         continue;
                     }
-                }
-                else if (BattleController.isAttacking) {
+                } else if (BattleController.isAttacking) {
                     MLog.info("Battle: 自动攻击中");
                     if (ScreenCheck.skills[ScreenCheck.skills.length - 4] &&
                             (ScreenCheck.inBoss || ScreenCheck.inLion ||
@@ -61,14 +62,17 @@ public class Battle extends Thread {
                         if (!Assistant.getInstance().isRunning()) {
                             return;
                         }
-                        if (ScreenCheck.skills[i]) {
-                            if (!BattleController.isAttacking) {
-                                MLog.info("Battle: ----------停止技能----------");
-                                continue mainLoop;
-                            }
-                            Robot.Press(Presets.skillRecs[i], Utility.RandomInt(2, 3));
+                        if (!BattleController.isAttacking) {
+                            MLog.info("Battle: ----------停止技能----------");
+                            sleep(1000);
                             pressTime = Utility.RandomInt(3, 4);
-                            Actions.PressMultipleAttacks(pressTime, "Battle.69");
+                            Actions.PressMultipleAttacks(pressTime, "Battle.66");
+                            continue mainLoop;
+                        }
+                        if (ScreenCheck.skills[i]) {
+                            Robot.Press(Presets.skillRecs[i], Utility.RandomInt(2, 3));
+//                            pressTime = Utility.RandomInt(3, 4);
+//                            Actions.PressMultipleAttacks(pressTime, "Battle.69");
                         }
                     }
                 }

@@ -54,7 +54,7 @@ public class Assistant {
                         BattleController.StartBattle();
                         initialized = true;
                     } else if (Image.findPointByCheckImageModel(ScreenCheck.GetScreenshot(), Presets.dailyMenuModel).isValid()) {
-                        Utility.show("Assistant: 在地下城中,开始搬砖");
+                        Utility.show("Assistant: 不在地下城中,开始每日");
                         MLog.info("Assistant: 不在地下城中,开始每日");
                         BattleController.StopFarming();
                         DailyQuest.StartDailyQuesting();
