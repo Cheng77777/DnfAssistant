@@ -62,7 +62,7 @@ public class BattleController extends Thread {
         } else {
             MLog.info("BattleController: 疲劳不为0,继续副本");
             Actions.FindAndTapTilDisappear(Presets.continueModels);
-            sleep(1000);
+            sleep(3000);
             ScreenCheck.InitializeFarmingParameters();
             sleep(1000);
         }
@@ -116,7 +116,7 @@ public class BattleController extends Thread {
                 }
                 if (isBattling) {
                     if (isPathfinding) {
-//                        MLog.info("BattleController: 寻路中");
+//                        MLog.in fo("BattleController: 寻路中");
                         if (ScreenCheck.isDamaging && ScreenCheck.hasMonster) {
                             StartAttacking();
                             continue;
@@ -168,20 +168,20 @@ public class BattleController extends Thread {
                                 StartPathfinding();
                                 MLog.info("BattleController: 不在狮子头前");
                             }
-                            if(ScreenCheck.inHell && ScreenCheck.screenFreezeTime>40){
-                                if (!ScreenCheck.hasMonster && ScreenCheck.isEnergyEmpty) {
+                            if(ScreenCheck.inHell && !ScreenCheck.hasMonster){
+                                if (ScreenCheck.isEnergyEmpty) {
+                                    StopAll("BattleController.173");
                                     int random;
                                     for (int i = 0; i < 3; i++) {
                                         random = Utility.RandomInt(2000, 3000);
                                         PressLongAttack(random, 0, "BattleController.176");
-                                        if (!Actions.SleepCheckIsPathfinding(random)) {
+                                        if (!Actions.SleepCheckHasMonster(random)) {
                                             MLog.info("BattleController: ----------进入战斗----------");
                                             sleep(100);
                                             StartAttacking();
                                             continue mainLoop;
                                         }
                                     }
-                                    StopAll("BattleController.184");
                                     isBattling = false;
                                     Actions.GoOutDungeonFromMenu();
                                     sleep(10000);
@@ -194,7 +194,7 @@ public class BattleController extends Thread {
                         } else {
                             if (hasDailyContinue) {
                                 MLog.info("BattleController: 每日副本可继续");
-                                StopAll("BattleController180");
+                                StopAll("BattleController.197");
                                 MoveAround();
                                 int random;
                                 for (int i = 0; i < 3; i++) {

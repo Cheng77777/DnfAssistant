@@ -38,9 +38,9 @@ public class Actions {
     static synchronized void PressMultipleAttacks(int multiple, String info) throws InterruptedException {
         MLog.info("Actions:" + info + " ==========多次攻击==========");
         for (int i = 0; i < multiple; i++) {
-            if (BattleController.isPathfinding) {
-                return;
-            }
+//            if (BattleController.isPathfinding) {
+//                return;
+//            }
             Robot.Press(Presets.attackRec);
         }
     }
@@ -616,7 +616,7 @@ public class Actions {
             if (!BattleController.isPathfinding || ScreenCheck.canDodge) {
                 return false;
             }
-            if(!ScreenCheck.inHell && ScreenCheck.screenFreezeTime >=20){
+            if(!ScreenCheck.inHell && ScreenCheck.screenFreezeTime >=25){
                 Actions.MoveAround();
                 return false;
             }

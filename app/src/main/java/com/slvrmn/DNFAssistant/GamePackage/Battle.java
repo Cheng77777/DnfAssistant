@@ -48,8 +48,11 @@ public class Battle extends Thread {
                         }
                     }
                     MLog.info("Battle: 自动寻路中");
-                    int pressTime = Utility.RandomInt(7500, 8000);
-                    Actions.PressLongAttack(pressTime, ScreenCheck.CHECK_INTERVAL, "Battle.39");
+                    int pressTime = Utility.RandomInt(1, 2);
+                    Actions.PressMultipleAttacks(pressTime, "Battle.52");
+                    pressTime = Utility.RandomInt(7500, 8000);
+                    sleep(100);
+                    Actions.PressLongAttack(pressTime, ScreenCheck.CHECK_INTERVAL, "Battle.54");
 
                     ScreenCheck.hasRepair = Rectangle.INVALID_RECTANGLE;
 
@@ -66,21 +69,19 @@ public class Battle extends Thread {
                         Robot.Press(Presets.skillRecs[ScreenCheck.skills.length - 4], Utility.RandomInt(1, 2));
                         continue;
                     }
-                    int pressTime = Utility.RandomInt(3, 4);
-                    Actions.PressMultipleAttacks(pressTime, "Battle.57");
                     for (int i = 0; i < ScreenCheck.skills.length - 4; i++) {
                         if (!Assistant.getInstance().isRunning()) {
                             return;
                         }
                         if (!BattleController.isAttacking) {
                             MLog.info("Battle: ----------停止技能----------");
-                            sleep(1000);
-                            pressTime = Utility.RandomInt(3, 4);
-                            Actions.PressMultipleAttacks(pressTime, "Battle.66");
+//                            sleep(1000);
                             continue mainLoop;
                         }
                         if (ScreenCheck.skills[i]) {
-                            Robot.Press(Presets.skillRecs[i], Utility.RandomInt(2, 3));
+                            Robot.Press(Presets.skillRecs[i], Utility.RandomInt(1, 2));
+                            int pressTime = Utility.RandomInt(1900, 2000);
+                            Actions.PressLongAttack(pressTime, 800, "Battle.83");
 //                            pressTime = Utility.RandomInt(3, 4);
 //                            Actions.PressMultipleAttacks(pressTime, "Battle.69");
                         }
