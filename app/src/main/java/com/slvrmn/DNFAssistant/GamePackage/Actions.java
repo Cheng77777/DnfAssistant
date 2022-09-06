@@ -1,6 +1,5 @@
 package com.slvrmn.DNFAssistant.GamePackage;
 
-import static com.slvrmn.DNFAssistant.GamePackage.BattleController.StartAttacking;
 import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.GetScreenshot;
 import static java.lang.Thread.sleep;
 
@@ -37,7 +36,7 @@ public class Actions {
     }
 
     static synchronized void PressMultipleAttacks(int multiple, String info) throws InterruptedException {
-        MLog.info("Actions:"+info+" ==========多次攻击==========");
+        MLog.info("Actions:" + info + " ==========多次攻击==========");
         for (int i = 0; i < multiple; i++) {
             if (BattleController.isPathfinding) {
                 return;
@@ -47,7 +46,7 @@ public class Actions {
     }
 
     static synchronized void PressLongAttack(int pressTime, int sleepTime, String info) throws InterruptedException {
-        MLog.info("Actions:"+info+" ==========长按攻击==========");
+        MLog.info("Actions:" + info + " ==========长按攻击==========");
         Robot.LongPress(Presets.attackRec, pressTime);
         sleep(sleepTime);
     }
@@ -79,7 +78,7 @@ public class Actions {
         MLog.info("Actions: ==========拾取物品==========");
         MoveAround();
         int random = Utility.RandomInt(5500, 5600);
-        PressLongAttack(random, random,"Actions.82");
+        PressLongAttack(random, random, "Actions.82");
     }
 
     static synchronized void RepairEquipments() throws InterruptedException {
@@ -112,21 +111,21 @@ public class Actions {
         MLog.info("Actions: ==========向后闪避==========");
         Robot.swipe(Presets.dodgeRecs[0], Presets.dodgeRecs[1], Utility.RandomInt(120, 130));
         SystemClock.sleep(800);
-        PressMultipleAttacks(3,"Actions.115");
+        PressMultipleAttacks(3, "Actions.115");
     }
 
     static synchronized void Dodge() throws InterruptedException {
         MLog.info("Actions: ==========向后闪避==========");
         Robot.Press(Presets.dodgeRecs[0]);
         SystemClock.sleep(800);
-        PressMultipleAttacks(3,"Actions.122");
+        PressMultipleAttacks(3, "Actions.122");
     }
 
     static synchronized void DodgeDown() throws InterruptedException {
         MLog.info("Actions: ==========向下闪避==========");
         Robot.swipe(Presets.dodgeRecs[0], Presets.dodgeRecs[2], Utility.RandomInt(120, 130));
         SystemClock.sleep(800);
-        PressMultipleAttacks(3,"Actions.129");
+        PressMultipleAttacks(3, "Actions.129");
     }
 
     static boolean UseBuff() throws InterruptedException {
@@ -447,7 +446,7 @@ public class Actions {
         return false;
     }
 
-    public static synchronized boolean FindAndTap(CheckImageModel checkImageModel) throws InterruptedException {
+    public static synchronized boolean  FindAndTap(CheckImageModel checkImageModel) throws InterruptedException {
         if (!Assistant.getInstance().isRunning()) {
             return false;
         }
@@ -576,7 +575,8 @@ public class Actions {
         FindAndTapTilDisappear(Presets.switchCharacterButtonModel);
         for (int i = 0; i < 10; i++) {
             sleep(3000);
-            if (FindAndTap(Presets.characterRemainColor, Presets.characterRemainRec)) {
+//            if (FindAndTap(Presets.characterRemainColor, Presets.characterRemainRec)) {
+            if (FindAndTap(Presets.availableCharacterModel)) {
                 sleep(2000);
                 while (FindAndTap(Presets.switchCharacterModels[1])) {
                     if (!Assistant.getInstance().isRunning()) {
@@ -614,6 +614,10 @@ public class Actions {
         for (int i = 0; i < random / ScreenCheck.CHECK_INTERVAL; i++) {
             sleep(ScreenCheck.CHECK_INTERVAL);
             if (!BattleController.isPathfinding || ScreenCheck.canDodge) {
+                return false;
+            }
+            if(!ScreenCheck.inHell && ScreenCheck.screenFreezeTime >=20){
+                Actions.MoveAround();
                 return false;
             }
         }

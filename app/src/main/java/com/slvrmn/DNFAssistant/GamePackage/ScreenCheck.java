@@ -246,7 +246,7 @@ public class ScreenCheck extends Thread {
             if (Image.matchTemplate(
                     Image.cropBitmap(lastScreenshot, Presets.stuckRec),
                     Image.cropBitmap(screenshot, Presets.stuckRec),
-                    0.95).isValid()) {
+                    0.99).isValid()) {
                 AddStuck();
                 //MLog.info("ScreenCheck: __________屏幕静止" + screenFreezeTime + "次__________");
                 return;

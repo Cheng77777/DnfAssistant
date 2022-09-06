@@ -1,5 +1,7 @@
 package com.slvrmn.DNFAssistant.GamePackage;
 
+import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.canRecover;
+
 import com.slvrmn.DNFAssistant.Model.Rectangle;
 import com.slvrmn.DNFAssistant.Model.Robot;
 import com.slvrmn.DNFAssistant.Tools.MLog;
@@ -19,6 +21,14 @@ public class Battle extends Thread {
                     sleep(3000);
                     continue;
                 }
+                if (canRecover) {
+                    BattleController.StopAll("Battle.25");
+                    Actions.FindAndTapTilDisappear(Presets.recoverModels[1]);
+                    sleep(500);
+                    BattleController.StartAttacking();
+                    canRecover = false;
+                    continue;
+                }
                 MLog.info("Battle: Looping " + BattleController.isPathfinding + " " + BattleController.isAttacking);
                 if (!BattleController.isPathfinding && !BattleController.isAttacking) {
                     sleep(ScreenCheck.CHECK_INTERVAL);
@@ -33,7 +43,7 @@ public class Battle extends Thread {
                     }
                     if (buffCoolDown <= 0) {
                         if (Actions.UseBuff()) {
-                            buffCoolDown = 20;
+                            buffCoolDown = 5;
                             continue;
                         }
                     }

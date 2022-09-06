@@ -115,13 +115,6 @@ public class BattleController extends Thread {
                     continue;
                 }
                 if (isBattling) {
-                    if (canRecover) {
-                        StopAll("BattleController.119");
-                        Actions.FindAndTapTilDisappear(Presets.recoverModels[1]);
-                        sleep(100);
-                        StartAttacking();
-                        continue;
-                    }
                     if (isPathfinding) {
 //                        MLog.info("BattleController: 寻路中");
                         if (ScreenCheck.isDamaging && ScreenCheck.hasMonster) {
@@ -175,6 +168,29 @@ public class BattleController extends Thread {
                                 StartPathfinding();
                                 MLog.info("BattleController: 不在狮子头前");
                             }
+                            if(ScreenCheck.inHell && ScreenCheck.screenFreezeTime>40){
+                                if (!ScreenCheck.hasMonster && ScreenCheck.isEnergyEmpty) {
+                                    int random;
+                                    for (int i = 0; i < 3; i++) {
+                                        random = Utility.RandomInt(2000, 3000);
+                                        PressLongAttack(random, 0, "BattleController.176");
+                                        if (!Actions.SleepCheckIsPathfinding(random)) {
+                                            MLog.info("BattleController: ----------进入战斗----------");
+                                            sleep(100);
+                                            StartAttacking();
+                                            continue mainLoop;
+                                        }
+                                    }
+                                    StopAll("BattleController.184");
+                                    isBattling = false;
+                                    Actions.GoOutDungeonFromMenu();
+                                    sleep(10000);
+                                    Actions.SwitchCharacter();
+                                } else {
+                                    StartPathfinding();
+                                }
+                                continue mainLoop;
+                            }
                         } else {
                             if (hasDailyContinue) {
                                 MLog.info("BattleController: 每日副本可继续");
@@ -207,33 +223,6 @@ public class BattleController extends Thread {
                                 isBattling = false;
                                 continue;
                             }
-                        }
-                        if (ScreenCheck.screenFreezeTime >= 15) {
-                            MLog.info("BattleController: 卡住次数大于15");
-                            Actions.MoveAround();
-                            if (ScreenCheck.inHell && !ScreenCheck.hasMonster && ScreenCheck.isEnergyEmpty) {
-                                MLog.info("BattleController: ");
-                                int random;
-                                for (int i = 0; i < 3; i++) {
-                                    random = Utility.RandomInt(2000, 3000);
-                                    PressLongAttack(random, random, "BattleController.224");
-
-                                    if (!Actions.SleepCheckIsPathfinding(random)) {
-                                        MLog.info("BattleController: ----------进入战斗----------");
-                                        sleep(100);
-                                        StartAttacking();
-                                        continue mainLoop;
-                                    }
-                                }
-                                StopAll("BattleController225");
-                                isBattling = false;
-                                Actions.GoOutDungeonFromMenu();
-                                sleep(10000);
-                                Actions.SwitchCharacter();
-                                continue;
-                            }
-                            sleep(100);
-                            StartPathfinding();
                         }
                     } else if (isAttacking) {
 //                        MLog.info("BattleController: 攻击中");

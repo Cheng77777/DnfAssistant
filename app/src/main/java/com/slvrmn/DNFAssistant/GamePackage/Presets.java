@@ -273,8 +273,12 @@ public class Presets {
             new CheckRuleModel(15, 54, 34, 73, "6BAABD,3|10|63AACE,6|1|314152,8|12|102021,11|4|84CADE,14|13|102021")
             , new CheckRuleModel(1057, 603, 1180, 641, "107DBD,5|11|0881BD,17|-8|0071AD,20|-2|0075B5,20|8|DEF3FF,41|-8|0071AD,48|1|DEF3FF,53|12|007DBD,58|-6|DEF3FF,71|1|DEF7FF,79|11|E6F7FF")
     };
-    public static final Rectangle characterRemainRec = new Rectangle(664, 204, 731, 547);
-    public static final Color characterRemainColor = new Color(255, 243, 222);
+//    public static final Rectangle characterRemainRec = new Rectangle(664, 204, 731, 547);
+//    public static final Color characterRemainColor = new Color(255, 243, 222);
+
+    public static final CheckImageModel availableCharacterModel = new CheckImageModel(664, 204, 731, 547,"CharacterAvailableIcon.png");
+
+
     private static final AssetManager assetManager = MainApplication.getInstance().getAssets();
     public static CheckImageModel[] damagingModels = {
             new CheckImageModel(908, 48, 1113, 300, "ComboIcon_1.png"),
