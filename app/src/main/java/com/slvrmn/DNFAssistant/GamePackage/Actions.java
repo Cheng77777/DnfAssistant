@@ -592,9 +592,10 @@ public class Actions {
                 Assistant.getInstance().Restart();
                 return true;
             }
-            Robot.swipe(new Rectangle(1078, 551, 1083, 556), new Rectangle(1078, 154, 1083, 159), 1000);
-            sleep(2000);
+            Robot.swipe(new Rectangle(1078, 500, 1083, 510), new Rectangle(1078, 200, 1083, 210), 2000);
+            sleep(3000);
         }
+        Assistant.getInstance().Stop();
         return false;
     }
 

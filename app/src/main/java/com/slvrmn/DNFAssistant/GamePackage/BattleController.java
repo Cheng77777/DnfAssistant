@@ -8,20 +8,24 @@ import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.CHECK_INTERVAL;
 import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.GetScreenshot;
 import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.InitializeDailyQuestParameters;
 import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.beforeLion;
-import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.canRecover;
 import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.hasDailyContinue;
 import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.hasDailySelect;
+import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.hasRepair;
+import static com.slvrmn.DNFAssistant.GamePackage.ScreenCheck.hasResult;
 
 import com.slvrmn.DNFAssistant.Model.Image;
+import com.slvrmn.DNFAssistant.Model.Rectangle;
 import com.slvrmn.DNFAssistant.Model.Robot;
 import com.slvrmn.DNFAssistant.Tools.MLog;
 import com.slvrmn.DNFAssistant.Tools.Utility;
 
 public class BattleController extends Thread {
+    private static final int nonMapAttackCoolDown = 25;
     public static volatile boolean isBattling = false;
     public static volatile boolean isFarming = false;
     public static volatile boolean isAttacking = false;
     public static volatile boolean isPathfinding = false;
+    private static volatile int nonMapAttack;
     private boolean initialized;
 
     static void GetReward() throws InterruptedException {
@@ -168,12 +172,12 @@ public class BattleController extends Thread {
                                 StartPathfinding();
                                 MLog.info("BattleController: 不在狮子头前");
                             }
-                            if(ScreenCheck.inHell && !ScreenCheck.hasMonster){
+                            if (ScreenCheck.inHell && !ScreenCheck.hasMonster) {
                                 if (ScreenCheck.isEnergyEmpty) {
                                     StopAll("BattleController.173");
                                     int random;
                                     for (int i = 0; i < 3; i++) {
-                                        random = Utility.RandomInt(2000, 3000);
+                                        random = Utility.RandomInt(5000, 6000);
                                         PressLongAttack(random, 0, "BattleController.176");
                                         if (!Actions.SleepCheckHasMonster(random)) {
                                             MLog.info("BattleController: ----------进入战斗----------");
@@ -195,10 +199,10 @@ public class BattleController extends Thread {
                             if (hasDailyContinue) {
                                 MLog.info("BattleController: 每日副本可继续");
                                 StopAll("BattleController.197");
-                                MoveAround();
                                 int random;
                                 for (int i = 0; i < 3; i++) {
-                                    random = Utility.RandomInt(2000, 3000);
+                                    MoveAround();
+                                    random = Utility.RandomInt(4000, 5000);
                                     PressLongAttack(random, random, "BattleController.190");
                                 }
                                 Actions.FindAndTapTilDisappear(Presets.dailyContinueButtonModel);
@@ -211,10 +215,10 @@ public class BattleController extends Thread {
                             if (hasDailySelect) {
                                 MLog.info("BattleController: 每日副本可选择");
                                 StopAll("BattleController196");
-                                MoveAround();
                                 int random;
                                 for (int i = 0; i < 3; i++) {
-                                    random = Utility.RandomInt(2000, 3000);
+                                    MoveAround();
+                                    random = Utility.RandomInt(4000, 5000);
                                     PressLongAttack(random, random, "BattleController.206");
                                 }
                                 Actions.FindAndTapTilDisappear(Presets.dailySelectButtonModel);
@@ -223,12 +227,37 @@ public class BattleController extends Thread {
                                 isBattling = false;
                                 continue;
                             }
+                            if (ScreenCheck.dailyNonMapDungeon) {
+                                if(hasResult){
+                                    Robot.Press(new Rectangle(760, 300, 810, 350),3);
+                                    sleep(500);
+                                    hasResult = false;
+                                    continue;
+                                }
+                                if (nonMapAttack < nonMapAttackCoolDown) {
+                                    nonMapAttack++;
+                                } else {
+                                    StartAttacking();
+                                }
+                            }
                         }
                     } else if (isAttacking) {
+                        if (ScreenCheck.dailyNonMapDungeon) {
+                            if(hasResult){
+                                StartPathfinding();
+                                continue;
+                            }
+                            if (nonMapAttack > 0) {
+                                nonMapAttack--;
+                            } else {
+                                StartPathfinding();
+                            }
+                        }else{
 //                        MLog.info("BattleController: 攻击中");
-                        if (!ScreenCheck.hasMonster || !ScreenCheck.isDamaging) {
-                            StartPathfinding();
-                            continue;
+                            if (!ScreenCheck.hasMonster || !ScreenCheck.isDamaging) {
+                                StartPathfinding();
+                                continue;
+                            }
                         }
                     }
                 }

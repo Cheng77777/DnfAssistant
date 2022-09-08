@@ -74,11 +74,11 @@ public class DailyQuest extends Thread {
             }
             ScreenCheck.RefreshDailyDungeons(GetScreenshot());
             //进入副本
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 2; i++) {
                 if (dailyDungeons[i].isValid()) {
                     Robot.Press(dailyDungeons[i]);
                     while (!Actions.FindAndTap(Presets.dailyDungeonConfirmModels)) {
-                        if (i >= 2) {
+                        if (i >= 1) {
                             ScreenCheck.dailyNonMapDungeon = true;
                         }
                         if (!Assistant.getInstance().isRunning()) {
@@ -102,6 +102,8 @@ public class DailyQuest extends Thread {
                     inDailyDungeon = false;
                 }
                 GoBackToMainScene("DailyQuest.StartDailyDungeon2");
+
+                ScreenCheck.dailyNonMapDungeon = false;
                 if (!isEnergyEmpty) {
                     EnterFarming();
                     break;

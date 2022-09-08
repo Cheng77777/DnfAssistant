@@ -109,6 +109,9 @@ public class ScreenCheck extends Thread {
                     CheckFarmingParameters();
                 } else {
                     CheckDailyMenu();
+                    if(dailyNonMapDungeon){
+                        CheckResult();
+                    }
                 }
                 sleep(CHECK_INTERVAL / 2);
                 lastScreenshot = screenshot;

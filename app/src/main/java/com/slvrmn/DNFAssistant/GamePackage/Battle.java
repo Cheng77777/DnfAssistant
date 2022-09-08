@@ -29,7 +29,6 @@ public class Battle extends Thread {
                     canRecover = false;
                     continue;
                 }
-                MLog.info("Battle: Looping " + BattleController.isPathfinding + " " + BattleController.isAttacking);
                 if (!BattleController.isPathfinding && !BattleController.isAttacking) {
                     sleep(ScreenCheck.CHECK_INTERVAL);
                     continue;

@@ -664,14 +664,14 @@ public class Image {
     }
 
     public static Point findPointByCheckImageModel(Bitmap screenshot, CheckImageModel checkImageModel) {
-        return Image.matchTemplate(screenshot, checkImageModel.image,0.7, checkImageModel.rectangle);
+        return Image.matchTemplate(screenshot, checkImageModel.image,checkImageModel.threshold, checkImageModel.rectangle);
     }
 
     public static Point findPointByCheckImageModels(Bitmap screenshot, CheckImageModel[] checkImageModels) {
         Point p;
-        for (CheckImageModel checkImageMode :
+        for (CheckImageModel checkImageModel :
                 checkImageModels) {
-            p = Image.matchTemplate(screenshot,checkImageMode.image,0.7,checkImageMode.rectangle);
+            p = Image.matchTemplate(screenshot,checkImageModel.image,checkImageModel.threshold,checkImageModel.rectangle);
             if(p.isValid()){
                 return p;
             }
@@ -681,9 +681,9 @@ public class Image {
 
     public static boolean findPointByAllCheckImageModels(Bitmap screenshot, CheckImageModel[] checkImageModels) {
         Point p;
-        for (CheckImageModel checkImageMode :
+        for (CheckImageModel checkImageModel :
                 checkImageModels) {
-            p = Image.matchTemplate(screenshot,checkImageMode.image,0.7,checkImageMode.rectangle);
+            p = Image.matchTemplate(screenshot,checkImageModel.image,checkImageModel.threshold,checkImageModel.rectangle);
             if(!p.isValid()){
                 return false;
             }
