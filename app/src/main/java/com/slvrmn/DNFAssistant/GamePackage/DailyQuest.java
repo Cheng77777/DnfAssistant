@@ -66,7 +66,7 @@ public class DailyQuest extends Thread {
         while (Assistant.getInstance().isRunning()) {
             //如果正在战斗,continue
             if (BattleController.isBattling) {
-                sleep(3000);
+                sleep(10000);
                 continue;
             }
             if (!Assistant.getInstance().isRunning()) {

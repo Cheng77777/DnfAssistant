@@ -43,18 +43,20 @@ public class FloatingViewService extends Service implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_start:
-                startAssistant();
+                startAssistant(false);
                 break;
             case R.id.btn_stop:
                 stopAssistant();
                 break;
             case R.id.btn_close:
-                destroy();
+                startAssistant(true);
+//                destroy();
                 break;
         }
     }
 
-    private void startAssistant() {
+    private void startAssistant(boolean onlyBattle) {
+        Assistant.getInstance().setOnlyBattle(onlyBattle);
         Assistant.getInstance().start();
     }
 
@@ -78,7 +80,7 @@ public class FloatingViewService extends Service implements View.OnClickListener
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 

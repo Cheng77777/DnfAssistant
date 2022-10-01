@@ -284,16 +284,18 @@ public class Presets {
             new CheckImageModel(908, 48, 1113, 300, "ComboIcon_3.png")
     };
     public static boolean initialized;
-    public static Bitmap[] numbers = new Bitmap[3];
+    public static Bitmap[] numbers = new Bitmap[5];
     public static Bitmap resultIcon, rewardIcon, continueConfirmButton, ammoBuffIcon, epicIcon,
             coalIcon, crystalIcon, towerIcon, ticketsIcon, goldIcon, crouchingIcon;
     public static Bitmap[] dailyDungeonIcons;
     private static InputStream input;
 
     public static void Initialize() {
-        numbers[0] = readImage("Number_5.png");
-        numbers[1] = readImage("Number_4.png");
-        numbers[2] = readImage("Number_2.png");
+        numbers[0] = readImage("Number_1.png");
+        numbers[1] = readImage("Number_2.png");
+        numbers[2] = readImage("Number_3.png");
+        numbers[3] = readImage("Number_4.png");
+        numbers[4] = readImage("Number_5.png");
         resultIcon = readImage("ResultIcon.jpeg");
         rewardIcon = readImage("RewardIcon.jpg");
         continueConfirmButton = readImage("ConfirmButton_Bright.png");

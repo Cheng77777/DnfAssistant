@@ -35,6 +35,12 @@ public class BattleController extends Thread {
         Robot.Press(Presets.skillRecs[0], random);
         sleep(3000);
 
+        if(Assistant.getInstance().isOnlyBattle()){
+            sleep(3000);
+            ScreenCheck.InitializeFarmingParameters();
+            sleep(1000);
+            return;
+        }
 
         while (!Image.findPointByCheckImageModel(GetScreenshot(), Presets.continueButtonModel).isValid()) {
             if (!Assistant.getInstance().isRunning()) {

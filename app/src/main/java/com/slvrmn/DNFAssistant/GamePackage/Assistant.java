@@ -15,8 +15,13 @@ public class Assistant {
     private DailyQuest dailyQuest;
     private BattleController battleController;
     private Battle battle;
+    private boolean onlyBattle;
 
     private Assistant() {
+//        Initialize();
+    }
+
+    private void Initialize(){
         screenCheck = new ScreenCheck();
         dailyQuest = new DailyQuest();
         battleController = new BattleController();
@@ -39,6 +44,7 @@ public class Assistant {
             }
 
             if (!isRunning()) {
+                Initialize();
                 battleController.Initialize();
                 ScreenCheck.InitializeDailyQuestParameters();
                 ScreenCheck.InitializeFarmingParameters();
@@ -46,19 +52,29 @@ public class Assistant {
                 MLog.setDebugToConsole(true);
                 RUN = true;
                 do {
-                    if (Image.findPointByCheckImageModel(ScreenCheck.GetScreenshot(), Presets.inDungeonModel).isValid()) {
-                        Utility.show("Assistant: 在地下城中,开始搬砖");
-                        MLog.info("Assistant: 在地下城中,开始搬砖");
+                    if(onlyBattle){
+                        Utility.show("Assistant: 仅自动战斗");
+                        MLog.info("Assistant: 仅自动战斗");
                         DailyQuest.StopDailyQuesting();
                         BattleController.StartFarming();
                         BattleController.StartBattle();
                         initialized = true;
-                    } else if (Image.findPointByCheckImageModel(ScreenCheck.GetScreenshot(), Presets.dailyMenuModel).isValid()) {
-                        Utility.show("Assistant: 不在地下城中,开始每日");
-                        MLog.info("Assistant: 不在地下城中,开始每日");
-                        BattleController.StopFarming();
-                        DailyQuest.StartDailyQuesting();
-                        initialized = true;
+                    }
+                    else{
+                        if (Image.findPointByCheckImageModel(ScreenCheck.GetScreenshot(), Presets.inDungeonModel).isValid()) {
+                            Utility.show("Assistant: 在地下城中,开始搬砖");
+                            MLog.info("Assistant: 在地下城中,开始搬砖");
+                            DailyQuest.StopDailyQuesting();
+                            BattleController.StartFarming();
+                            BattleController.StartBattle();
+                            initialized = true;
+                        } else if (Image.findPointByCheckImageModel(ScreenCheck.GetScreenshot(), Presets.dailyMenuModel).isValid()) {
+                            Utility.show("Assistant: 不在地下城中,开始每日");
+                            MLog.info("Assistant: 不在地下城中,开始每日");
+                            BattleController.StopFarming();
+                            DailyQuest.StartDailyQuesting();
+                            initialized = true;
+                        }
                     }
                 }
                 while (!initialized && RUN);
@@ -122,5 +138,13 @@ public class Assistant {
         }
         while (!initialized && RUN);
         PAUSE = false;
+    }
+
+    public void setOnlyBattle(boolean onlyBattle) {
+        this.onlyBattle = onlyBattle;
+    }
+
+    public boolean isOnlyBattle(){
+        return onlyBattle;
     }
 }
